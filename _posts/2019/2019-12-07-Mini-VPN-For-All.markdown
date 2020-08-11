@@ -4,7 +4,7 @@ title:  "Mini VPN For All!"
 date:   2019-12-07 15:54:00 +0100
 categories: nebula vpn
 ---
-![]({{ site.url }}/assets/images/site/rootisgod-logo.png)
+![](/assets/images/site/rootisgod-logo.png)
 
 ## Overview
 
@@ -142,7 +142,11 @@ Then enable and start. I do recommend running manually as a test then creating a
 
 Happy days! Be sure to setup the firewall on your home network to allow UDP 4242 traffic. This is a screenshot from my pfSense router.
 
-<figure class="wp-block-image size-large">![]({{ site.url }}/assets/images/2019/mini-vpn-for-all/861b47c369c64a17b031650dd06d65e1-1024x280.png)</figure>
+----------
+
+> ![](/assets/images/2019/mini-vpn-for-all/01.png)
+
+----------
 
 Now to our windows node…
 
@@ -243,7 +247,11 @@ Then run;
 
 Be sure your firewall allows UDP 4242 traffic. This is the NSG on my Azure VM
 
-<figure class="wp-block-image size-large">![]({{ site.url }}/assets/images/2019/mini-vpn-for-all/94e4e205fd3f4d50a6b0b625370ea768-1024x102.png)</figure>
+----------
+
+> ![](/assets/images/2019/mini-vpn-for-all/02.png)
+
+----------
 
 ### RDP to an internal VM
 
@@ -251,11 +259,19 @@ Now we can put all this together and rdp to our home network from this azure vm 
 
 Create an RDP session and point it to something internal to your network you want to connect to. In my case 192.168.1.190 is a test windows VM I use.
 
-<figure class="wp-block-image size-large">![]({{ site.url }}/assets/images/2019/mini-vpn-for-all/3a8a83d9a1884618b49672bfb2170fd1.png)</figure>
+----------
+
+> ![](/assets/images/2019/mini-vpn-for-all/03.png)
+
+----------
 
 Then connect (authenticate the lighthouse SSH then the Windows RDP). This screenshot hopefully shows that I am on a remote machine and connected into my local VM inside my home network. Without a VPN. Cool!
 
-<figure class="wp-block-image size-large">![]({{ site.url }}/assets/images/2019/mini-vpn-for-all/c6d87ade7d964f6cab7ed933dfac445b-1024x569.png)</figure>
+----------
+
+> ![](/assets/images/2019/mini-vpn-for-all/04.png)
+
+----------
 
 ## Pros and Cons
 

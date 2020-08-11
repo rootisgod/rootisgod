@@ -4,3 +4,4 @@
 
 layout: home
 ---
+![](/assets/images/site/rootisgod-logo.png)

@@ -4,19 +4,30 @@ title:  "Linux Partition Resizing"
 date:   2020-05-05 15:54:00 +0100
 categories: linux disk resize
 ---
-![]({{ site.url }}/assets/images/site/rootisgod-logo.png)
+
+![](/assets/images/site/rootisgod-logo.png)
 
 We’ve all been there… Make a Linux VM, the disk is too small… Arggh! I come from a Windows world where a disk resize is a click away in Disk Management, and so this scenario has always filled me with dread, especially as their is no GUI. And, a google for a disk resize in linux always suggests using parted or something similar. No good without a UI...
 
 So, to test this out, make a VM in ESXi (or Virtualbox etc…) and make it small. This one is 8GB.
-![]({{ site.url }}/assets/images/2020/linux-partition-resizing/01.png)
+
+----------
+
+> ![](/assets/images/2020/linux-partition-resizing/01.png)
+
+----------
 
 Install the OS (Ubuntu 18.04 LTS in this example) and then make sure all is installed and ready to go.
 
 ```
 Disclaimer: Not sure if this tutorial it will work with LVM, chose this default.
 ```
-![]({{ site.url }}/assets/images/2020/linux-partition-resizing/02.png)
+
+----------
+
+> ![](/assets/images/2020/linux-partition-resizing/02.png)
+
+----------
 
 And check the disk space…
 
@@ -36,7 +47,13 @@ tmpfs            99M     0   99M   0% /run/user/1000
 Maybe we should get some more space. Power if off.
 
 Then, increase the disk space in ESXi (and remove any snapshots you have or this will fail)
-![]({{ site.url }}/assets/images/2020/linux-partition-resizing/03.png)
+
+----------
+
+> ![](/assets/images/2020/linux-partition-resizing/03.png)
+
+----------
+
 
 Then, login and run this;
 
@@ -45,13 +62,24 @@ sudo cfdisk
 ```
 
 Notice above the partition we want to resize is actually /dev/sda2 so choose that in the menu and resize as the option.
-![]({{ site.url }}/assets/images/2020/linux-partition-resizing/04.png)
+
+----------
+
+> ![](/assets/images/2020/linux-partition-resizing/04.png)
+
+----------
 
 It should realise there is now 16GB available so it will fin that in for us. Hit enter and accept that.
-![]({{ site.url }}/assets/images/2020/linux-partition-resizing/05.png)
+
+>![](/assets/images/2020/linux-partition-resizing/05.png)
 
 It will say the partition has been resized. Choose to write the change, type yes and then quit the program.
-![]({{ site.url }}/assets/images/2020/linux-partition-resizing/06.png)
+
+----------
+
+>![](/assets/images/2020/linux-partition-resizing/06.png)
+
+----------
 
 Now, all we have done is increase the size of the partition but the filesystem doesn’t know it can use this yet (output from a df -h.
 
@@ -100,9 +128,8 @@ mount /dev/sdb1 /u01
 
 Then, if you increase the space, this will expand it on the OS
 
-
 | Operation                                              | Command              |
-|--------------------------------------------------------|----------------------|
+|------|--|
 | Unmount the disk                                       | umount /u01          |
 | Check it is removed on filesystem                      | df \-h               |
 | Amend partition                                        | fdisk /dev/sdb       |
