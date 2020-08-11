@@ -22,7 +22,7 @@ title: RootIsGod
 email: blog@rootisgod.com
 description: >- # this means to ignore newlines until "baseurl:"
   Sysadmin Blog for Cloud and General Day to Day Stuff
-baseurl: "rootisgod" # the subpath of your site, e.g. /blog
+baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://www.rootisgod.com" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  iaingblack
 
@@ -36,7 +36,7 @@ defaults:
   -
     scope:
       path: ""
-      type: "post"
+      type: "posts"
     values:
         layout: "post"
         permalink: /:year/:title/
