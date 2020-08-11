@@ -28,6 +28,8 @@ github_username:  iaingblack
 
 # Build settings
 theme: minima
+minima:
+  skin: dark
 plugins:
   - jekyll-feed
 markdown: kramdown
