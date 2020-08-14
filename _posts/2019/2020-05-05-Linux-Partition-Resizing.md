@@ -7,7 +7,7 @@ categories: linux disk resize
 
 {% include header.md %}
 
-We’ve all been there… Make a Linux VM, the disk is too small… Arggh! I come from a Windows world where a disk resize is a click away in Disk Management, and so this scenario has always filled me with dread, especially as their is no GUI. And, a google for a disk resize in linux always suggests using parted or something similar. No good without a UI...
+We’ve all been there… Make a Linux VM, the disk is too small… Arggh! I come from a Windows world where a disk resize is a click away in Disk Management, and so this scenario has always filled me with dread, especially as there is no GUI. And, a google for a disk resize in linux always suggests using parted or something similar, or a billion mental commands. No good without a UI...
 
 So, to test this out, make a VM in ESXi (or Virtualbox etc…) and make it small. This one is 8GB.
 
