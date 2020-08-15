@@ -1,3 +1,5 @@
+# https://rootisgod.visualstudio.com/Blog%20Deployment/_build
+
 trigger:
 - master
 
@@ -38,4 +40,4 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: 'az cdn endpoint purge --resource-group "www.rootisgod.com" --name "rootisgod" --profile-name "rootisgod-cdn" --content-paths "/*"'
-  displayName: 'Purge CDN Cache'    
+  displayName: 'Purge CDN Cache'
