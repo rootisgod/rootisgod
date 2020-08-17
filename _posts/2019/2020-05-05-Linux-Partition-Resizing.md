@@ -13,7 +13,7 @@ So, to test this out, make a VM in ESXi (or Virtualbox etc…) and make it small
 
 ----------
 
-> ![](/assets/images/2020/linux-partition-resizing/01.png)
+![](/assets/images/2020/linux-partition-resizing/01.png)
 
 ----------
 
@@ -25,7 +25,7 @@ Disclaimer: Not sure if this tutorial it will work with LVM, chose this default.
 
 ----------
 
-> ![](/assets/images/2020/linux-partition-resizing/02.png)
+![](/assets/images/2020/linux-partition-resizing/02.png)
 
 ----------
 
@@ -50,7 +50,7 @@ Then, increase the disk space in ESXi (and remove any snapshots you have or this
 
 ----------
 
-> ![](/assets/images/2020/linux-partition-resizing/03.png)
+![](/assets/images/2020/linux-partition-resizing/03.png)
 
 ----------
 
@@ -65,19 +65,19 @@ Notice above the partition we want to resize is actually /dev/sda2 so choose tha
 
 ----------
 
-> ![](/assets/images/2020/linux-partition-resizing/04.png)
+![](/assets/images/2020/linux-partition-resizing/04.png)
 
 ----------
 
 It should realise there is now 16GB available so it will fin that in for us. Hit enter and accept that.
 
->![](/assets/images/2020/linux-partition-resizing/05.png)
+![](/assets/images/2020/linux-partition-resizing/05.png)
 
 It will say the partition has been resized. Choose to write the change, type yes and then quit the program.
 
 ----------
 
->![](/assets/images/2020/linux-partition-resizing/06.png)
+![](/assets/images/2020/linux-partition-resizing/06.png)
 
 ----------
 
