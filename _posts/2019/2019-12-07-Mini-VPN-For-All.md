@@ -145,7 +145,7 @@ Happy days! Be sure to setup the firewall on your home network to allow UDP 4242
 
 ----------
 
-> ![](/assets/images/2019/mini-vpn-for-all/01.png)
+![](/assets/images/2019/mini-vpn-for-all/01.png)
 
 ----------
 
