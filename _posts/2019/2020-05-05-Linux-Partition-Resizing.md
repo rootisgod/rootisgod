@@ -31,7 +31,7 @@ Disclaimer: Not sure if this tutorial it will work with LVM, chose this default.
 
 And check the disk space…
 
-```
+```bash
 iain@smallvm:~$ df -h
 Filesystem      Size  Used Avail Use% Mounted on
 udev            463M     0  463M   0% /dev
@@ -57,7 +57,7 @@ Then, increase the disk space in ESXi (and remove any snapshots you have or this
 
 Then, login and run this;
 
-```
+```bash
 sudo cfdisk
 ```
 
@@ -83,7 +83,7 @@ It will say the partition has been resized. Choose to write the change, type yes
 
 Now, all we have done is increase the size of the partition but the filesystem doesn’t know it can use this yet (output from a df -h.
 
-```
+```bash
 iain@smallvm:~$ df -h
 Filesystem      Size  Used Avail Use% Mounted on
 ...
@@ -93,13 +93,13 @@ Filesystem      Size  Used Avail Use% Mounted on
 
 So, we have to let it use this space. Run this command (again, change /dev/sda2 if yours is different)
 
-```
+```bash
 sudo resize2fs /dev/sda2
 ```
 
 After that we should have an expanded disk. Success! No more over-specifying disk because resizing a linux disk is a dark art 🙂
 
-```
+```bash
 iain@smallvm:~$ sudo resize2fs /dev/sda2
 resize2fs 1.44.1 (24-Mar-2018)
 Filesystem at /dev/sda2 is mounted on /; on-line resizing required
@@ -119,7 +119,7 @@ If you have another EXT4 disk mounted that you need to resize, do this.
 
 Create a disk like this;
  
-```
+```bash
 sudo fdisk /dev/sdb (make partition)
 mkfs -t ext4 /dev/sdb1 (make ext4)
 mkdir /u01

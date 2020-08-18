@@ -17,7 +17,7 @@ The ansible and script below are as to the point as I can make it, so there won'
 
 Ansible code below. Be sure to have some facts setup or variables in place for things like the 'octopus_tentacle_version', or just hard code them.
 
-```
+```yaml
 - name: Install Octopus Tentacle using chocolatey
   win_chocolatey:
     name: octopusdeploy.tentacle
@@ -78,7 +78,7 @@ Ansible code below. Be sure to have some facts setup or variables in place for t
 
 This is what the scheduled task runs. It keeps a transcript so you can see what it did. There is slghtly fancier version [here](https://gist.githubusercontent.com/erichexter/b0cca2ff2e3ab120cec8/raw/492fcb7dc41e0470b0e77d4ac74efe6b85d124af/gistfile1.ps1) from the github issue page referenced earlier. It does a little more like set environment and roles of the VM, but the version below is the bare requirements needed to get it in a installed state which is fit for registration.
 
-```
+```java
 param (
     $tentacle_service_port,
     $octopus_server_certificate_thumbprint

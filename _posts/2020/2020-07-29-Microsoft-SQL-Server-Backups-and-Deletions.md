@@ -15,7 +15,7 @@ This is an unashamed post for me to remember something later. Below are a couple
 
 Tweak as necessary. Hopefully it is pretty clear where to amend certain things if you have a slight familiarity with SQL already. Apologies to the people I ripped this off ([https://www.mssqltips.com/sqlservertip/1070/simple-script-to-backup-all-sql-server-databases/](https://www.mssqltips.com/sqlservertip/1070/simple-script-to-backup-all-sql-server-databases/)), but this is a version I can use without thinking too hard.
 
-```
+```sql
 DECLARE @name VARCHAR(50) -- database name
 DECLARE @path VARCHAR(256) -- path for backup files
 DECLARE @fileName VARCHAR(256) -- filename for backup
@@ -55,7 +55,7 @@ DEALLOCATE db_cursor
 
 This to delete Databases
 
-```
+```sql
 use master
 go
 

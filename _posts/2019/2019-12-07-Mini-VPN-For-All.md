@@ -43,23 +43,28 @@ I’m using Ubuntu 18.04 but any distro should work. Download and untar the rele
 
 [https://github.com/slackhq/nebula/releases/download/v1.0.0/nebula-linux-amd64.tar.gz](https://github.com/slackhq/nebula/releases/download/v1.0.0/nebula-linux-amd64.tar.gz)
 
-<pre class="wp-block-preformatted">nebula  
-nebula-cert</pre>
+Remember and do a; 
 
-Remember and `chmod +x nebula*` them.
+```bash
+chmod +x nebula*
+```
 
 #### Certificate Generation
 
 We must first generate a certificate file like so;
 
-`./nebula-cert ca -name 'Your Org Name'`
+```bash
+./nebula-cert ca -name 'Your Org Name'
+```
 
 This creates a `ca.key` and `ca.crt` file. Do not let the ca.key file loose on the internet! Keep it secure. This is the holiest of holies.
 
 Then we need to pre-create a couple of certificates for the two nodes we plan to add.
 
-`./nebula-cert sign -name "lighthouse" -ip "192.168.255.1/24"`  
-`./nebula-cert sign -name "azure-windows-vm" -ip "192.168.255.10/24"`
+```bash
+./nebula-cert sign -name "lighthouse" -ip "192.168.255.1/24"
+./nebula-cert sign -name "azure-windows-vm" -ip "192.168.255.10/24"`
+```
 
 You should get a couple of files for each with those names with a crt and key extension.
 
@@ -69,77 +74,89 @@ We have to now configure and run the service. Because this is also the lighthous
 
 Copy the example config.yaml file from github and tweak these lines to make sure it is valid. We essentially, make sure key location os correct, flag that this is a lighthouse node and allow ‘all’ inbound traffic ither than ‘icmp’ as in their example config.yaml file. Also, going forward the examples show my home folder as `/home/iain/nebula`. You obviously want to change that for you own folder. And put in your own external IP in the `static_host_map` section. Use [www.whatismyip.com](http://www.whatismyip.com/) from the lighthouse box to get that if unsure.
 
-      # The CAs that are accepted by this node. Must contain one or more certificates created by 'nebula-cert ca'
-      ca: /home/iain/nebula/ca.crt
-      cert: /home/iain/nebula/lighthouse.crt
-      key: /home/iain/nebula/lighthouse.key
+```
+# The CAs that are accepted by this node. Must contain one or more certificates created by 'nebula-cert ca'
+ca: /home/iain/nebula/ca.crt
+cert: /home/iain/nebula/lighthouse.crt
+key: /home/iain/nebula/lighthouse.key
 
-    ...
+...
 
-    # Example, if your lighthouse has the nebula IP of 192.168.100.1 and has the real ip address of 100.64.22.11 and runs on port 4242:
-    static_host_map:
-      "192.168.255.1": ["my.internet.address.whatismyip:4242"]
+# Example, if your lighthouse has the nebula IP of 192.168.100.1 and has the real ip address of 100.64.22.11 and runs on port 4242:
+static_host_map:
+  "192.168.255.1": ["my.internet.address.whatismyip:4242"]
 
-    ...
+...
 
-    lighthouse:
-      # am_lighthouse is used to enable lighthouse functionality for a node. This should ONLY be true on nodes
-      # you have configured to be lighthouses in your network
-      am_lighthouse: true
-      ...
-      # IMPORTANT: THIS SHOULD BE EMPTY ON LIGHTHOUSE NODES
-      #hosts:
-      #  - "192.168.255.1"
+lighthouse:
+  # am_lighthouse is used to enable lighthouse functionality for a node. This should ONLY be true on nodes
+  # you have configured to be lighthouses in your network
+  am_lighthouse: true
+  ...
+  # IMPORTANT: THIS SHOULD BE EMPTY ON LIGHTHOUSE NODES
+  #hosts:
+  #  - "192.168.255.1"
 
-    ...
+...
 
-      inbound:
-        # Allow any between any nebula hosts
-        - port: any
-          proto: any
-          host: any
+  inbound:
+    # Allow any between any nebula hosts
+    - port: any
+      proto: any
+      host: any
+```
 
 Okay, almost there… Now we run it.
 
-`sudo ./nebula -config config.yaml`
+```bash
+sudo ./nebula -config config.yaml
+```
 
 If it just sits there then we are good.
 
-    INFO[0000] Firewall rule added                           firewallRule="map[caName: caSha: direction:outgoing endPort:0 groups:[] host:any ip:<nil> proto:0 startPort:0]"
-    INFO[0000] Firewall rule added                           firewallRule="map[caName: caSha: direction:incoming endPort:0 groups:[] host:any ip:<nil> proto:0 startPort:0]"
-    INFO[0000] Firewall rule added                           firewallRule="map[caName: caSha: direction:incoming endPort:443 groups:[laptop home] host: ip:<nil> proto:6 startPort:443]"
-    INFO[0000] Firewall started                              firewallHash=7f575bbec56ca8fa6eb9318659edfa5bfa68ccbd046e7a6225b4047adad5cae0
-    INFO[0000] Main HostMap created                          network=192.168.255.1/24 preferredRanges="[]"
-    INFO[0000] UDP hole punching enabled
-    INFO[0000] Nebula interface is active                    build=1.0.0 interface=nebula1 network=192.168.255.1/24
+```
+INFO[0000] Firewall rule added                           firewallRule="map[caName: caSha: direction:outgoing endPort:0 groups:[] host:any ip:<nil> proto:0 startPort:0]"
+INFO[0000] Firewall rule added                           firewallRule="map[caName: caSha: direction:incoming endPort:0 groups:[] host:any ip:<nil> proto:0 startPort:0]"
+INFO[0000] Firewall rule added                           firewallRule="map[caName: caSha: direction:incoming endPort:443 groups:[laptop home] host: ip:<nil> proto:6 startPort:443]"
+INFO[0000] Firewall started                              firewallHash=7f575bbec56ca8fa6eb9318659edfa5bfa68ccbd046e7a6225b4047adad5cae0
+INFO[0000] Main HostMap created                          network=192.168.255.1/24 preferredRanges="[]"
+INFO[0000] UDP hole punching enabled
+INFO[0000] Nebula interface is active                    build=1.0.0 interface=nebula1 network=192.168.255.1/24
+```
 
 If you want to run it as a service (tested on Ubuntu 18.04 only, by me) create this file;
 
-`sudo nano /etc/systemd/system/nebula.service`
+```bash
+sudo nano /etc/systemd/system/nebula.service
+```
 
 And paste in this. Ensure you update the ExecStart location with your nebula folder.
 
-    [Unit]
-    Description=nebula
-    Wants=basic.target
-    After=basic.target network.target
+```
+[Unit]
+Description=nebula
+Wants=basic.target
+After=basic.target network.target
 
-    [Service]
-    SyslogIdentifier=nebula
-    StandardOutput=syslog
-    StandardError=syslog
-    ExecReload=/bin/kill -HUP $MAINPID
-    ExecStart=/home/iain/nebula/nebula -config /home/iain/nebula/config.yaml
-    Restart=always
+[Service]
+SyslogIdentifier=nebula
+StandardOutput=syslog
+StandardError=syslog
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/home/iain/nebula/nebula -config /home/iain/nebula/config.yaml
+Restart=always
 
-    [Install]
-    WantedBy=multi-user.target
+[Install]
+WantedBy=multi-user.target
+```
 
 Then enable and start. I do recommend running manually as a test then creating a service once happy though.
 
-    sudo systemctl start nebula
-    sudo systemctl enable nebula
-    sudo systemctl status nebula
+```
+sudo systemctl start nebula
+sudo systemctl enable nebula
+sudo systemctl status nebula
+```
 
 Happy days! Be sure to setup the firewall on your home network to allow UDP 4242 traffic. This is a screenshot from my pfSense router.
 
@@ -161,96 +178,104 @@ Then, copy the `ca.crt`, `azure-windows-vm.crt` and `azure-windows-vm.key` files
 
 All we need now is a config file. Get the example config.yaml again and tweak like before but with these changes;
 
-      # The CAs that are accepted by this node. Must contain one or more certificates created by 'nebula-cert ca'
-      ca: c:\nebula\ca.crt
-      cert: c:\nebula\azure-windows-vm.crt
-      key: c:\nebula\azure-windows-vm.key
+```
+# The CAs that are accepted by this node. Must contain one or more certificates created by 'nebula-cert ca'
+ca: c:\nebula\ca.crt
+cert: c:\nebula\azure-windows-vm.crt
+key: c:\nebula\azure-windows-vm.key
 
-    ...
+...
 
-    # Example, if your lighthouse has the nebula IP of 192.168.100.1 and has the real ip address of 100.64.22.11 and runs on port 4242:
-    static_host_map:
-      "192.168.255.1": ["my.internet.address.whatismyip:4242"]
+# Example, if your lighthouse has the nebula IP of 192.168.100.1 and has the real ip address of 100.64.22.11 and runs on port 4242:
+static_host_map:
+  "192.168.255.1": ["my.internet.address.whatismyip:4242"]
 
-    ...
+...
 
-    lighthouse:
-      # am_lighthouse is used to enable lighthouse functionality for a node. This should ONLY be true on nodes
-      # you have configured to be lighthouses in your network
-      am_lighthouse: false
-      ...
-      # IMPORTANT: THIS SHOULD BE EMPTY ON LIGHTHOUSE NODES
-      hosts:
-        - "192.168.255.1"
+lighthouse:
+  # am_lighthouse is used to enable lighthouse functionality for a node. This should ONLY be true on nodes
+  # you have configured to be lighthouses in your network
+  am_lighthouse: false
+  ...
+  # IMPORTANT: THIS SHOULD BE EMPTY ON LIGHTHOUSE NODES
+  hosts:
+    - "192.168.255.1"
 
-    ...
+...
 
-      inbound:
-        # Allow any between any nebula hosts
-        - port: any
-          proto: any
-          host: any
+  inbound:
+    # Allow any between any nebula hosts
+    - port: any
+      proto: any
+      host: any
+```
 
 And we should have a working config. Run as we did on Linux and there should be a succesful handshake to our lighthouse (last line).
 
-    C:\Nebula>nebula.exe -config config.yaml
-    time="2019-11-30T08:33:57Z" level=info msg="Firewall rule added" firewallRule="map[caName: caSha: direction:outgoing endPort:0 groups:[] host:any ip:<nil> proto:0 startPort:0]"
-    time="2019-11-30T08:33:57Z" level=info msg="Firewall rule added" firewallRule="map[caName: caSha: direction:incoming endPort:0 groups:[] host:any ip:<nil> proto:0 startPort:0]"
-    time="2019-11-30T08:33:57Z" level=info msg="Firewall rule added" firewallRule="map[caName: caSha: direction:incoming endPort:443 groups:[laptop home] host: ip:<nil> proto:6 startPort:443]"
-    time="2019-11-30T08:33:57Z" level=info msg="Firewall started" firewallHash=7f575bbec56ca8fa6eb9318659edfa5bfa68ccbd046e7a6225b4047adad5cae0
-    time="2019-11-30T08:33:57Z" level=info msg="Main HostMap created" network=192.168.255.10/24 preferredRanges="[]"
-    time="2019-11-30T08:33:57Z" level=info msg="UDP hole punching enabled"
-    time="2019-11-30T08:33:57Z" level=info msg="Handshake message sent" handshake="map[stage:1 style:ix_psk0]" initiatorIndex=4261561494 remoteIndex=0 udpAddr="your-ext-ip:4242" vpnIp=192.168.255.1
-    time="2019-11-30T08:33:57Z" level=info msg="Nebula interface is active" build=1.0.0 interface="Ethernet 2" network=192.168.255.10/24
-    time="2019-11-30T08:33:57Z" level=info msg="Handshake message received" durationNs=324031300 handshake="map[stage:2 style:ix_psk0]" initiatorIndex=4261561494 remoteIndex=4261561494 responderIndex=1434342704 udpAddr="your-ext-ip:4242" vpnIp=192.168.255.1
+```shell
+C:\Nebula>nebula.exe -config config.yaml
+time="2019-11-30T08:33:57Z" level=info msg="Firewall rule added" firewallRule="map[caName: caSha: direction:outgoing endPort:0 groups:[] host:any ip:<nil> proto:0 startPort:0]"
+time="2019-11-30T08:33:57Z" level=info msg="Firewall rule added" firewallRule="map[caName: caSha: direction:incoming endPort:0 groups:[] host:any ip:<nil> proto:0 startPort:0]"
+time="2019-11-30T08:33:57Z" level=info msg="Firewall rule added" firewallRule="map[caName: caSha: direction:incoming endPort:443 groups:[laptop home] host: ip:<nil> proto:6 startPort:443]"
+time="2019-11-30T08:33:57Z" level=info msg="Firewall started" firewallHash=7f575bbec56ca8fa6eb9318659edfa5bfa68ccbd046e7a6225b4047adad5cae0
+time="2019-11-30T08:33:57Z" level=info msg="Main HostMap created" network=192.168.255.10/24 preferredRanges="[]"
+time="2019-11-30T08:33:57Z" level=info msg="UDP hole punching enabled"
+time="2019-11-30T08:33:57Z" level=info msg="Handshake message sent" handshake="map[stage:1 style:ix_psk0]" initiatorIndex=4261561494 remoteIndex=0 udpAddr="your-ext-ip:4242" vpnIp=192.168.255.1
+time="2019-11-30T08:33:57Z" level=info msg="Nebula interface is active" build=1.0.0 interface="Ethernet 2" network=192.168.255.10/24
+time="2019-11-30T08:33:57Z" level=info msg="Handshake message received" durationNs=324031300 handshake="map[stage:2 style:ix_psk0]" initiatorIndex=4261561494 remoteIndex=4261561494 responderIndex=1434342704 udpAddr="your-ext-ip:4242" vpnIp=192.168.255.1
+```
 
 We should have a new network interface on the machine
 
-    ipconfig /all
+```shell
+ipconfig /all
 
-    ...
+  Ethernet adapter Ethernet 2:
 
-    Ethernet adapter Ethernet 2:
-
-       Connection-specific DNS Suffix  . :
-       Description . . . . . . . . . . . : TAP-Windows Adapter V9
-       Physical Address. . . . . . . . . : 00-FF-4E-66-0A-F8
-       DHCP Enabled. . . . . . . . . . . : No
-       Autoconfiguration Enabled . . . . : Yes
-       Link-local IPv6 Address . . . . . : fe80::383f:7b72:e6a:1439%10(Preferred)
-       IPv4 Address. . . . . . . . . . . : 192.168.255.10(Preferred)
-       Subnet Mask . . . . . . . . . . . : 255.255.255.0
-       Default Gateway . . . . . . . . . :
-       DHCPv6 IAID . . . . . . . . . . . : 604045134
-       DHCPv6 Client DUID. . . . . . . . : 00-01-00-01-24-1A-3C-9A-00-0D-3A-B4-28-FB
-       DNS Servers . . . . . . . . . . . : fec0:0:0:ffff::1%1
-                                           fec0:0:0:ffff::2%1
-                                           fec0:0:0:ffff::3%1
-       NetBIOS over Tcpip. . . . . . . . : Enabled
+     Connection-specific DNS Suffix  . :
+     Description . . . . . . . . . . . : TAP-Windows Adapter V9
+     Physical Address. . . . . . . . . : 00-FF-4E-66-0A-F8
+     DHCP Enabled. . . . . . . . . . . : No
+     Autoconfiguration Enabled . . . . : Yes
+     Link-local IPv6 Address . . . . . : fe80::383f:7b72:e6a:1439%10(Preferred)
+     IPv4 Address. . . . . . . . . . . : 192.168.255.10(Preferred)
+     Subnet Mask . . . . . . . . . . . : 255.255.255.0
+     Default Gateway . . . . . . . . . :
+     DHCPv6 IAID . . . . . . . . . . . : 604045134
+     DHCPv6 Client DUID. . . . . . . . : 00-01-00-01-24-1A-3C-9A-00-0D-3A-B4-28-FB
+     DNS Servers . . . . . . . . . . . : fec0:0:0:ffff::1%1
+                                         fec0:0:0:ffff::2%1
+                                         fec0:0:0:ffff::3%1
+     NetBIOS over Tcpip. . . . . . . . : Enabled
+```
 
 Now, we try and ping between hosts. If the ports are open it should succeed! (Note that the reverse ping should work too, from 192.168.255.10 to this vm)
 
-    C:\Users\azureuser>ping 192.168.255.1
+```shell
+C:\Users\azureuser>ping 192.168.255.1
 
-    Pinging 192.168.255.1 with 32 bytes of data:
-    Reply from 192.168.255.1: bytes=32 time=15ms TTL=64
+Pinging 192.168.255.1 with 32 bytes of data:
+Reply from 192.168.255.1: bytes=32 time=15ms TTL=64
+```
 
 Like linux, it is best we set this up as a service. We can then use nssm. Download from here, unzip and place nssm.exe in the `c:\nebula` folder.  
 [https://nssm.cc/release/nssm-2.24.zip](https://nssm.cc/release/nssm-2.24.zip)
 
 Then run;
 
-    nssm.exe install Nebula /s
-    nssm.exe set Nebula Application C:\nebula\nebula.exe
-    nssm.exe set Nebula AppDirectory C:\nebula
-    nssm.exe set Nebula AppParameters -config config.yaml
-    sc start nebula
+```shell
+nssm.exe install Nebula /s
+nssm.exe set Nebula Application C:\nebula\nebula.exe
+nssm.exe set Nebula AppDirectory C:\nebula
+nssm.exe set Nebula AppParameters -config config.yaml
+sc start nebula
+```
 
 Be sure your firewall allows UDP 4242 traffic. This is the NSG on my Azure VM
 
 ----------
 
-> ![](/assets/images/2019/mini-vpn-for-all/02.png)
+![](/assets/images/2019/mini-vpn-for-all/02.png)
 
 ----------
 
@@ -262,7 +287,7 @@ Create an RDP session and point it to something internal to your network you wan
 
 ----------
 
-> ![](/assets/images/2019/mini-vpn-for-all/03.png)
+![](/assets/images/2019/mini-vpn-for-all/03.png)
 
 ----------
 
@@ -270,7 +295,7 @@ Then connect (authenticate the lighthouse SSH then the Windows RDP). This screen
 
 ----------
 
-> ![](/assets/images/2019/mini-vpn-for-all/04.png)
+![](/assets/images/2019/mini-vpn-for-all/04.png)
 
 ----------
 

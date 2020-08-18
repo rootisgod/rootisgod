@@ -11,7 +11,7 @@ If anyone wants to deploy a website using Azure DevOps this should build the sit
 
 Anyway, this is the pipeline YAML file I ended up with. Generate a SAS token and place it's value as a variable called 'sastoken' and your own subscription for the purging the cache step.
 
-```
+```yaml
 trigger:
 - master
 
