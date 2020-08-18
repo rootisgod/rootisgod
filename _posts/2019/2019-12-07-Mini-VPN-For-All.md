@@ -74,7 +74,7 @@ We have to now configure and run the service. Because this is also the lighthous
 
 Copy the example config.yaml file from github and tweak these lines to make sure it is valid. We essentially, make sure key location os correct, flag that this is a lighthouse node and allow ‘all’ inbound traffic ither than ‘icmp’ as in their example config.yaml file. Also, going forward the examples show my home folder as `/home/iain/nebula`. You obviously want to change that for you own folder. And put in your own external IP in the `static_host_map` section. Use [www.whatismyip.com](http://www.whatismyip.com/) from the lighthouse box to get that if unsure.
 
-```
+```yaml
 # The CAs that are accepted by this node. Must contain one or more certificates created by 'nebula-cert ca'
 ca: /home/iain/nebula/ca.crt
 cert: /home/iain/nebula/lighthouse.crt
@@ -114,7 +114,7 @@ sudo ./nebula -config config.yaml
 
 If it just sits there then we are good.
 
-```
+```log
 INFO[0000] Firewall rule added                           firewallRule="map[caName: caSha: direction:outgoing endPort:0 groups:[] host:any ip:<nil> proto:0 startPort:0]"
 INFO[0000] Firewall rule added                           firewallRule="map[caName: caSha: direction:incoming endPort:0 groups:[] host:any ip:<nil> proto:0 startPort:0]"
 INFO[0000] Firewall rule added                           firewallRule="map[caName: caSha: direction:incoming endPort:443 groups:[laptop home] host: ip:<nil> proto:6 startPort:443]"
@@ -178,7 +178,7 @@ Then, copy the `ca.crt`, `azure-windows-vm.crt` and `azure-windows-vm.key` files
 
 All we need now is a config file. Get the example config.yaml again and tweak like before but with these changes;
 
-```
+```yaml
 # The CAs that are accepted by this node. Must contain one or more certificates created by 'nebula-cert ca'
 ca: c:\nebula\ca.crt
 cert: c:\nebula\azure-windows-vm.crt
