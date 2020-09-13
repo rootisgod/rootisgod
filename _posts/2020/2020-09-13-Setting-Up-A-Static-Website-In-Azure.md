@@ -37,7 +37,7 @@ I'm going to assume you have an azure account. If not, sign up here - [https://a
 
 The first thing we need is a storage account inside a new resource group (the folder that holds everything essentially if you don't know what a resource group is). I just call this **www.mystaticwebsite.xyz** for ease of reference.
 
-Storage blobs are very cheap for ver small amounts of data. Check the pricing here - [https://azure.microsoft.com/en-us/pricing/details/storage/blobs/](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/). Unless you are uploading GB's of files, the best option should still be very, very cheap.
+Storage blobs are very cheap for small amounts of data in the MB range. Check the pricing here - [https://azure.microsoft.com/en-us/pricing/details/storage/blobs/](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/). Unless you are uploading GB's of files, the best option should still be very, very cheap.
 
 | Replication Level | Price | Notes |
 |---|---|---|
