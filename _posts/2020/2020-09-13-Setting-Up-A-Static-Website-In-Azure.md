@@ -235,3 +235,5 @@ See here for setting up a Jekyll static website using Azure DevOps. It updates t
 [https://www.rootisgod.com/2020/Azure-DevOps-Jekyll-Pipeline/](https://www.rootisgod.com/2020/Azure-DevOps-Jekyll-Pipeline/)
 
 And that's it. Enjoy a cheap static site and an easy HTTPS certificate thanks to the consumption model of the cloud!
+
+#### [https://www.mystaticwebsite.xyz/](https://www.mystaticwebsite.xyz/)
