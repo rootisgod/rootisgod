@@ -72,7 +72,7 @@ Once enabled, enter an index document name of 'index.html'. This is generally th
 
 ![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/120.png)
 
-### Add a Test File
+### Add an index.html
 
 We now have a live site we can access. Note that we now have a $web folder where we place static website related files.
 
@@ -106,4 +106,68 @@ Success!
 
 ![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/170.png)
 
-Now, we can look at how to add our domain name and get a free HTTPS certificate from Azure.
+Now, we can look at how to use our domain name and get a free HTTPS certificate from Azure.
+
+## Custom Domain Setup
+
+From the azure blob storage page, it has some instructions to follow if we want to use a custom domain. We will choose the first option. But we first have to make a change to our DNS so azure can check that we own the domain. I tried both DNS names suggested, but only the one with the 'z16' worked. Not sure why, so just use that one of the two (ie mystaticwebsiteblob.z16.web.core.windows.net).
+
+Aside. Interestingly, these both have different IP addresses, so not sure whats happening.
+
+'www' DNS CNAME pointing to mystaticwebsiteblob.blob.core.windows.net
+```shell
+PS C:\Windows\system32> ping www.mystaticwebsite.xyz
+Pinging blob.db1prdstrz01a.store.core.windows.net [52.239.137.36] with 32 bytes of data:
+```
+
+'www' DNS CNAME pointing to mystaticwebsiteblob.z16.web.core.windows.net
+```shell
+PS C:\Windows\system32> ping www.mystaticwebsite.xyz
+Pinging web.db1prdstrz01a.store.core.windows.net [52.239.137.33] with 32 bytes of data:
+```
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/180.png)
+
+### Domain Name DNS Settings
+
+Go back to GoDaddy and make a change to our DNS settings to create a CNAME. Go to 'Domains' and choose your domain. 
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/190.png)
+
+Then, scroll down a bit and and find the 'Manage DNS' option (ignore the other stuff it's just GoDaddy wanting to make you buy web services from them). 
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/200.png)
+
+We actually already have a 'www' CNAME entry already, GoDaddy have set it up for us so we just have to amend it. Click the little pencil to edit the entry.
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/210.png)
+
+Change the '@' value to 'mystaticwebsiteblob.z16.web.core.windows.net'. I also change the TTL to something low just in case I make a mistake and don't want to wait too long for the update to be noticed. 600 seconds is the minimum GoDaddy allows. Hit save. We now have set www.mystaticwebsite.xyz to point to the 'z16' azure blob storage static site.
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/220.png)
+
+### Azure Blob Store Custom Domain
+
+Go back to Azure and our blob storage, and the 'Custom Domain' option. Enter in our website name and hit save. Don't tick 'Use indirect CNAME validation'.
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/240.png)
+
+It should succeed! Mine actually failed first time, I just hit it again. DNS may take a little time to verify the change, so just wait a few minutes if this happens.
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/250.png)
+
+Now, go to the [http://www.mystaticwebsite.xyz](http://www.mystaticwebsite.xyz) site, it should be live!
+
+Arggh, error.
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/260.png)
+
+What happened? Well, we are trying to access this site over a non-secure protocol (HTTP) and we have told the blob storage not to allow this. So, jump into the 'Configuration' settings page and disable 'Secure Transfer Required' and hit save. We will make this secure only again once we get an HTTPS certificate in place.
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/270.png)
+
+Retry the page.
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/280.png)
+
+Success!
