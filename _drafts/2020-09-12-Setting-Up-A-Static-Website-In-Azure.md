@@ -11,13 +11,11 @@ I thought I would blog about how to create a static website for very little mone
 
 The process is quite simple but it is easy to get some bits wrong so I thought I would document it start to finish for my own knowledge, and for anyone else struggling to figure it out.
 
-You can actually do all this through GitHub Pages, so try that if you dont want to go down this route, but it will ve very educational.
+You can actually do all this through GitHub Pages, so try that if you don't want to go down this route, but it will ve very educational.
 
-## Getting a Domain Name
+## Buy the Domain Name
 
-### By the Domain Name
-
-First, buy a domain name. I use [GoDaddy](https://www.godaddy.com) as i've never had a problem with them. I'm using an XYZ domain name in this example because it is cheap! Feel free to get a decent .com instead. Don't buy any extras that GoDaddy offer, you probably dont need them. Make sure you do no put something like a mobile phone number in the details when you purchase otherwise you will get calls from random people looking through whois for people to scam and create a website for. An example of a purchase is below.
+First, buy a domain name. I use [GoDaddy](https://www.godaddy.com) as i've never had a problem with them. I'm using an XYZ domain name in this example because it is cheap! Feel free to get a decent .com instead. Don't buy any extras that GoDaddy offer, you probably don't need them. Make sure you do no put something like a mobile phone number in the details when you purchase otherwise you will get calls from random people looking through whois for people to scam and create a website for. An example of a purchase is below.
 
 ![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/020.png)
 
@@ -27,12 +25,10 @@ First, buy a domain name. I use [GoDaddy](https://www.godaddy.com) as i've never
 
 ![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/050.png)
 
-### Add a CNAME Alias
-todo
 
-## Azure
+## Setup Azure
 
-I'm going to assume you have an azure acoount. If not, sign up here - [https://azure.microsoft.com/en-us/free/](https://azure.microsoft.com/en-us/free/)
+I'm going to assume you have an azure account. If not, sign up here - [https://azure.microsoft.com/en-us/free/](https://azure.microsoft.com/en-us/free/)
 
 ### Create a Blob Storage Account
 
@@ -42,16 +38,16 @@ Check the pricing here - [https://azure.microsoft.com/en-us/pricing/details/stor
 
 | Replication Level | Price | Notes |
 |---|---|---|
-| LRS | £0.0164 per GB | Most basic. Data is replicated in a regions single datacenter 3 times |
-| ZRS | £0.0172 per GB | Data replicated at the specified region but across 3 datacenters |
+| LRS | £0.0164 per GB | Most basic. Data is replicated in a regions single data center 3 times |
+| ZRS | £0.0172 per GB | Data replicated at the specified region but across 3 data centers |
 | GRS | £0.0275 per GB | Data is replicated to a secondary region but it is only available in event of the primary region having an outage |
 | RA GRS | £0.0343 per GB | Like above, but your data is always available read-only if primary site has an outage |
 | GZRS | £0.0318 per GB | Like GRS and ZRS mixed together. Data replicated to two regions and 3 sites at each region |
 | RA GZRS | £0.0397 per GB | Like above but data is available read-only if primary site has an outage |
 
-Now, given that your site is likely in git and you dont mind an outage on, say a blog site, feel free to choose LRS, the most 'risky' option. But, given the site will be almost certainly under a gigabyte in size i'd just go for the most opulent option. The files that make up this site as of now come to a size of under 5 MB. So, cost of storage is £0.0397 * 0.05 which is about £0.002p a month. I'd say just splurge out on the best. Even a 10GB website would cost about £0.40p a month. This doesn't include bandwidth of uploads/downloads, but you can see that the cost for a simple site is pennies. 
+Now, given that your site is likely in git and you don't mind an outage on, say a blog site, feel free to choose LRS, the most 'risky' option. But, given the site will be almost certainly under a gigabyte in size i'd just go for the most opulent option. The files that make up this site as of now come to a size of under 5 MB. So, cost of storage is £0.0397 * 0.05 which is about £0.002p a month. I'd say just splurge out on the best. Even a 10GB website would cost about £0.40p a month. This doesn't include bandwidth of uploads/downloads, but you can see that the cost for a simple site is pennies. 
 
-Create the blob like below, accept all default options after the name, replication etc... screen. In this example, we dont need the advanced options of file versioning and soft deletions as the site is kept in git so nothing can really go wrong. In a real file keeping scenario these may be valuable settings.
+Create the blob like below, accept all default options after the name, replication etc... screen. In this example, we don't need the advanced options of file versioning and soft deletions as the site is kept in git so nothing can really go wrong. In a real file keeping scenario these may be valuable settings.
 
 ![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/060.png)
 
@@ -171,3 +167,54 @@ Retry the page.
 ![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/280.png)
 
 Success!
+
+## Creating an HTTPS Enabled Site with a CDN
+
+The next step is to involve a CDN (Content Delivery Network). Now, we don't exactly need this but if we enable it we can get a free HTTPS certificate and because it is a consumption cost model it will be pennies to implement and avoid us buying 'real' cert or having complexity in setting up Let Encrypt. 
+
+### Create a CDN
+
+We will create a CDN to get our site up to the HTTPS level. There are 4 options, see here [https://docs.microsoft.com/en-us/azure/cdn/cdn-features](https://docs.microsoft.com/en-us/azure/cdn/cdn-features). We will go for Verizon Premium because it has a rules engine (not something we will really use apart from an HTTP to HTTPS redirect) and real-time usage stats which is pretty cool. And the cost will be pennies for a site of our size, so just do it!
+
+Choose to add a resource from our resource group. Choose a Microsoft CDN (don't worry, the Verizon option is in this one).
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/290.png)
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/300.png)
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/310.png)
+
+Then, enter the options like below. Be sure to choose to crete a CDN endpoint in this dialog box. Some options are dropdowns so you don't have to type in too much and it should be fairly intuitive.
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/320.png)
+
+Once created, click on the endpoint
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/330.png)
+
+Then choose to add a custom domain
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/340.png)
+
+But, we need to update our www DNS entry to show we own the domain. So go back to GoDaddy and update our www record it requires.
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/350.png)
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/360.png)
+
+The azure custom domain should now be accepted so add it.
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/370.png)
+
+And then, we wait for it enable. It took a while to do stage 2 (say 30 minutes) and then it took a good 3-4 hours for the certificate to be replicated across all CDN zones.
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/380.png)
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/390.png)
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/400.png)
+
+![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/410.png)
+
+But, eventually... success!
+
