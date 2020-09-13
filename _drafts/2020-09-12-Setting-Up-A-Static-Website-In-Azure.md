@@ -102,7 +102,7 @@ Success!
 
 ![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/170.png)
 
-Now, we can look at how to use our domain name and get a free HTTPS certificate from Azure.
+But, it's not an HTTPS connection which isn't ideal nowadays. Now, we can look at how to use our domain name and get a free HTTPS certificate from Azure.
 
 ## Custom Domain Setup
 
@@ -111,13 +111,13 @@ From the azure blob storage page, it has some instructions to follow if we want 
 Aside. Interestingly, these both have different IP addresses, so not sure whats happening.
 
 'www' DNS CNAME pointing to mystaticwebsiteblob.blob.core.windows.net
-```shell
+```
 PS C:\Windows\system32> ping www.mystaticwebsite.xyz
 Pinging blob.db1prdstrz01a.store.core.windows.net [52.239.137.36] with 32 bytes of data:
 ```
 
 'www' DNS CNAME pointing to mystaticwebsiteblob.z16.web.core.windows.net
-```shell
+```
 PS C:\Windows\system32> ping www.mystaticwebsite.xyz
 Pinging web.db1prdstrz01a.store.core.windows.net [52.239.137.33] with 32 bytes of data:
 ```
