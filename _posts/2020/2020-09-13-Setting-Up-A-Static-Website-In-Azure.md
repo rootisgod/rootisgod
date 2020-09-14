@@ -15,6 +15,8 @@ The process of setting up a custom domain static site is quite simple but it is 
 
 On a side note, you can actually do all this (git repo, compiling and hosting) for free on GitHub Pages, so try that if you don't want to go down this route, but it will be very educational to do the bits and bobs yourself. This guide is good if you do want to go the GitHub route - [http://jmcglone.com/guides/github-pages/](http://jmcglone.com/guides/github-pages/)
 
+But, if not, keep reading...
+
 ## Buy the Domain Name
 
 First, buy a domain name so we can get to the site we create. I use [GoDaddy](https://www.godaddy.com) and i've never had a problem with them, but any registrar should do the job. I'm using an XYZ domain name in this example because it is cheap! Feel free to get a decent .com instead. Don't buy any extras that GoDaddy offer, you probably don't need them. Make sure you do no put something like a mobile phone number in the details when you purchase otherwise you will get calls from random people looking through whois for people to scam and create a website for. An example of a purchase using GoDaddy is below.
@@ -37,16 +39,16 @@ I'm going to assume you have an azure account. If not, sign up here - [https://a
 
 The first thing we need is a storage account inside a new resource group (the folder that holds everything essentially if you don't know what a resource group is). I just call this **www.mystaticwebsite.xyz** for ease of reference.
 
-Storage blobs are very cheap for small amounts of data in the MB range. Check the pricing here - [https://azure.microsoft.com/en-us/pricing/details/storage/blobs/](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/). Unless you are uploading GB's of files, the best option should still be very, very cheap.
+Storage blobs are very cheap for small amounts of data in the MB range. Check the pricing here - [https://azure.microsoft.com/en-us/pricing/details/storage/blobs/](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/). Unless you are uploading GB's of files, the best option should still be very, very cheap. Here is a thorough explanation of the different options - [https://docs.microsoft.com/en-us/azure/storage/common/storage-redundancy](https://docs.microsoft.com/en-us/azure/storage/common/storage-redundancy). Below is my simplistic guide.
 
 | Replication Level | Price | Notes |
 |---|---|---|
-| LRS | £0.0164 per GB | Most basic. Data is replicated in a regions single data center 3 times |
-| ZRS | £0.0172 per GB | Data replicated at the specified region but across 3 nearby (tens of miles) data centers |
-| GRS | £0.0275 per GB | Data is replicated to a secondary region but it is only made available in event of the primary region having an outage |
-| RA GRS | £0.0343 per GB | Like above, but your data is always available read-only if the primary site has an outage |
-| GZRS | £0.0318 per GB | Like GRS and ZRS mixed together. Data replicated to two regions and 3 sites at each region |
-| RA GZRS | £0.0397 per GB | Like above but data is available read-only at any of the secondary sites zones if primary site has an outage |
+| LRS (Locally Redundant Storage) | £0.0164 per GB | Most basic. Data is replicated in a regions single data center site 3 times. A single zone essentially. |
+| ZRS (Zone-Redundant Storage) | £0.0172 per GB | Data replicated at the specified region but across 3 nearby (tens of miles) data centers (zones) |
+| GRS (Geo-Redundant Storage) | £0.0275 per GB | Data is replicated to a secondary region but it is only made available in event of the primary region having an outage |
+| RA GRS (ReadAccess Geo-Redundant Storage) | £0.0343 per GB | Like above, but your data is always available read-only if the primary site has an outage |
+| GZRS (Geo-Zone-Redundant Storage) | £0.0318 per GB | Like GRS and ZRS mixed together. Data replicated to two regions and 3 sites at each region |
+| RA GZRS (ReadAccess Geo-Zone-Redundant Storage) | £0.0397 per GB | Like above but data is available read-only at any of the secondary sites zones if primary site has an outage |
 
 Now, given that your site is likely in git and you don't mind an outage on, say a blog site, feel free to choose LRS, the most 'risky' option. It would take a single data center failure to take it down, an unlikely event in itself. But, given the site will be almost certainly under a gigabyte in size i'd just go for the most opulent option. The files that make up this site as of now come to a size of under 5 MB. So, cost of storage is £0.0397 (RA GZRS) * 0.05GB which is about £0.002p a month. I'd say just splurge out on the best. Even a 10GB website would cost about £0.40p a month. This doesn't include bandwidth [cost](https://azure.microsoft.com/en-us/pricing/details/bandwidth/) of uploads/downloads, and the first 5GB is free, but you can see that the cost for a simple site is still  pennies at £0.065 per GB in the North Europe region. 
 
