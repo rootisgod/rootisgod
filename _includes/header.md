@@ -1,1 +1,1 @@
-![](/assets/images/site/rootisgod-logo.png)
+![](/assets/images/site/rootisgod-logo-blinking.png)
