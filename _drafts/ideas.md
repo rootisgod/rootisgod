@@ -11,5 +11,4 @@
    edit /etc/libvirt/libvirt.confd to listen on 0.0.0.0
   <loader readonly='yes' type='pflash'>/usr/share/qemu/ovmf-x64/OVMF_CODE-pure-efi.fd</loader>
   <loader readonly='yes' type='rom'>/usr/share/qemu/ovmf-x64/OVMF_CODE-pure-efi.fd</loader>
-- Rdp and linux mint
 - delete old files and empty folders with powershell
