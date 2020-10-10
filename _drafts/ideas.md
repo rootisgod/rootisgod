@@ -1,13 +1,15 @@
-- Useful software i use (beyond compare, snagit, vscode, clipboard keeper, mobaxterm etc...)
+- Useful software i use (beyond compare, snagit, vscode, clipboard keeper, mobaxterm, sublime text/merge etc...)
 - powershell one liners (can update)
 - wireguard and unraid amd rdp
 - Unraid Tips/Promote
   Buy big parity disk
   RAM on windows initial and max are the same
-  Use krusader to coyp files
+  Use krusader to copy files
   VM and Docker backups
 -Virt Manager Snapshots
   Install openbsd netcat vis Nerdtools
    edit /etc/libvirt/libvirt.confd to listen on 0.0.0.0
   <loader readonly='yes' type='pflash'>/usr/share/qemu/ovmf-x64/OVMF_CODE-pure-efi.fd</loader>
   <loader readonly='yes' type='rom'>/usr/share/qemu/ovmf-x64/OVMF_CODE-pure-efi.fd</loader>
+- Rdp and linux mint
+- delete old files and empty folders with powershell
