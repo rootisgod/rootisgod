@@ -20,8 +20,8 @@ echo env -u SESSION_MANAGER -u DBUS_SESSION_BUS_ADDRESS cinnamon-session>~/.xses
 
 Then get your ip address using ```ifconfig``` and then use a remote desktop client to RDP to that IP, enter your username and password, and voila!
 
-![](/assets/images/2020/Linux-Mint-RDP/010.png)
+![](/assets/images/2020/Linux-Mint-RDP/10.png)
 
-![](/assets/images/2020/Linux-Mint-RDP/020.png)
+![](/assets/images/2020/Linux-Mint-RDP/20.png)
 
-![](/assets/images/2020/Linux-Mint-RDP/030.png)
+![](/assets/images/2020/Linux-Mint-RDP/30.png)
