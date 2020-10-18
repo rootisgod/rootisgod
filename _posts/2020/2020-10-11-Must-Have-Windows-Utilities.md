@@ -41,7 +41,7 @@ Use linux but are working on windows? Get this. It's an all-in-one gui for SSHin
 
 ## [Remote Desktop Manager Free](https://remotedesktopmanager.com/home/download) - $FREE
 
-I use this at work and it has hundreds of sessions in it. I found this before Mobaxterm, so perhaps I don't need this as much, but it has been very solid and has always been pretty decent to use. Seems more corporate and so perhaps it just seems a bit more solid. I don't use it's features to the limit, but if you want the enterprisey 'on steroids' mobaxterm this might be it.
+I use this at work and it has hundreds of sessions in it. I found this before Mobaxterm, so perhaps I don't need this as much, but it has been very solid and has always been pretty decent to use. Seems more corporate and so perhaps it just seems a bit more solid. I don't use all of the available features to the limit, but if you want the 'enterprisey' 'on steroids' mobaxterm this might be it.
 
 ## [Sublime Text](https://www.sublimetext.com/) - $80
 
@@ -55,7 +55,7 @@ I battled with a number of Git IDEs for a while, and again (lol) I got sick of '
 
 These are both free for personal use now! Worth it just for that. Generally a better option than Virtualbox and allows nested guests so you can do crazy things like run a Windows VM which runs a vagrant container which launches virtualbox. Nice! Fusion on Mac lets you load a Bootcamp partition as a VM inside Mac OSX which is ridiculously handy. 
 
-https://blogs.vmware.com/teamfusion/2020/08/announcing-fusion-12-and-workstation-16.html
+[Free Personal Fusion and Workstation Blog Post](https://blogs.vmware.com/teamfusion/2020/08/announcing-fusion-12-and-workstation-16.html)
 
 ## [Unraid](https://unraid.net/product) - $59 (6 Disks)
 
