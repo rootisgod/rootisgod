@@ -19,6 +19,7 @@ steps:
 #   displayName: 'Install Jekyll'
  
 - script: |
+    bundle install
     jekyll -v
     jekyll build
   displayName: 'Build Jekyll Site'
