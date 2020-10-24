@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-Try keep cache of Jekyll install as it takes a while...
+# Try keep cache of Jekyll install as it takes a while...
 RUN apt-get update && \
     apt install ruby-full build-essential zlib1g-dev curl wget apt-transport-https software-properties-common -y && \
     wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb && \
@@ -10,6 +10,7 @@ RUN apt-get update && \
     gem install jekyll bundler && \
     jekyll -v
 
+# Misc utils for pushing build to Azure storage blob
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash && \
     wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb && \
     dpkg -i packages-microsoft-prod.deb && \
@@ -17,4 +18,5 @@ RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash && \
     apt-get install -y powershell && \
     pwsh --version && \
     wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux && tar -xf azcopy_v10.tar.gz --strip-components=1 && \
-    mv azcopy azcopy10
+    mv azcopy azcopy10 && \
+    apt-get clean
