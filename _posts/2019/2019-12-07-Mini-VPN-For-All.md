@@ -5,8 +5,6 @@ date:   2019-12-07 15:54:00 +0100
 categories: nebula vpn
 ---
 
-{% include header.md %}
-
 ## Overview
 
 Ever wanted to securely connect to another machine without needing to use a VPN? Now you can! Nebula is a pretty exciting little networking project which has been used internally at slack for over 2 years. It is a ‘global network overlay’ which means it can bring differrent machines on different networks together and present them on a virtual LAN/subnet so they can all see each other (more detail below). It is now open sourced and available on github – [https://github.com/slackhq/nebula](https://github.com/slackhq/nebula)

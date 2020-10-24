@@ -12,3 +12,9 @@
   <loader readonly='yes' type='pflash'>/usr/share/qemu/ovmf-x64/OVMF_CODE-pure-efi.fd</loader>
   <loader readonly='yes' type='rom'>/usr/share/qemu/ovmf-x64/OVMF_CODE-pure-efi.fd</loader>
 - delete old files and empty folders with powershell
+
+
+ Insights SDK Serup
+  - https://docs.microsoft.com/en-us/azure/azure-monitor/app/create-new-resource
+  - https://stackoverflow.com/questions/47108702/how-to-add-script-tag-in-jekyll
+  
