@@ -1,4 +1,3 @@
-{% include azure_app_insights.js %}
 ---
 layout: post
 title:  "Octopus Deploy Remote Tentacle Installation"
@@ -6,6 +5,7 @@ date:   2020-08-15 08:20:00 +0100
 categories: ansible octopus
 ---
 
+{% include azure_app_insights.js %}
 {% include header.md %}
 
 I've spent a couple of miserable days doing battle trying to install an Octopus Deploy Tentacle agent to remote machines via ansible. The machines in question are created brand new, and we need that agent in order to install software from a build system. The problem is that an agent install requires generating a certificate for that machine. And, if there is no user profile loaded then windows cannot access the cryptographic functions required to generate it (for some reason). The ansible deployment connects to each VM as an admin user via WinRM but this still isnt enough for things to work it seems. This is a long standing issue. See this github [page](https://github.com/OctopusDeploy/Issues/issues/353) for some solutions others have offered. I tried them all (pregenerating certificates via openssl/tentacle.exe, and psexec commands), but had no success. What makes it worse is that the only way to see the logs is to login to the machine, and so you ruin the 'not logged in before' nature of the sytem and everything starts to work remotely. Schrodingers octopus!

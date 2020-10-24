@@ -1,4 +1,3 @@
-{% include azure_app_insights.js %}
 ---
 layout: post
 title:  "Using RDP With Linux Mint 20 Cinnamon"
@@ -6,6 +5,7 @@ date:   2020-10-10 11:30:00 +0100
 categories: linux rdp
 ---
 
+{% include azure_app_insights.js %}
 {% include header.md %}
 
 I like using linux, but frankly, the remote connection options are just horrible. Windows really rules with regards to remotely connecting to a graphical desktop, it's just builtin and there. On linux it generally boils down to;

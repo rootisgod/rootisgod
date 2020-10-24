@@ -1,4 +1,3 @@
-{% include azure_app_insights.js %}
 ---
 layout: post
 title:  "My Must Have Software"
@@ -6,6 +5,7 @@ date:   2020-10-11 13:00:00 +0100
 categories: software utilities
 ---
 
+{% include azure_app_insights.js %}
 {% include header.md %}
 
 Here is a list of my must have software items. Most of these are paid, but I feel they are all well worth the cash. In going through this I have noticed a few traits I seem to gravitate towards;

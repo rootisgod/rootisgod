@@ -1,4 +1,3 @@
-{% include azure_app_insights.js %}
 ---
 layout: post
 title:  "Linux Partition Resizing"
@@ -6,6 +5,7 @@ date:   2020-05-05 15:54:00 +0100
 categories: linux disk resize
 ---
 
+{% include azure_app_insights.js %}
 {% include header.md %}
 
 We’ve all been there… Make a Linux VM, the disk is too small… Arggh! I come from a Windows world where a disk resize is a click away in Disk Management, and so this scenario has always filled me with dread, especially as there is no GUI. And, a google for a disk resize in linux always suggests using parted or something similar, or a billion mental commands. No good without a UI...

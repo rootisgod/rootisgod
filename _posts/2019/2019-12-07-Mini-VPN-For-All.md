@@ -1,4 +1,3 @@
-{% include azure_app_insights.js %}
 ---
 layout: post
 title:  "Mini VPN For All!"
@@ -6,6 +5,7 @@ date:   2019-12-07 15:54:00 +0100
 categories: nebula vpn
 ---
 
+{% include azure_app_insights.js %}
 {% include header.md %}
 
 ## Overview

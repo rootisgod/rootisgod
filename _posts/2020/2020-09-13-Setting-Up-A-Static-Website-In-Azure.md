@@ -1,4 +1,3 @@
-{% include azure_app_insights.js %}
 ---
 layout: post
 title:  "Setting Up a Static Website in Azure"
@@ -6,6 +5,7 @@ date:   2020-09-13 22:13:00 +0100
 categories: azure websites
 ---
 
+{% include azure_app_insights.js %}
 {% include header.md %}
 
 I thought I would blog about how to create a static website on your own domain with an HTTPS certificate for very little money in Azure. A static website is simply one which has no backend server like PHP or ASP generating the pages dynamically. Instead, you can either just write static HTML files or use something like [Jekyll](https://jekyllrb.com/) to 'compile' a site from some rules and give you the content to publish as an update. This is what I do and it works great as everything can be kept in a git repo. And the files are small for a basic blog with just text and pictures.
