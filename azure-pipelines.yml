@@ -9,9 +9,9 @@ pool:
 container: 'iaingblack/rootisgod-builder:latest'
 
 steps:
-- task: UseRubyVersion@0
-  inputs:
-    versionSpec: '>= 2.6'
+# - task: UseRubyVersion@0
+#   inputs:
+#     versionSpec: '>= 2.6'
  
 # - script: |
 #     gem install jekyll bundler
