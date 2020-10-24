@@ -1,3 +1,4 @@
+{% include azure_app_insights.js %}
 ---
 layout: post
 title:  "Using RDP With Linux Mint 20 Cinnamon"

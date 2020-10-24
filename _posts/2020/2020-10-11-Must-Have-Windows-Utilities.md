@@ -1,3 +1,4 @@
+{% include azure_app_insights.js %}
 ---
 layout: post
 title:  "My Must Have Software"
