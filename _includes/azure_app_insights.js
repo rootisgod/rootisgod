@@ -6,7 +6,7 @@
 //useXhr: 1, // Use XHR instead of fetch to report failures (if available),
 //crossOrigin: "anonymous", // When supplied this will add the provided value as the cross origin attribute on the script tag
     cfg: { // Application Insights Configuration
-    instrumentationKey: "502ce02a-ecdf-4298-aa0c-fea9d4f2febe"
+    instrumentationKey: "54438eb9-50ea-471e-90d6-a740d7ad370a"
     /* ...Other Configuration Options... */
 }});
 </script>
