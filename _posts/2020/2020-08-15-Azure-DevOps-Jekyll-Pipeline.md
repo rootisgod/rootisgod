@@ -10,7 +10,7 @@ categories: azure devops jekyll cicd blob automation
 
 If anyone wants to deploy a website using Azure DevOps this should build the site. It took a while to get just right. The tricky parts were azcopy being version 7 on the Ubuntu machine which is awful as far as I can tell, version 10 is much better, so I had to do some wonky stuff. It also purges the cache on the CDN I host from in Azure so that the site gets an HTTPS cert. I might expand this post over the next few weeks, or explain the entire setup process to host a site on Azure Blob Storage as a Static Site. The main benefit is the cost, the last week of hosting this has cost £0.02 so far! Not bad for a full site with an HTTPS cert in place.
 
-Anyway, this is the pipeline YAML file I ended up with. Generate a SAS token and place it's value as a variable called 'sastoken' and your own subscription for the purging the cache step.
+Anyway, this is the pipeline YAML file I ended up with. Generate a SAS token and place its value as a variable called 'sastoken' and your own subscription for the purging the cache step.
 
 ```yaml
 trigger:
