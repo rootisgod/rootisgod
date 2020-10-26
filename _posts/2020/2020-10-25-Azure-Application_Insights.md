@@ -8,21 +8,23 @@ categories: website hosting metrics javascript
 {% include azure_app_insights.js %}
 {% include header.md %}
 
-So, hosting a site on Jekyll and Azure Static Blob storage has one major problem (okay, two big problems, there is no way to easily add a comments section either!), but I can't really get any metrics on who visited the site as there really aren't any logs to parse. So, I decided to look at what I could quickly do to see what is going on.
+So, hosting a site on Jekyll and Azure Static Blob storage has one major problem (okay, two big problems, there is no way to easily add a comments section!), but I can't really get any metrics on who visited the site as there is no server backend to record any visits. So, I decided to look at what could be done to get some analytics.
 
 # Azure Application Insights
 
-The simplest and most straightforward solution is Azure Application Insights. Now, I don't have much experience of hosting anything so this is very new to me, but I was startled at how easy this was to add to my site. This description shows the steps involved.
+The simplest and most straightforward solution is to use Azure Application Insights. Now, I don't have much experience of hosting anything so this is very new to me, but I was startled at how easy this was to add to the site. The steps below show how to set this up.
 
 For clarity this is how Application Insights is described on the azure website.
 
 ![](/assets/images/2020/Azure-Application-Insights/005.png)
 
-So, it is saying we create a resource and then get a special key to use on our site to monitor it. Because our site is just a static HTML page we can't use the server-side SDKs and so, we fall back to Javascript on the pages we host - https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript#snippet-based-setup. But, there some pre-reqs first.
+So, it is saying we create a resource and then reference a special key on our site to monitor connections. Because our site is just a static HTML page we can't use the server-side SDKs and so, we fall back to Javascript on the pages we host - [https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript#snippet-based-setup](https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript#snippet-based-setup).
+
+But, there are some pre-reqs first to setting up an Application Insights solution.
 
 ## Prereqs
 
-We need to create a Log Analytics Workspace to hold the metrics we collect and let us query it. So, create one first from the Azure Portal, using the defaults and in the same region as your Static Site enabled blob storage.
+We need to first create a Log Analytics Workspace to hold the metrics we collect, this will also let us query this data. So, we create one first from the Azure Portal, using the defaults and placing it in the same region as your Static Site enabled blob storage.
 
 ![](/assets/images/2020/Azure-Application-Insights/010.png)
 
@@ -34,7 +36,7 @@ We need to create a Log Analytics Workspace to hold the metrics we collect and l
 
 ## Application Insights Resource
 
-Now we can create our Application Insight resource. Choose the same region as your other resources and the Log Analytics Workspace we just created. Choose the workspace based resource mode as classic will be deprecated soon. 
+Now we can create our Application Insight resource. Choose the same region as our other resources to avoid any bandwidth costs (same region traffic is free). Choose the workspace based resource mode as the classic mode will be deprecated soon. 
 
 ![](/assets/images/2020/Azure-Application-Insights/050.png)
 
@@ -46,21 +48,20 @@ Once created, we can go to the resource and look for the 'Application Instrument
 
 ![](/assets/images/2020/Azure-Application-Insights/080.png)
 
-
 ## Add the Javascript to our Jekyll Site
 
 Now, looking at the previous link above, we just add that to the example javascript snippet provided.
 
-On our site, create a javascript file in the ```/assets/js``` folder and put in your key. 
+On our site, create a javascript file in the ```/assets/js``` folder and put in the key. 
 
 ![](/assets/images/2020/Azure-Application-Insights/090.png)
 
-Then, we can start to include this on our pages. 
+Then, we can start to add this snippet as an 'include' on our content pages. 
 
-*I'm sure there is a way to do this in the jekyll ```_config.yml``` file but i'm not there yet, so just add it manually to your pages like so (i'll update this later when I figure out the better way).*
+*I'm sure there is a way to have this added automatically via the jekyll ```_config.yml``` file but i'm not there yet, so just add it manually to your pages like below and i'll update this page later when I figure out the better way.*
 
 ![](/assets/images/2020/Azure-Application-Insights/0100.png)
 
-Then, push and build your site and start browsing a few pages to trigger some data (it's also a good idea to double-check your page source to make sure the javascript code we included is there, it should be or none of it will work!). There is a lot to dig into, and I don't know much yet, but the most useful initial thing I have found are page access counts, and the system accessing it. Look below! Cool! And, cost is minimal so far as it is also pay-as-you-go data consumption based and almost free. Seems like a good start!
+Then, push and build your site and start browsing a few pages to trigger some data (it's also a good idea to double-check your page source to make sure the javascript code we included is there, it should be or none of this will work!). There is a lot to dig into, and I don't know much yet, but the most useful initial thing I have found are page access counts, and the system accessing it. Look below! Cool! And, best of all, cost is minimal as Application Insights is also a pay-as-you-go, data ingress/egress, consumption based model which for my scale is almost free. Seems like a good start!
 
 ![](/assets/images/2020/Azure-Application-Insights/0110.png)
