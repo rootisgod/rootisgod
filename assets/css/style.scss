@@ -1,0 +1,9 @@
+---
+---
+
+@import "minima/skins/{{ site.minima.skin | default: 'classic' }}";
+@import "minima/initialize";
+
+body {
+  font-family: Arial, "Dank Mono", "Fira Code";
+}
