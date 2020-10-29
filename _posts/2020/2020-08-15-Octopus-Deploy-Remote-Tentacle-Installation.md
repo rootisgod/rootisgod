@@ -33,7 +33,6 @@ Ansible code below. Be sure to have some facts setup or variables in place for t
     remote_src: no
     force: true
 
-
 - name: Create a Scheduled Task to Install the Tentacle to Avoid the Remote Certificate Generation Issue
   win_scheduled_task:
     name: Install Octopus Deploy
