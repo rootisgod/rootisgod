@@ -4,6 +4,14 @@
 @import "minima/skins/{{ site.minima.skin | default: 'classic' }}";
 @import "minima/initialize";
 
+@font-face {
+  font-family: 'Fira Code';
+  src: url('FiraCode-Regular.woff2') format('woff2'),
+  url("FiraCode-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
-  font-family: Arial, "Dank Mono", "Fira Code";
+  font-family: "Fira Code", Arial, "Dank Mono";
 }
