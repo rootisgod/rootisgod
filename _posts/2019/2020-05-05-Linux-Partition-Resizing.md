@@ -8,9 +8,9 @@ categories: linux disk resize
 {% include azure_app_insights.js %}
 {% include header.md %}
 
-We’ve all been there… Make a Linux VM, the disk is too small… Arggh! I come from a Windows world where a disk resize is a click away in Disk Management, and so this scenario has always filled me with dread, especially as there is no GUI. And, a google for a disk resize in linux always suggests using parted or something similar, or a billion mental commands. No good without a UI...
+We’ve all been there… Make a Linux VM, the disk is too small… Arggh! I come from a Windows world where a disk resize is a click away in Disk Management, and so this scenario in a Linux OS has always filled me with dread, especially as there is no GUI. And, a google for a reliable disk resize command (not to mention the disk format in use!) always suggests using parted or a some weirdo custom voodoo. I really can't have any confidence doing something like that on critical data (okay, random github pulls) without sweating it out on each command.
 
-So, to test this out, make a VM in ESXi (or Virtualbox etc…) and make it small. This one is 8GB.
+So, for my own records, this is the basic scenario on resizing the main OS disk in Ubuntu. To begin, create a VM and disk in ESXi (or Virtualbox etc…) and make it small. This one is 8GB.
 
 ----------
 
@@ -18,7 +18,7 @@ So, to test this out, make a VM in ESXi (or Virtualbox etc…) and make it small
 
 ----------
 
-Install the OS (Ubuntu 18.04 LTS in this example) and then make sure all is installed and ready to go.
+Install the OS (Ubuntu 18.04 LTS in this example) and then get ready to go.
 
 ```
 Disclaimer: Not sure if this tutorial it will work with LVM, chose this default.
