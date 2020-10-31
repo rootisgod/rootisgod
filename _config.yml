@@ -20,6 +20,7 @@ minima:
   skin: dark
 plugins:
   - jekyll-feed
+  - jekyll-sitemap
 markdown: kramdown
 
 defaults:
