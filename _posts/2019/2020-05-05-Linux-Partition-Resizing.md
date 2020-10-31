@@ -5,8 +5,7 @@ date:   2020-05-05 15:54:00 +0100
 categories: linux disk resize
 ---
 
-{% include azure_app_insights.js %}
-{% include header.md %}
+{% include all-includes.html %}
 
 We’ve all been there… Make a Linux VM, the disk is too small… Arggh! I come from a Windows world where a disk resize is a click away in Disk Management, and so this scenario in a Linux OS has always filled me with dread, especially as there is no GUI. And, a google for a reliable disk resize command (not to mention the disk format in use!) always suggests using parted or a some weirdo custom voodoo. I really can't have any confidence doing something like that on critical data (okay, random github pulls) without sweating it out on each command.
 

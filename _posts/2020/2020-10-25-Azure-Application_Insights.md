@@ -5,8 +5,7 @@ date:   2020-10-25 20:00:00 +0100
 categories: website hosting metrics javascript
 ---
 
-{% include azure_app_insights.js %}
-{% include header.md %}
+{% include all-includes.html %}
 
 So, hosting a site on Jekyll and Azure Static Blob storage has one major problem (okay, two big problems, there is no way to easily add a comments section!), but I can't really get any metrics on who visited the site as there is no server backend to record any visits. So, I decided to look at what could be done to get some analytics.
 
