@@ -5,6 +5,8 @@ date:   2020-10-31 09:55:00 +0100
 categories: markdown
 ---
 
+{% include all-header-includes.html %}
+
 Okay, a simple one. You either know this or you don't, and I just discovered it. If you usually add a code block in markdown like this with just 3 backticks;
 
 ````

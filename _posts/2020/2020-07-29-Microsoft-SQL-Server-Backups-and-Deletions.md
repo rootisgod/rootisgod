@@ -5,7 +5,7 @@ date:   2020-07-29 15:54:00 +0100
 categories: sql backup
 ---
 
-{% include all-includes.html %}
+{% include all-header-includes.html %}
 
 This is an unashamed post for me to remember something later. Below are a couple of scripts to backup a set of Microsoft SQL Server DBs. Also, to delete, perhaps those same DBs, that you no longer need.
 

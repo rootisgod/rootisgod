@@ -5,7 +5,7 @@ date:   2019-12-07 15:54:00 +0100
 categories: nebula vpn
 ---
 
-{% include all-includes.html %}
+{% include all-header-includes.html %}
 
 ## Overview
 
