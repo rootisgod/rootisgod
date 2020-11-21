@@ -1,4 +1,13 @@
-I’m a big believer in books to deepen knowledge of a subject. I also do love videos and find them a great way to initially learn a subject and get up to speed on something quickly, but books fill in the gaps a and ‘real-world’ details that a video can understandably gloss over in an effort to show a ‘happy path’.
+---
+layout: post
+title:  "Must Read Books and How To Get Them"
+date:   2020-11-18 15:54:00 +0100
+categories: sql backup
+---
+
+{% include all-header-includes.html %}
+
+I’m a big believer in using books to deepen knowledge of a subject. I also do love videos and find them a great way to initially learn a subject and get up to speed on something quickly, but books fill in the gaps a and ‘real-world’ details that a video can understandably gloss over in an effort to show a ‘happy path’.
 
 The books below are the ones I have found most value from over the years. Some are pretty old but the concepts are still very relevant and explain the topic in a way I haven’t seen bettered. I’ll try give a wide range of topics and hopefully help someone out there. 
 
