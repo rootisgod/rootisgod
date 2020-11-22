@@ -25,7 +25,7 @@ RUN wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux && tar -xf
     apt-get clean
 
 # Create a simple file to serve the site easily for testing
-RUN echo 'cd /site && bundle install && jekyll serve --watch --host 0.0.0.0' >> /serve.sh && \
+RUN echo 'pwd && ls -lah && cd /site && ls -lah && bundle install && jekyll serve --watch --host 0.0.0.0' >> /serve.sh && \
     chmod +x /serve.sh && \
     ls -lah /
 

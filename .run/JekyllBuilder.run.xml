@@ -2,7 +2,7 @@
   <configuration default="false" name="Jekyll-Build-And-Serve" type="docker-deploy" factoryName="docker-image" server-name="Docker">
     <deployment type="docker-image">
       <settings>
-        <option name="imageTag" value="iaingblack/rootisgod-builder:latest" />
+        <option name="imageTag" value="rootisgod-builder:latest" />
         <option name="command" value="" />
         <option name="containerName" value="jekyll" />
         <option name="entrypoint" value="/bin/bash /serve.sh" />
