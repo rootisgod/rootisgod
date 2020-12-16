@@ -21,7 +21,7 @@ steps:
 - script: |
     bundle install
     jekyll -v
-    jekyll build
+    bundle exec jekyll build
   displayName: 'Build Jekyll Site'
 
 - task: PowerShell@2
