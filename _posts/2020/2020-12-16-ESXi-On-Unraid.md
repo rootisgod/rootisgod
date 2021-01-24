@@ -366,3 +366,5 @@ Now, we can create a VM to test that this machine works as a virtualization host
 ![](/assets/images/2020/ESXi-On-Unraid/Image46.png)
 
 ![](/assets/images/2020/ESXi-On-Unraid/Image47.png)
+
+{% include all-footer-includes.html %}

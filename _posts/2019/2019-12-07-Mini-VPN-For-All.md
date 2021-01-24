@@ -315,3 +315,5 @@ There are some caveats to this approach.
     Edit: Dave Bundy at The Jupiter Broadcasting telegram channel suggested that an ip_forward on the gateway machine might open up the whole subnet. Not tested, but might/should work if you know what you’re doing.
 *   Lack of OSX and mobile support. Though it is coming I hear.
 *   Installing the service is fiddly on windows. An installer which includes the TAP driver and a service installer would be nice.
+
+{% include all-footer-includes.html %}

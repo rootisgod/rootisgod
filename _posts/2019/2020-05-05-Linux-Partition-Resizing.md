@@ -139,3 +139,6 @@ Then, if you increase the space, this will expand it on the OS
 | Check with e2fsck \(required before resize2fs resize\) | e2fsck \-f /dev/sdb1 |
 | Resize                                                 | resize2fs /dev/sdb1  |
 | Remount or reboot                                      | mount /dev/sdb1 /u01 |
+
+
+{% include all-footer-includes.html %}

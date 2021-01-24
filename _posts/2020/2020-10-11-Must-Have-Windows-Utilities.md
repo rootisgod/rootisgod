@@ -70,3 +70,5 @@ A bit of a different thing here. This is essentially a NAS system at heart, but 
 So, if you want a do-it-all machine you can stick behind the TV or in a cupboard, this is it! I currently have an AMD 2600 machine, with 64GB of RAM and 6 hard disks of many TB's. It can do almost anything. I seriously urge anyone who needs something like this to give it a shot. I ran a home ESXi server and a Synology NAS for a few years and this beats them both hands down for a simple home setup. Even if you don't need file hosting i'd say it's worth buying just as a hypervisor and docker container host.
 
 Check out some of these videos for inspiration: https://www.youtube.com/c/SpaceinvaderOne/videos
+
+{% include all-footer-includes.html %}

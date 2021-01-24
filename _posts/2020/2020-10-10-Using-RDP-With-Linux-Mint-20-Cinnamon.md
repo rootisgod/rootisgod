@@ -27,3 +27,6 @@ Then get your ip address using ```ifconfig``` and then use a remote desktop clie
 ![](/assets/images/2020/Linux-Mint-RDP/20.png)
 
 ![](/assets/images/2020/Linux-Mint-RDP/30.png)
+
+
+{% include all-footer-includes.html %}

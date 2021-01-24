@@ -68,3 +68,5 @@ Way better!
 This seems to be the official languages supported so far: [https://github.com/github/linguist/blob/master/lib/linguist/languages.yml](https://github.com/github/linguist/blob/master/lib/linguist/languages.yml). 
 
 Just search for yours to see if it exists, but coverage seems excellent. Even powershell is there!
+
+{% include all-footer-includes.html %}

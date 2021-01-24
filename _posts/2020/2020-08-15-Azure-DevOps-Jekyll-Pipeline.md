@@ -54,3 +54,5 @@ steps:
     inlineScript: 'az cdn endpoint purge --resource-group "www.rootisgod.com" --name "rootisgod" --profile-name "rootisgod-cdn" --content-paths "/*"'
   displayName: 'Purge CDN Cache'
 ```
+
+{% include all-footer-includes.html %}

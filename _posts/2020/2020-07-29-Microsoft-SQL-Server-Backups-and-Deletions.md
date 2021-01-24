@@ -76,3 +76,5 @@ else
     exec sp_executesql @statement -- Comment to show results first
 end
 ```
+
+{% include all-footer-includes.html %}

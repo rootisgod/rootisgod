@@ -64,3 +64,5 @@ Then, we can start to add this snippet as an 'include' on our content pages.
 Then, push and build your site and start browsing a few pages to trigger some data (it's also a good idea to double-check your page source to make sure the javascript code we included is there, it should be or none of this will work!). There is a lot to dig into, and I don't know much yet, but the most useful initial thing I have found are page access counts, and the system accessing it. Look below! Cool! And, best of all, cost is minimal as Application Insights is also a pay-as-you-go, data ingress/egress, consumption based model which for my scale is almost free. Seems like a good start!
 
 ![](/assets/images/2020/Azure-Application-Insights/0110.png)
+
+{% include all-footer-includes.html %}

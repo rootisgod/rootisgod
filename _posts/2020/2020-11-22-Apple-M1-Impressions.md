@@ -52,3 +52,5 @@ I'm very very impressed. I now have a laptop with the holy grail of price, perfo
 In summary, probably try get that extra RAM, but for under a grand (or just over), you are getting a fantastic all-purpose machine that won't be beaten until the next Apple laptops are released. 
 
 (if you like Mac, don't need VMs or Docker, and don't need more disk space)
+
+{% include all-footer-includes.html %}
