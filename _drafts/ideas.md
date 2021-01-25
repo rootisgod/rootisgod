@@ -1,5 +1,10 @@
 - must read books
 - Delete old files and empty folders with powershell
+- Ansible Azure InfrastructureAsCode Series
+  - Github and Windows environment setup
+  - Azure account and Service Principal Setup
+  - Creating Azure Environment from Ansible
+  - Using Molecule to test
 - wireguard and unraid amd rdp
 - Unraid Tips/Promote
   Buy big parity disk
