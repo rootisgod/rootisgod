@@ -101,11 +101,12 @@ Installation Result
 
 reboot
 
+```
 [root@localhost:~] esxcli network nic list
 Name    PCI Device    Driver    Admin Status  Link Status  Speed  Duplex  MAC Address         MTU  Description
 ------  ------------  --------  ------------  -----------  -----  ------  -----------------  ----  -----------
 vmnic0  0000:00:03.0  nvmxnet3  Up            Up            1000  Full    52:54:00:b1:6a:9b  1500  VMware Inc. vmxnet3 Virtual Ethernet Controller
-
+```
 
 Check kernel.log
 
