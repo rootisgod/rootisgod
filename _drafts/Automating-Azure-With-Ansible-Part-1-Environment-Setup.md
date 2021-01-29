@@ -106,15 +106,68 @@ Now we are at a point where we can start to look at what we need to do next to c
 
 ### VSCode Setup
 
-We also need some extensions for VSCode, but not many! Load VSCode and find and install these;
+We also need some extensions for VSCode, but only a couple! Load VSCode and find and install these. 
 
-TODO
+- Docker
+- Remote - Containers
+
+These let us visually see that our dockerfile is correct and the 'Remote - Containers' extension lets us run a VSCode environment in a remote container, which lets us run ansible playbooks in that container. But, more to come on that. Next, we need a dockerfile.
 
 ### Create our Ansible dockerfile
 
+You will have to take this on a certain amount of faith, but the code is well documented. If you have never used Docker before, just know that this file creates a base container from a debian image, installs a bunch of stuff and then we can run this as a place to run ansible from, on a Windows machine.
+
+So, create a new folder on your Windows machine and open it in VSCode using the 'Open Folder' option. Create a file called 'Dockerfile' (no extension) and copy/paste this code.
+
+```dockerfile
+# This is the latest Version of Python which is install to a Debian 'Buster' Image
+FROM python:3.9.1-buster
+
+# Get any new security and package updates
+RUN apt-get update && apt-get upgrade
+
+# Install Ansible
+RUN pip install ansible==2.10.5
+
+# Install the Azure Ansible Modules. First the required prereqs, then the actual modules
+RUN curl -sL https://raw.githubusercontent.com/ansible-collections/azure/v1.3.1/requirements-azure.txt --output ./requirements.txt && \
+    pip install -r ./requirements.txt && \
+    ansible-galaxy collection install azure.azcollection:1.3.1
+```
+
 ## Create an Ansible Docker Container in VSCode
 
+Now, right click the file and choose 'Build Image'. If Docker is setup correctly it will happily build this for us. Give it a name (default is fine) and watch the build occur. It will take a couple of minutes. Note that we have an Image in our docker images list afterwards.
+
+![](../assets/images/2020/Automating-Azure-With-Ansible/040.png)
+
+![](../assets/images/2020/Automating-Azure-With-Ansible/045.png)
+
+![](../assets/images/2020/Automating-Azure-With-Ansible/050.png)
+
+![](../assets/images/2020/Automating-Azure-With-Ansible/055.png)
+
+## Run a Remote Container VSCode Instance
+
+![](../assets/images/2020/Automating-Azure-With-Ansible/060.png)
+
+![](../assets/images/2020/Automating-Azure-With-Ansible/065.png)
+
+![](../assets/images/2020/Automating-Azure-With-Ansible/070.png)
+
+![](../assets/images/2020/Automating-Azure-With-Ansible/075.png)
+
+![](../assets/images/2020/Automating-Azure-With-Ansible/080.png)
+
+## Create an Ansible Role Playbook
+
+We can now create an ansible playbook, or more specifically, a role. This command creates a file/folder structure for a role which we can use to create our Azure setup.
+```
+root@629eefda924e:/workspaces/azure-ansible# ansible-galaxy init azureinfra
+- Role azureinfra was created successfully
+```
+
+![](../assets/images/2020/Automating-Azure-With-Ansible/085.png)
 
 
-- Create our Ansible Playbook
 - Make a Basic VM and deploy it...
