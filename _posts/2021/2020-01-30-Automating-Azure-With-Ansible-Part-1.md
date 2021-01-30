@@ -2,7 +2,7 @@
 layout: post
 title:  "Automating Azure with Ansible - Part 1"
 date:   2021-01-28 18:00:00 +0100
-categories: azure devops ansible automation windows
+categories: azure devops ansible automation windows vscode
 ---
 
 {% include all-header-includes.html %}
@@ -69,33 +69,33 @@ To get a 'Service Principal' login to your Azure Account at [https://portal.azur
 
 Then, go to the 'Azure Active Directory' resource and choose to create a 'New registration' (I had to blur some existing ones I have, your list will be empty if you are using a new account).
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/005.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/005.png)
 
 Call it something sensible like 'Ansible-Automation' and click 'Register'.
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/010.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/010.png)
 
 Now, we will have a 'Service Principal' created. Note down the 3 items highlighted (not in a file Git tracks though!).
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/015.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/015.png)
 
 Then, click 'Certificates & secrets' and choose 'New client secret' and add a name and a duration (a year is recommended just so you protect yourself slightly from forgetting about it and if it ever somehow gets leaked into the wild. Choose never expires with caution!)
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/020.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/020.png)
 
 Then, you get one chance to record the secret, so click the little clipboard icon and copy/paste somewhere and save it (again, definitely not in git!)
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/025.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/025.png)
 
 The Service Principal is now created, but it has no permissions. Let's give it 'Contributor' access to the subscription. Contributor is a powerful level of access which allows the creation of any resource, but not the ability to change permissions in Azure. It's about as good as it gets for someone to create resources though, so again, keep all this information secret and out of git ;)
 
 Go to your subscription and choose 'Access Control (IAM)' and click 'Add'.
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/030.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/030.png)
 
 Then add our 'Service Principal' and give it a 'Contributor' role as explained above. Hit save, and we are done! 
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/035.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/035.png)
 
 Just make sure you have all 4 pieces of information handy about the 'Service Principal' handy from earlier;
 
@@ -145,33 +145,33 @@ RUN curl -sL https://raw.githubusercontent.com/ansible-collections/azure/v1.3.1/
 
 Now, right click the file and choose 'Build Image'. If Docker is setup correctly it will happily build this for us. Give it a name (default is fine) and watch the build occur. It will take a couple of minutes. Note that we have an Image in our docker images list afterwards.
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/040.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/040.png)
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/045.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/045.png)
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/050.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/050.png)
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/055.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/055.png)
 
 ### Run a Remote Container VSCode Instance
 
 Now the fun part. Click the little green >< icon on the bottom left of VSCode and at the top of the screen choose 'Remote-Containers: Reopen in Container'
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/060.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/060.png)
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/065.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/065.png)
 
 Then we tell it want to use our Dockerfile as the remote container instance
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/070.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/070.png)
 
 Wait a few seconds... 
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/075.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/075.png)
 
 Boom! Bring up a terminal if it isn't there (CTRL-') and run a few commands. We have ansible installed and are running from our container which is a different machine effectively.
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/080.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/080.png)
 
 Note that this also maps the files from our work folder into this container and so we can see/work with those here. This is where the magic happens as we can develop on Windows but use a linux container backend. Very nice.
 
@@ -223,7 +223,7 @@ The structure should be like this. I've removed the role folders/files for brevi
 
 And note this is reflected in our VSCode, perfect. We can edit them directly from it.
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/085.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/085.png)
 
 ### Basic Playbook Setup
 
@@ -341,7 +341,7 @@ root@629eefda924e:/workspaces/azure-ansible#
 
 It's in azure too!
 
-![](../assets/images/2020/Automating-Azure-With-Ansible/095.png)
+![](/assets/images/2021/Automating-Azure-With-Ansible/095.png)
 
 This seems a good point to stop at. In the next post we'll create a whole VM and configure it. 
 
