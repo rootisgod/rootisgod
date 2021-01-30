@@ -1,29 +1,33 @@
 ---
 layout: post
-title:  "Automating Azure with Ansible"
+title:  "Automating Azure with Ansible - Part 1"
 date:   2021-01-28 18:00:00 +0100
 categories: azure devops ansible automation windows
 ---
 
 {% include all-header-includes.html %}
-{% include all-footer-includes.html %}
 
-This post will quite lengthy, but it will outline how to use Ansible to deploy and setup Windows machines on Azure and achieve the automation holy grail and have Infrastructure as Code.
-I'll show an efficient way to setup the development and deployment environment on Windows, which isn't something you could easily do until relatively recently.
+This post will quite lengthy, but it will outline the starting steps on how to use Ansible to deploy resources on Azure from ansible, on a Windows machine. I discovered Ansible quite late on as it is Linux only, unlike Terraform. So, in this post we will walk through how to setup a Windows environment that we can use to run ansible and deploy to Azure. In doing so we will achieve the automation holy grail of having our Infrastructure as Code.
 
-One question might be 'What is Ansible and why use it?'. The best answer I have is that Ansible is a simple but powerful way to get started with Configuration Management of Infrastructure, and it is also a very hot trend right now in lots of areas. Ansible is starting to really dominate the market. Terraform is also a contender but it is more difficult to use well in my opinion, and the state file concept causes a few headaches that ansible can simply circumvent. I won't go too deep into it, but with Ansible we essentially declare a resource and tell Ansible we would like it created. Be it a VM, a disk, a software package installed on a Windows machine, you name it, ansible can likely do it. Terraform can also do most of this but stops short of simple OS configuration capability and it likes to keep track of what is created in a state file and it really starts to get complicated when you get an error, or worse, you lose your original state file.
+One question might be 'What is Ansible and why use it?'. The best answer I have is that Ansible is a simple but powerful way to get started with Configuration Management of your Cloud Infrastructure in this use case, and it is also a very hot trend right now in lots of areas. Ansible is starting to really dominate the market. Terraform is also a contender for this job but it is more difficult to use well in my opinion, and the state file concept causes a few headaches that Ansible can simply circumvent. I won't go too deep into it, but with Ansible we essentially declare a resource and tell Ansible we would like it created. Be it a VM, a disk, a software package installed on a Windows machine, you name it, ansible can likely do it. Terraform can also do this but it is more 'enterprisey' in scope and so can have some headaches around State files and refactoring exsting code can be difficult. Ansible is a jack of all trades, and while still rough, it is gaining a lot of traction as a good middle-ground for lots of purposes. This post gives a more detailed explanation [https://www.whizlabs.com/blog/ansible-vs-terraform/](https://www.whizlabs.com/blog/ansible-vs-terraform/)
 
-# What We Will Do
+# What We Will Be Doing
 
 So, we will perform the following steps;
 
- - Setup Docker on a Windows VM
- - Install VS Code  
+VM Setup
+ - Setup Docker
+ - Install VS Code
+ - Setup a Github Account (Optional)
+
+Azure
  - Create an Azure Account
- - Create an Azure Service Principal Account
+ - Create an Azure Service Principal
+
+Ansible
  - Create an Ansible Docker Container in VSCode
- - Create our Ansible Playbook  
- - Make a Basic VM and deploy it...
+ - Create our Ansible Playbook
+ - Deploy it
 
 ## VM Setup
 
@@ -44,7 +48,7 @@ Install the 'Stable' VS Code from here - [https://code.visualstudio.com](https:/
 
 Now, optionally, setup a github account - [https://github.com](https://github.com)
 
-It is optional, but you probably want to do this to track your code. This post is not a git tutorial as adding that in would complicate things too much. Feel free to do so yourself though.
+It is optional, but you probably want to do this to track your code. This post is not a git tutorial as adding that content would complicate things too much. Feel free to do so yourself though.
 
 ## Azure
 
@@ -52,18 +56,18 @@ Now, we need an Azure account. If you have one then great, if not, see the next 
 
 ### Create an Azure Account
 
-We need an Azure account. Go here and sign up! Sorry, no instructions, I'm sure you will figure it out :)
+We need an Azure account. Go here and sign up! Sorry, no instructions, I'm sure you will figure it out :) If worried about cost then look at a prepaid credit card or investigate cost limits in Azure.
 
 [https://azure.microsoft.com/](https://azure.microsoft.com/)
 
 
-## Create an Azure Service Principal Account
+### Create an Azure Service Principal
 
-We now need a way for the Ansible Playbook we create later to authenticate as 'us', but in a way that Ansible can understand. The easiest way to do this is to create what is called a 'Service Principal'. It's like an API key with permissions. The key point is to NEVER EVER NEVER store the values for this in github in a public repo (or even a private one). It is essentially a way to access an account for free and have someone else foot the bill. Be careful if using github and pushing your code.
+We now need a way for the Ansible Playbook we create later to authenticate as 'us', but in a way that Ansible can understand. The easiest way to do this is to create what is called a 'Service Principal'. It's like an API key with permissions to Azure. The key point is to **NEVER EVER NEVER** store the values for this in github in a public repo (or even a private one). It is essentially a way to access an Azure account for free and have someone else foot the bill. Be careful if using GitHub and pushing your code. The code we write later will load our credentials at runtime to avoid this.
 
 To get a 'Service Principal' login to your Azure Account at [https://portal.azure.com](https://portal.azure.com)
 
-Then, go to the 'Azure Active Directory' resource and choose to create a 'New registration' (I had to blur some existing ones I have, your's will be empty).
+Then, go to the 'Azure Active Directory' resource and choose to create a 'New registration' (I had to blur some existing ones I have, your list will be empty if you are using a new account).
 
 ![](../assets/images/2020/Automating-Azure-With-Ansible/005.png)
 
@@ -71,11 +75,11 @@ Call it something sensible like 'Ansible-Automation' and click 'Register'.
 
 ![](../assets/images/2020/Automating-Azure-With-Ansible/010.png)
 
-Now, we will have a 'Service Principal' created. Note down the 3 items highlighted (not in a file Git tracks!).
+Now, we will have a 'Service Principal' created. Note down the 3 items highlighted (not in a file Git tracks though!).
 
 ![](../assets/images/2020/Automating-Azure-With-Ansible/015.png)
 
-Then, click 'Certificates & secrets' and choose 'New client secret' and add a name and a duration (a year is recommended just so you never ever forget it exists, choose never expires with caution!)
+Then, click 'Certificates & secrets' and choose 'New client secret' and add a name and a duration (a year is recommended just so you protect yourself slightly from forgetting about it and if it ever somehow gets leaked into the wild. Choose never expires with caution!)
 
 ![](../assets/images/2020/Automating-Azure-With-Ansible/020.png)
 
@@ -100,11 +104,13 @@ Just make sure you have all 4 pieces of information handy about the 'Service Pri
 - Object ID
 - Secret
 
-## Docker and VSCode
+## Ansible 
 
-Now we are at a point where we can start to look at what we need to do next to create our Ansible environment. The first thing we need to do is create a 'dockerfile' which has the ansible setup we need to deploy to Azure. So, let's do that. 
+### Create an Ansible Docker Container in VSCode
 
-### VSCode Setup
+Now we are at a point where we can start to look at what we need to do next to create our Ansible environment. The first thing we need to do is create a 'dockerfile' which has the ansible software installed that we need to deploy to Azure. So, let's do that.
+
+### VSCode Extensions
 
 We also need some extensions for VSCode, but only a couple! Load VSCode and find and install these. 
 
@@ -113,9 +119,9 @@ We also need some extensions for VSCode, but only a couple! Load VSCode and find
 
 These let us visually see that our dockerfile is correct and the 'Remote - Containers' extension lets us run a VSCode environment in a remote container, which lets us run ansible playbooks in that container. But, more to come on that. Next, we need a dockerfile.
 
-### Create our Ansible dockerfile
+### Create our Ansible Dockerfile
 
-You will have to take this on a certain amount of faith, but the code is well documented. If you have never used Docker before, just know that this file creates a base container from a debian image, installs a bunch of stuff and then we can run this as a place to run ansible from, on a Windows machine.
+You will have to take this file on a certain amount of faith, but the code is well documented. If you have never used Docker before, just know that this file creates a base container from a debian image, installs a bunch of stuff and then we can use this as a place to run ansible from, on a Windows machine.
 
 So, create a new folder on your Windows machine and open it in VSCode using the 'Open Folder' option. Create a file called 'Dockerfile' (no extension) and copy/paste this code.
 
@@ -135,7 +141,7 @@ RUN curl -sL https://raw.githubusercontent.com/ansible-collections/azure/v1.3.1/
     ansible-galaxy collection install azure.azcollection:1.3.1
 ```
 
-## Create an Ansible Docker Container in VSCode
+### Create an Ansible Docker Container in VSCode
 
 Now, right click the file and choose 'Build Image'. If Docker is setup correctly it will happily build this for us. Give it a name (default is fine) and watch the build occur. It will take a couple of minutes. Note that we have an Image in our docker images list afterwards.
 
@@ -147,7 +153,7 @@ Now, right click the file and choose 'Build Image'. If Docker is setup correctly
 
 ![](../assets/images/2020/Automating-Azure-With-Ansible/055.png)
 
-## Run a Remote Container VSCode Instance
+### Run a Remote Container VSCode Instance
 
 Now the fun part. Click the little green >< icon on the bottom left of VSCode and at the top of the screen choose 'Remote-Containers: Reopen in Container'
 
@@ -156,19 +162,24 @@ Now the fun part. Click the little green >< icon on the bottom left of VSCode an
 ![](../assets/images/2020/Automating-Azure-With-Ansible/065.png)
 
 Then we tell it want to use our Dockerfile as the remote container instance
+
 ![](../assets/images/2020/Automating-Azure-With-Ansible/070.png)
 
 Wait a few seconds... 
+
 ![](../assets/images/2020/Automating-Azure-With-Ansible/075.png)
 
 Boom! Bring up a terminal if it isn't there (CTRL-') and run a few commands. We have ansible installed and are running from our container which is a different machine effectively.
+
 ![](../assets/images/2020/Automating-Azure-With-Ansible/080.png)
 
-Not that this also maps the files from our work folder into this container and so we can see/work with those here. This is where the magic happens as we can develop on Windows but use a linux container backend. Very nice.
+Note that this also maps the files from our work folder into this container and so we can see/work with those here. This is where the magic happens as we can develop on Windows but use a linux container backend. Very nice.
 
-## Create an Ansible Role Playbook
+### Create an Ansible Role Playbook
 
 We can now create an ansible playbook. A playbook is simply the steps we want ansible to carry out. We will create two 'roles' inside this, one to create the VM (infrastructure) and the other to connect to it and configure it (configuration).
+
+I do have a zip of the code [on GitHub here](https://github.com/iaingblack/Ansible-Azure-Infrastructure/tree/v1.0.0) but I would definitely encourage trying it out yourself first
 
 In our working folder, create the following folders and empty files.
 
@@ -220,7 +231,7 @@ Let's start simply and try to have ansible create a resource group in Azure for 
 
 #### playbook.yml
 
-In```playbook.yml``` file. Add this;
+In ```playbook.yml``` file. Add this;
 
 ```yaml
 - name: "Provision Azure infrastructure"  # Just a name for our own use really
@@ -235,7 +246,7 @@ In```playbook.yml``` file. Add this;
 
 #### /group_vars/all.yml
 
-Then, in ```/group_vars/all.yml```, which will store default values for us. Including our azure vars we will pass at runtime. So, add this;
+Then, in ```/group_vars/all.yml```, which will store default values for us, ncluding our azure vars we will pass at runtime, add this;
 
 ```yaml
 # Turn our passed env variables into something ansible can use to talk to azure
@@ -250,7 +261,7 @@ location: "northeurope"
 
 #### /roles/infrastructure/tasks/main.yml
 
-Then, in ```/roles/infrastructure/tasks/main.yml```, which will store default values for us, add this;
+Then, in ```/roles/infrastructure/tasks/main.yml```, add this to tell it to run another set of takss we will create next;
 
 ```yaml
 ---
@@ -260,7 +271,7 @@ Then, in ```/roles/infrastructure/tasks/main.yml```, which will store default va
   include_tasks: resource-group.yml
   ```
 
-Notice we are asking it to run tasks in another file, so create the beside main.yml called ```resource-group.yml``` and paste in this. It looks worse than it is. Notice the items in brackets, these are variables and ansible will fill in these values for us later based on what we pass in. This also our first 'Azure' resource creation item. Check the docs [here](https://docs.ansible.com/ansible/latest/collections/azure/azcollection/azure_rm_resourcegroup_module.html) for more info on it and what else we could specify etc...
+As we are asking it to run tasks in another file, create this beside main.yml and call it ```resource-group.yml``` and paste in this. It looks worse than it is. Notice the items in brackets, these are variables and ansible will fill in these values for us later based on what we pass in. This also our first 'Azure' resource creation item. Check the docs [here](https://docs.ansible.com/ansible/latest/collections/azure/azcollection/azure_rm_resourcegroup_module.html) for more info on it and what else we could specify etc...
 
 ```yaml
 - name: Create Resource Group
@@ -331,3 +342,7 @@ root@629eefda924e:/workspaces/azure-ansible#
 It's in azure too!
 
 ![](../assets/images/2020/Automating-Azure-With-Ansible/095.png)
+
+This seems a good point to stop at. In the next post we'll create a whole VM and configure it. 
+
+{% include all-footer-includes.html %}
