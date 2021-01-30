@@ -149,25 +149,185 @@ Now, right click the file and choose 'Build Image'. If Docker is setup correctly
 
 ## Run a Remote Container VSCode Instance
 
+Now the fun part. Click the little green >< icon on the bottom left of VSCode and at the top of the screen choose 'Remote-Containers: Reopen in Container'
+
 ![](../assets/images/2020/Automating-Azure-With-Ansible/060.png)
 
 ![](../assets/images/2020/Automating-Azure-With-Ansible/065.png)
 
+Then we tell it want to use our Dockerfile as the remote container instance
 ![](../assets/images/2020/Automating-Azure-With-Ansible/070.png)
 
+Wait a few seconds... 
 ![](../assets/images/2020/Automating-Azure-With-Ansible/075.png)
 
+Boom! Bring up a terminal if it isn't there (CTRL-') and run a few commands. We have ansible installed and are running from our container which is a different machine effectively.
 ![](../assets/images/2020/Automating-Azure-With-Ansible/080.png)
+
+Not that this also maps the files from our work folder into this container and so we can see/work with those here. This is where the magic happens as we can develop on Windows but use a linux container backend. Very nice.
 
 ## Create an Ansible Role Playbook
 
-We can now create an ansible playbook, or more specifically, a role. This command creates a file/folder structure for a role which we can use to create our Azure setup.
+We can now create an ansible playbook. A playbook is simply the steps we want ansible to carry out. We will create two 'roles' inside this, one to create the VM (infrastructure) and the other to connect to it and configure it (configuration).
+
+In our working folder, create the following folders and empty files.
+
+```bash
+mkdir group_vars && touch group_vars/all.yml
+mkdir roles
+touch myVM.yml
+touch playbook.yml
 ```
-root@629eefda924e:/workspaces/azure-ansible# ansible-galaxy init azureinfra
-- Role azureinfra was created successfully
+
+Then, cd into the roles folder and create our two roles by running these commands;
+
+```bash
+cd roles
+
+ansible-galaxy init infrastructure
+- Role infrastructure was created successfully
+
+ansible-galaxy init configuration
+- Role configuration was created successfully
 ```
+
+The structure should be like this. I've removed the role folders/files for brevity, but it will make a lot of items.
+```bash
+.
+├── Dockerfile
+├── group_vars
+│   └── all.yml
+├── myVM.yml
+├── playbook.yml
+└── roles
+    ├── configuration
+    │   ├── README.md
+    │   ├── ...
+    └── infrastructure
+        ├── README.md
+        ├── ...
+
+20 directories, 20 files
+```
+
+And note this is reflected in our VSCode, perfect. We can edit them directly from it.
 
 ![](../assets/images/2020/Automating-Azure-With-Ansible/085.png)
 
+### Basic Playbook Setup
 
-- Make a Basic VM and deploy it...
+Let's start simply and try to have ansible create a resource group in Azure for us. 
+
+#### playbook.yml
+
+In```playbook.yml``` file. Add this;
+
+```yaml
+- name: "Provision Azure infrastructure"  # Just a name for our own use really
+  hosts: localhost                        # Run this item from our 'local' machine
+  #connection: local                      # 
+  pre_tasks:                              # We want load in our variables to customise the run
+    - name: Load our variables
+      include_vars: "{{ env }}"           # A variable file to load, which we tell ansible at run time
+  roles:
+    - infrastructure                      # The role we want to run
+```
+
+#### /group_vars/all.yml
+
+Then, in ```/group_vars/all.yml```, which will store default values for us. Including our azure vars we will pass at runtime. So, add this;
+
+```yaml
+# Turn our passed env variables into something ansible can use to talk to azure
+client_id: "{{ lookup('env','AZURE_CLIENT_ID') }}"
+secret: "{{ lookup('env','AZURE_SECRET') }}"
+tenant_id: "{{ lookup('env','AZURE_TENANT') }}"
+azure_clients_object_id: "{{ lookup('env','AZURE_CLIENTS_OBJECT_ID') }}"  #TEMP - should figure this out at runtime
+
+# Where to deploy our resources by default
+location: "northeurope"
+```
+
+#### /roles/infrastructure/tasks/main.yml
+
+Then, in ```/roles/infrastructure/tasks/main.yml```, which will store default values for us, add this;
+
+```yaml
+---
+# tasks file for infrastructure
+
+- name: Resource Group tasks
+  include_tasks: resource-group.yml
+  ```
+
+Notice we are asking it to run tasks in another file, so create the beside main.yml called ```resource-group.yml``` and paste in this. It looks worse than it is. Notice the items in brackets, these are variables and ansible will fill in these values for us later based on what we pass in. This also our first 'Azure' resource creation item. Check the docs [here](https://docs.ansible.com/ansible/latest/collections/azure/azcollection/azure_rm_resourcegroup_module.html) for more info on it and what else we could specify etc...
+
+```yaml
+- name: Create Resource Group
+  azure.azcollection.azure_rm_resourcegroup:
+    subscription_id: "{{ subscription_id }}"
+    client_id: "{{ client_id }}"
+    secret: "{{ secret }}"
+    tenant: "{{ tenant_id }}"
+    location: "{{ location }}"
+    name: "{{ resource_group_name }}"
+```
+
+#### myVM.yml
+
+And finally, add this to ```myVM.yml```. This is a config file of sorts we can use to represent an environment we want to deploy. We can create lots of these, one for each VM we want. One thing we do need to put in is our azure ```subscription_id``` as this is currently referenced in the resource-group.yml file and will be used in all azure resource declarations we make, so we define it here to keep things flexible later in case want to deploy this to another subscription later for example. Grab yours from the azure portal.
+
+```yaml
+subscription_id:     "put-in-your-subscription-id-here"
+resource_group_name: "Ansible-Infra"
+vm_name:             "iainsansiblevm"
+```
+
+### Deployment
+
+Now, we need to run it. First, we export our azure details from earlier to the bash shell so ansible can read them. Put in your Service Principal details from earlier and run this in the VSCode terminal;
+
+```bash
+export AZURE_TENANT=faa9681f-25c0-459c-95c2-b45a98e87sc3
+export AZURE_CLIENT_ID=e6f23ac2-e1ff-4abf-918e-c3a7f756a13a
+export AZURE_CLIENTS_OBJECT_ID=654f57d9-68e5-42ab-87d6-9c8c106412f2
+export AZURE_SECRET=put-your-secret-here-oh-and-never-in-git!
+```
+
+And then we run our playbook...
+
+```yaml
+ansible-playbook playbook.yml -e env=myVM.yml
+```
+
+
+Success!!!
+
+```yaml
+root@629eefda924e:/workspaces/azure-ansible# ansible-playbook playbook.yml -e env=myVM.yml
+[WARNING]: No inventory was parsed, only implicit localhost is available
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+PLAY [Provision Azure infrastructure] ***********************************************************************************************************
+
+TASK [Gathering Facts] **************************************************************************************************************************
+ok: [localhost]
+
+TASK [Load our variables] ***********************************************************************************************************************
+ok: [localhost]
+
+TASK [infrastructure : Resource Group tasks] ****************************************************************************************************
+included: /workspaces/azure-ansible/roles/infrastructure/tasks/resource-group.yml for localhost
+
+TASK [infrastructure : Create Resource Group] ***************************************************************************************************
+changed: [localhost]
+
+PLAY RECAP **************************************************************************************************************************************
+localhost                  : ok=4    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+root@629eefda924e:/workspaces/azure-ansible#
+```
+
+It's in azure too!
+
+![](../assets/images/2020/Automating-Azure-With-Ansible/095.png)
