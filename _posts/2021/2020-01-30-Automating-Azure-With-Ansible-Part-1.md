@@ -233,21 +233,23 @@ Let's start simply and try to have ansible create a resource group in Azure for 
 
 In ```playbook.yml``` file. Add this;
 
+{% raw %}
 ```yaml
 - name: "Provision Azure infrastructure"  # Just a name for our own use really
   hosts: localhost                        # Run this item from our 'local' machine
-  #connection: local                      # 
   pre_tasks:                              # We want load in our variables to customise the run
     - name: Load our variables
       include_vars: "{{ env }}"           # A variable file to load, which we tell ansible at run time
   roles:
     - infrastructure                      # The role we want to run
 ```
+{% endraw %}
 
 #### /group_vars/all.yml
 
 Then, in ```/group_vars/all.yml```, which will store default values for us, ncluding our azure vars we will pass at runtime, add this;
 
+{% raw %}
 ```yaml
 # Turn our passed env variables into something ansible can use to talk to azure
 client_id: "{{ lookup('env','AZURE_CLIENT_ID') }}"
@@ -258,6 +260,7 @@ azure_clients_object_id: "{{ lookup('env','AZURE_CLIENTS_OBJECT_ID') }}"  #TEMP 
 # Where to deploy our resources by default
 location: "northeurope"
 ```
+{% endraw %}
 
 #### /roles/infrastructure/tasks/main.yml
 
@@ -273,6 +276,7 @@ Then, in ```/roles/infrastructure/tasks/main.yml```, add this to tell it to run 
 
 As we are asking it to run tasks in another file, create this beside main.yml and call it ```resource-group.yml``` and paste in this. It looks worse than it is. Notice the items in brackets, these are variables and ansible will fill in these values for us later based on what we pass in. This also our first 'Azure' resource creation item. Check the docs [here](https://docs.ansible.com/ansible/latest/collections/azure/azcollection/azure_rm_resourcegroup_module.html) for more info on it and what else we could specify etc...
 
+{% raw %}
 ```yaml
 - name: Create Resource Group
   azure.azcollection.azure_rm_resourcegroup:
@@ -283,6 +287,7 @@ As we are asking it to run tasks in another file, create this beside main.yml an
     location: "{{ location }}"
     name: "{{ resource_group_name }}"
 ```
+{% endraw %}
 
 #### myVM.yml
 
