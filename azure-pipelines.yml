@@ -4,7 +4,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'ubuntu-18.04'
 
 #container: 'iaingblack/rootisgod-builder:latest'
 
