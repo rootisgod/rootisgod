@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Automating Azure with Ansible - Part 1"
-date:   2021-01-28 18:00:00 +0100
+date:   2021-01-30 18:00:00 +0100
 categories: azure devops ansible automation windows vscode
 ---
 
