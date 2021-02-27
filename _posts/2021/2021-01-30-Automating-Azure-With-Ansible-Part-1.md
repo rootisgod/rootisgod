@@ -237,7 +237,7 @@ In ```playbook.yml``` file. Add this;
 ```yaml
 - name: "Provision Azure infrastructure"  # Just a name for our own use really
   hosts: localhost                        # Run this item from our 'local' machine
-  pre_tasks:                              # We want load in our variables to customise the run
+  pre_tasks:                              # We want to load in our variables to customise the run
     - name: Load our variables
       include_vars: "{{ env }}"           # A variable file to load, which we tell ansible at run time
   roles:
@@ -247,7 +247,7 @@ In ```playbook.yml``` file. Add this;
 
 #### /group_vars/all.yml
 
-Then, in ```/group_vars/all.yml```, which will store default values for us, ncluding our azure vars we will pass at runtime, add this;
+Then, in ```/group_vars/all.yml```, which will store default values for us, including our azure vars we will pass at runtime, add this;
 
 {% raw %}
 ```yaml

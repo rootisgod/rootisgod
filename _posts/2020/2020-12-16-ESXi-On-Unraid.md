@@ -11,9 +11,9 @@ categories: Unraid ESXi Nested Virtualization
 
 I tried to find a guide on how to do this (and not the reverse of running Unraid on ESXi which seem to be everywhere!) and there seems to be a little missing in each case. The tutorial below seems to be a golden path of sorts, and is the motherboard and bios type that worked for me. The same settings on a Q35 motherboard and OVMF BIOS failed to see SATA drives for example, so you really do seem to have to be specific here. 
 
-So, i've brought everything I know toegether into one place. This isn't likely an optimal setup, but, if you want something that works for testing it might get you through. 
+So, i've brought everything I know together into one place. This isn't likely an optimal setup, but, if you want something that works for testing it might get you through. 
 
-The main reason I am doing this is because I have an Unraid box which hosts various fileshares, and a NUC. The Unraid server has 64GB RAM, but the NUC isn't so lucky. I want to have vCenter available as it does a lot of things you really need like setup VM Templates so creating a new machine is easy. I know I could probably just use Proxmox etc etc etc, but I like ESXi and so that's what i'm going for. So, the mission is to not burden my little NUC with vCenter and its 12GB RAM requirement, instead offload to my Unraid server so the NUC can focus on other things.
+The main reason I am doing this is because I have an Unraid box which hosts various fileshares, and a NUC. The Unraid server has 64GB RAM, but the NUC isn't so lucky. I want to have vCenter available as it does a lot of things you really need like setup VM Templates so creating a new machine is easy. I know I could probably just use Proxmox etc etc etc, but I like ESXi and so that's what i'm going for. So, the mission is to not burden my little NUC with vCenter and its 12GB RAM requirement and instead offload that role to my Unraid server so the NUC can focus on other things.
 
 ## Unraid Bootup Parameters
 First of all, We need to add ```kvm_amd.nested=1``` to bootup image params on our Unraid machine to enable nested virtualization (so we can run VMs inside our VMs). I run an AMD Unraid machine, so this is the setting for my machine. If running on an Intel system, use ```kvm_intel.nested=1``` instead and just swap what I say below.
