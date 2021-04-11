@@ -36,7 +36,7 @@ jobs:
         run: |
           bundle exec jekyll build
 
-      - name: Sync Site Files to DRAFT Site
+      - name: Sync Site Files to Site
         env:
           DRAFTSTORAGEACCOUNTANDSASTOKEN: ${{ secrets.DRAFTSTORAGEACCOUNTANDSASTOKEN }}
         run: |
