@@ -7,6 +7,13 @@ categories: sql backup
 
 {% include all-header-includes.html %}
 
+NOTES
+https://www.reddit.com/r/kubernetes/comments/be0415/k3s_minikube_or_microk8s/
+
+KIND
+https://github.com/kubernetes-sigs/kind/issues/1288
+
+
 Who wants to have a quick Kubernetes cluster on Unraid? Well, it can be installed using [K3S](https://k3s.io).
 
 ## Automatic K3S Installation
@@ -40,8 +47,8 @@ But first, let's grab the binary from the github page at https://github.com/k3s-
 Then grab the latest version link. We will move to the ```/mnt/user/appdata``` folder (which is a cache drive on my system), create a k3s folder, and download k3s to it, then make it executable.
 
 ```bash
-mkdir /mnt/user/appdata/k3s
-cd /mnt/user/appdata/k3s
+mkdir /mnt/cache/appdata/k3s
+cd /mnt/cache/appdata/k3s
 wget https://github.com/k3s-io/k3s/releases/download/v1.20.4%2Bk3s1/k3s
 chmod +x k3s
 ```
@@ -49,7 +56,7 @@ chmod +x k3s
 Proof this is a cache disk on my machine and not the USB drive (larger than 32GB)
 
 ```bash
-root@Unraid:/mnt/user/appdata/k3s# df -h /mnt/user/appdata/
+root@Unraid:/mnt/user/appdata/k3s# df -h /mnt/cache/appdata/
 Filesystem      Size  Used Avail Use% Mounted on
 shfs            954G  342G  611G  36% /mnt/user
 ```
@@ -89,7 +96,7 @@ From this, we can see that k3s wants to use ```/var/lib/rancher/k3s``` as a data
 But, as mentioned previously, in Unraid you'll see that this folder is on our USB install stick. Not what we want to be using.
 
 ```bash
-root@Unraid:/mnt/user/appdata/k3s# df -h /var/lib
+root@Unraid:/mnt/cache/appdata/k3s# df -h /var/lib
 Filesystem      Size  Used Avail Use% Mounted on
 rootfs           32G  1.8G   30G   6% /
 ```
@@ -97,13 +104,9 @@ rootfs           32G  1.8G   30G   6% /
 So, we want to specify where our data is to be kept when we run k3s.
 
 ```bash
-root@Unraid:/mnt/user/appdata/k3s# k3s server --data-dir  /mnt/user/appdata/k3s/
+root@Unraid:/mnt/user/appdata/k3s# k3s server --data-dir  /mnt/cache/appdata/k3s/
 ```
-So, that creates a lot of text! But, sadly, there is an error;
-
-```bash
-ERRO[2021-03-13T08:44:05.072455251Z] Failed to retrieve agent config: "overlayfs" snapshotter cannot be enabled for "/mnt/user/appdata/k3s/server/data/agent/containerd", try using "fuse-overlayfs" or "native": /mnt/user/appdata/k3s/server/data/agent/containerd does not support d_type. If the backing filesystem is xfs, please reformat with ftype=1 to enable d_type support
-```
+So, that creates a lot of text! 
 
 
 {% include all-footer-includes.html %}
