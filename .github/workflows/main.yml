@@ -1,0 +1,51 @@
+# This is a basic workflow to help you get started with Actions
+
+name: DRAFT
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the draft branch
+  push:
+    branches: [ draft ]
+  pull_request:
+    branches: [ draft ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    container:
+      image: iaingblack/rootisgod-builder:latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Install Required Gems and Show Jekyll Version
+        run: |
+          bundle install
+          bundle exec jekyll -v
+
+      - name: Build Site
+        run: |
+          bundle exec jekyll build
+
+      - name: Sync Site Files to DRAFT Site
+        env:
+          DRAFTSTORAGEACCOUNTANDSASTOKEN: ${{ secrets.DRAFTSTORAGEACCOUNTANDSASTOKEN }}
+        run: |
+          azcopy10 sync "./_site/" "$DRAFTSTORAGEACCOUNTANDSASTOKEN" --delete-destination true
+    
+      - name: Purge CDN Cache
+        env:
+          DRAFTSPSECRET: ${{ secrets.DRAFTSPSECRET }}
+        run: |
+          az login --service-principal --username "94e90015-fd6b-4d01-8dee-3e790dcdc5a0" --password "$DRAFTSPSECRET" --tenant "faa9681f-25c0-459c-95c2-d2e8607e1b72"
+          az cdn endpoint purge --resource-group "draft.rootisgod.com" --name "draftrootisgod-cdn" --profile-name "draftrootisgod-cdn" --content-paths "/*"
+        

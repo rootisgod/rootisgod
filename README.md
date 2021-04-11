@@ -6,6 +6,20 @@ This repo hosts the jekyll files for the blog https://www.rootisgod.com
 
 Or, if in IntelliJ/Webstorm, just run the 'Jekyll-Build-And-Serve' job.
 
+Or, run this to build it
+
+```bash
+docker build . -t iaingblack/rootisgod-builder:latest
+docker tag iaingblack/rootisgod-builder:latest iaingblack/rootisgod-builder:20210411
+```
+
+And push
+
+```bash
+docker push iaingblack/rootisgod-builder:latest
+docker push iaingblack/rootisgod-builder:20210411
+```
+
 If just using a terminal, to test locally, run a command like this;
 
 ```bash
