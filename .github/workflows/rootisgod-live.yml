@@ -44,7 +44,7 @@ jobs:
     
       - name: Purge CDN Cache
         env:
-          DRAFTSPSECRET: ${{ secrets.LIVESPSECRET }}
+          LIVESPSECRET: ${{ secrets.LIVESPSECRET }}
         run: |
           az login --service-principal --username "19460531-bf0e-4d7d-b0f6-6216e1cbccaf" --password "$LIVESPSECRET" --tenant "faa9681f-25c0-459c-95c2-d2e8607e1b72"
           az cdn endpoint purge --resource-group "www.rootisgod.com" --name "rootisgod-cdn" --profile-name "rootisgod-cdn" --content-paths "/*"
