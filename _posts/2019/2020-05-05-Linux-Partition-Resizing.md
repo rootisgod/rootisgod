@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Linux Partition Resizing"
-date:   2020-05-05 15:54:00 +0100
+title: "Linux Partition Resizing"
+date: 2020-05-05 15:54:00 +0100
 categories: linux disk resize
 ---
 
@@ -11,11 +11,11 @@ We’ve all been there… Make a Linux VM, the disk is too small… Arggh! I com
 
 So, for my own records, this is the basic scenario on resizing the main OS disk in Ubuntu. To begin, create a VM and disk in ESXi (or Virtualbox etc…) and make it small. This one is 8GB.
 
-----------
+---
 
 ![](/assets/images/2020/linux-partition-resizing/01.png)
 
-----------
+---
 
 Install the OS (Ubuntu 18.04 LTS in this example) and then get ready to go.
 
@@ -23,11 +23,11 @@ Install the OS (Ubuntu 18.04 LTS in this example) and then get ready to go.
 Disclaimer: Not sure if this tutorial it will work with LVM, chose this default.
 ```
 
-----------
+---
 
 ![](/assets/images/2020/linux-partition-resizing/02.png)
 
-----------
+---
 
 And check the disk space…
 
@@ -48,12 +48,11 @@ Maybe we should get some more space. Power if off.
 
 Then, increase the disk space in ESXi (and remove any snapshots you have or this will fail)
 
-----------
+---
 
 ![](/assets/images/2020/linux-partition-resizing/03.png)
 
-----------
-
+---
 
 Then, login and run this;
 
@@ -63,11 +62,11 @@ sudo cfdisk
 
 Notice above the partition we want to resize is actually /dev/sda2 so choose that in the menu and resize as the option.
 
-----------
+---
 
 ![](/assets/images/2020/linux-partition-resizing/04.png)
 
-----------
+---
 
 It should realise there is now 16GB available so it will fin that in for us. Hit enter and accept that.
 
@@ -75,11 +74,11 @@ It should realise there is now 16GB available so it will fin that in for us. Hit
 
 It will say the partition has been resized. Choose to write the change, type yes and then quit the program.
 
-----------
+---
 
 ![](/assets/images/2020/linux-partition-resizing/06.png)
 
-----------
+---
 
 Now, all we have done is increase the size of the partition but the filesystem doesn’t know it can use this yet (output from a df -h.
 
@@ -115,10 +114,10 @@ Filesystem Size Used Avail Use% Mounted on
 
 # ADDENDUM
 
-If you have another EXT4 disk mounted that you need to resize, do this. 
+If you have another EXT4 disk mounted that you need to resize, do this.
 
 Create a disk like this;
- 
+
 ```bash
 sudo fdisk /dev/sdb (make partition)
 mkfs -t ext4 /dev/sdb1 (make ext4)
@@ -129,7 +128,7 @@ mount /dev/sdb1 /u01
 Then, if you increase the space, this will expand it on the OS
 
 | Operation                                              | Command              |
-|------|--|
+| ------------------------------------------------------ | -------------------- |
 | Unmount the disk                                       | umount /u01          |
 | Check it is removed on filesystem                      | df \-h               |
 | Amend partition                                        | fdisk /dev/sdb       |
@@ -139,6 +138,5 @@ Then, if you increase the space, this will expand it on the OS
 | Check with e2fsck \(required before resize2fs resize\) | e2fsck \-f /dev/sdb1 |
 | Resize                                                 | resize2fs /dev/sdb1  |
 | Remount or reboot                                      | mount /dev/sdb1 /u01 |
-
 
 {% include all-footer-includes.html %}

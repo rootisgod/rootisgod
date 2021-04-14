@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Apple Macbook Air M1 Impressions"
-date:   2020-11-22 17:30:00 +0100
+title: "Apple Macbook Air M1 Impressions"
+date: 2020-11-22 17:30:00 +0100
 categories: apple macbook air m1 silicon 8gb
 ---
 
@@ -15,7 +15,7 @@ I have just purchased a new M1 Apple Silicon Macbook Air with 8GB RAM. How excit
 
 The value of the Macbook Air base configuration is probably the best thing about it. For a measly £999 you get a chip faster than most high end laptops, and a really decent 256GB SSD. If I had to recommend a laptop for someone with a grand to spend, it's a no-brainer. Nothing in the windows world really touches it. Some people don't like Mac OS, and I get it, but the value of what you get is astounding with their suite of Office style apps, GarageBand, and iMovie being worth hundreds of pounds alone or at least difficult to replace for free on Windows with programs of comparable quality. The build and feel of the laptop is also second-to-none with the touch ID in particular being super useful.
 
-The screen is also retina, albeit not as bright as the Macbook Pro. I doubt you can get a Windows laptop with a screen like this for the money, perhaps a surface would come close, but that's not really a laptop. 
+The screen is also retina, albeit not as bright as the Macbook Pro. I doubt you can get a Windows laptop with a screen like this for the money, perhaps a surface would come close, but that's not really a laptop.
 
 The speakers are also shockingly good. Loud and clear. I know people say this all the time, but it true in this case that it really is fairly amazing how good they are. Much better than an iPads and you could comfortably listen to Spotify and work quite happily.
 
@@ -27,7 +27,7 @@ It is also amazing to have no fan. No whining whirr. No hot base. It's very zen.
 
 ## Ports and Connectivity
 
-The connectivity is perhaps the only real, minor downside, but it depends on your perspective. It has 2 usbc ports which is probably enough for anyone's daily tasks. The battery life is so good, that even if one is used for power, another for an external disk like a samsung T5, it is super easy to just unplug power for a few hours to gain that extra port without having to care. As far as I know there is no throttling when on/off power so performance won't even be impacted If you have more demanding needs or require a traditional rectangular usb port a small hub is your best bet. But, how often do you plug things into a laptop? For me it's almost always for an SD card and on an adhoc basis, so 2 usbc ports are  perfectly fine.
+The connectivity is perhaps the only real, minor downside, but it depends on your perspective. It has 2 usbc ports which is probably enough for anyone's daily tasks. The battery life is so good, that even if one is used for power, another for an external disk like a samsung T5, it is super easy to just unplug power for a few hours to gain that extra port without having to care. As far as I know there is no throttling when on/off power so performance won't even be impacted If you have more demanding needs or require a traditional rectangular usb port a small hub is your best bet. But, how often do you plug things into a laptop? For me it's almost always for an SD card and on an adhoc basis, so 2 usbc ports are perfectly fine.
 
 You can only connect one monitor at the moment as well. I think this is a hard limit despite some workarounds on the internet, but I'm sure one would be plenty for my needs, so not a problem. More 'pro' machines coming will surely fix this.
 
@@ -37,9 +37,9 @@ One interesting thing I only just learned about is WiFi6. The new machines suppo
 
 This is where Apple probably don't get enough credit. As far as I can tell, everything I have tried to install has worked perfectly thanks to Rosetta 2 translating it to M1 code. That is crazy. Say what you like about apple, but they really have delivered for 99% of people. I don't have access to something truly outrageous like Maya or something like that, but anything I've tried has loaded and worked without a hitch, and with great performance. And it can only get better as more apps become native. Apple have hit it out of the park here. Do not worry that your old apps won't work, they very likely will be fine (but see further below if you are a dev).
 
-Another interesting ability is being able to run iPad/iPhone apps. This is genuinely useful! I use Goodreader as a virtual library and now have it on my Mac. I also use Fastmail and have been annoyed it lacked a Mac app, no more, install the iPad one, and it works perfectly. Not all apps are available as some developers don't want it to eat into their Desktop versions (looking at you Korg Gadget) but it is definitely better than nothing. Almost immediately the Mac is a gaming platform, and you can even connect an Xbox/PS controller to give a console experience, smart! 
- 
-But... you now definitely cannot run Windows and once Parallels and VMWare update their offerings, it will be ARM linux virtualisation. Now that more distros are multi-architecture that likely won't be a huge problem, but for people who need to test something and deploy to an x86 system it isn't ideal no matter how close the ARM version should be. This also extends to docker, it currently doesn't work. When it does work, it will also be an ARM implementation. Again, it might not be a problem but it is a bit of a blow to one of Macs traditional strengths of being able to run almost all OS's (Mac, Windows and Linux/FreeBSD et al). That party trick is over and while I do think ARM will take over (apple are proving it is possible) it's surely still 5 years away from being mainstream on most desktops and servers, so it will still be painful for developers and might be a total dealbreaker. I'm sure Apple know this and suggest the cloud is a good alternative, but it is unarguably a loss to the platform. As an aside, it is interesting that the new PS5 and XBOX launched with what are essentially PC components. I highly doubt they will be like this next iteration. Nvidia buying ARM should bring some  interesting developments...
+Another interesting ability is being able to run iPad/iPhone apps. This is genuinely useful! I use Goodreader as a virtual library and now have it on my Mac. I also use Fastmail and have been annoyed it lacked a Mac app, no more, install the iPad one, and it works perfectly. Not all apps are available as some developers don't want it to eat into their Desktop versions (looking at you Korg Gadget) but it is definitely better than nothing. Almost immediately the Mac is a gaming platform, and you can even connect an Xbox/PS controller to give a console experience, smart!
+
+But... you now definitely cannot run Windows and once Parallels and VMWare update their offerings, it will be ARM linux virtualisation. Now that more distros are multi-architecture that likely won't be a huge problem, but for people who need to test something and deploy to an x86 system it isn't ideal no matter how close the ARM version should be. This also extends to docker, it currently doesn't work. When it does work, it will also be an ARM implementation. Again, it might not be a problem but it is a bit of a blow to one of Macs traditional strengths of being able to run almost all OS's (Mac, Windows and Linux/FreeBSD et al). That party trick is over and while I do think ARM will take over (apple are proving it is possible) it's surely still 5 years away from being mainstream on most desktops and servers, so it will still be painful for developers and might be a total dealbreaker. I'm sure Apple know this and suggest the cloud is a good alternative, but it is unarguably a loss to the platform. As an aside, it is interesting that the new PS5 and XBOX launched with what are essentially PC components. I highly doubt they will be like this next iteration. Nvidia buying ARM should bring some interesting developments...
 
 ## What About the Macbook Pro?
 
@@ -49,7 +49,7 @@ I almost 'upgraded' from the Macbook Air base model to a Macbook Pro 16GB RAM an
 
 I'm very very impressed. I now have a laptop with the holy grail of price, performance and battery life. You are sacrificing almost nothing, as long as you like Macs obviously. The only real stickler outside of x86 compatability is that Apple charges a fortune for 'upgrades' which have to be selected at time of purchase. An extra 8GB of RAM (which I would still recommend for longevity if you can afford it) is £200 extra. £200! These prices existed on the legacy Intel machines, so it's not just M1 chip shenanigans. RAM certainly isn't an exotic component, and while I'm sure apple have a custom chip for space savings, a quick search shows a 16GB SODIMM is around £50 or so. Even being generous to apple, £200 for the privilege to swap your 8GB for 16GB is a bit of a racket. Same for disk space. Upgrading from 256GB SSD to 512GB SSD is £200, and a jump from that to 1TB is another £200, a total of £400 to get to a 'I dont care what I install' capacity level, and that kind of neglects that the original SSD is probably £200 of value in this pricing model. A 1TB NVMe for a PC can be had for £100-£150 sometimes! Granted, it won't be in the same performance class but Apple is definitely skimming some handsome profits here. I think the best alternative solution is a Samsung T5/T7 if you can handle the dongle aspect of it.
 
-In summary, probably try get that extra RAM, but for under a grand (or just over), you are getting a fantastic all-purpose machine that won't be beaten until the next Apple laptops are released. 
+In summary, probably try get that extra RAM, but for under a grand (or just over), you are getting a fantastic all-purpose machine that won't be beaten until the next Apple laptops are released.
 
 (if you like Mac, don't need VMs or Docker, and don't need more disk space)
 

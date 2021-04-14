@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Mini VPN For All!"
-date:   2019-12-07 15:54:00 +0100
+title: "Mini VPN For All!"
+date: 2019-12-07 15:54:00 +0100
 categories: nebula vpn
 ---
 
@@ -23,9 +23,9 @@ I have a slightly contrived setup just to show how I am currently using this. I 
 
 There are only three real requirements;
 
-*   We need a publicly accessible ‘lighthouse’ machine which essentially keeps track of who is on the network and their ip address. This can also double as ‘normal’ node on the network as far as I can tell which is handy.
-*   Port UDP 4242 must be open on the host (ie an azure NSG rule allows traffic or a port forward is set to the host if behind a home router).
-*   We create a certificate for each node we add
+- We need a publicly accessible ‘lighthouse’ machine which essentially keeps track of who is on the network and their ip address. This can also double as ‘normal’ node on the network as far as I can tell which is handy.
+- Port UDP 4242 must be open on the host (ie an azure NSG rule allows traffic or a port forward is set to the host if behind a home router).
+- We create a certificate for each node we add
 
 Once everything is setup you can then use the virtual ip as the address for whatever you like and all traffic is routed over the udp port invisibly for you. So, access https, ssh etc on each node as though it were local. Magical!
 
@@ -43,7 +43,7 @@ I’m using Ubuntu 18.04 but any distro should work. Download and untar the rele
 
 [https://github.com/slackhq/nebula/releases/download/v1.0.0/nebula-linux-amd64.tar.gz](https://github.com/slackhq/nebula/releases/download/v1.0.0/nebula-linux-amd64.tar.gz)
 
-Remember and do a; 
+Remember and do a;
 
 ```bash
 chmod +x nebula*
@@ -160,11 +160,11 @@ sudo systemctl status nebula
 
 Happy days! Be sure to setup the firewall on your home network to allow UDP 4242 traffic. This is a screenshot from my pfSense router.
 
-----------
+---
 
 ![](/assets/images/2019/mini-vpn-for-all/01.png)
 
-----------
+---
 
 Now to our windows node…
 
@@ -273,11 +273,11 @@ sc start nebula
 
 Be sure your firewall allows UDP 4242 traffic. This is the NSG on my Azure VM
 
-----------
+---
 
 ![](/assets/images/2019/mini-vpn-for-all/02.png)
 
-----------
+---
 
 ### RDP to an internal VM
 
@@ -285,19 +285,19 @@ Now we can put all this together and rdp to our home network from this azure vm 
 
 Create an RDP session and point it to something internal to your network you want to connect to. In my case 192.168.1.190 is a test windows VM I use.
 
-----------
+---
 
 ![](/assets/images/2019/mini-vpn-for-all/03.png)
 
-----------
+---
 
 Then connect (authenticate the lighthouse SSH then the Windows RDP). This screenshot hopefully shows that I am on a remote machine and connected into my local VM inside my home network. Without a VPN. Cool!
 
-----------
+---
 
 ![](/assets/images/2019/mini-vpn-for-all/04.png)
 
-----------
+---
 
 ## Pros and Cons
 
@@ -305,15 +305,15 @@ There are some caveats to this approach.
 
 ### Pros
 
-*   Quite simple to setup. Adding another host is just creating a certificate and installing a service on the next host. Simpler than a VPN.
-*   Very secure. I dont mind exposing my internet to the 4242 UDP port as traffic has to bypass a certificate challenge for network access (should be impossible) and then the local machine auth to login to the machine. Seems a pretty tough barrier.
-*   Performance should be better than a VPN though I havent verified.
+- Quite simple to setup. Adding another host is just creating a certificate and installing a service on the next host. Simpler than a VPN.
+- Very secure. I dont mind exposing my internet to the 4242 UDP port as traffic has to bypass a certificate challenge for network access (should be impossible) and then the local machine auth to login to the machine. Seems a pretty tough barrier.
+- Performance should be better than a VPN though I havent verified.
 
 ### Cons
 
-*   With a VPN I can access ALL hosts in my connected subnet, not just one. If you use nebula, you only get one host as a port forward so it more useful for creating jump boxes to other networks. You could add more hosts and incremenet the listening/port forwards if you really needed to though (4243, 4244 etc…)  
-    Edit: Dave Bundy at The Jupiter Broadcasting telegram channel suggested that an ip_forward on the gateway machine might open up the whole subnet. Not tested, but might/should work if you know what you’re doing.
-*   Lack of OSX and mobile support. Though it is coming I hear.
-*   Installing the service is fiddly on windows. An installer which includes the TAP driver and a service installer would be nice.
+- With a VPN I can access ALL hosts in my connected subnet, not just one. If you use nebula, you only get one host as a port forward so it more useful for creating jump boxes to other networks. You could add more hosts and incremenet the listening/port forwards if you really needed to though (4243, 4244 etc…)  
+  Edit: Dave Bundy at The Jupiter Broadcasting telegram channel suggested that an ip_forward on the gateway machine might open up the whole subnet. Not tested, but might/should work if you know what you’re doing.
+- Lack of OSX and mobile support. Though it is coming I hear.
+- Installing the service is fiddly on windows. An installer which includes the TAP driver and a service installer would be nice.
 
 {% include all-footer-includes.html %}

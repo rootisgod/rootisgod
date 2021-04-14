@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Microsoft SQL Server Backups and Deletions"
-date:   2020-07-29 15:54:00 +0100
+title: "Microsoft SQL Server Backups and Deletions"
+date: 2020-07-29 15:54:00 +0100
 categories: sql backup
 ---
 

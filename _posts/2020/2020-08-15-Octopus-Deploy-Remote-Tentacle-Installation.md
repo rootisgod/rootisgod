@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Octopus Deploy Remote Tentacle Installation"
-date:   2020-08-15 08:20:00 +0100
+title: "Octopus Deploy Remote Tentacle Installation"
+date: 2020-08-15 08:20:00 +0100
 categories: ansible octopus
 ---
 
@@ -9,7 +9,7 @@ categories: ansible octopus
 
 I've spent a couple of miserable days doing battle trying to install an Octopus Deploy Tentacle agent to remote machines via ansible. The machines in question are created brand new, and we need that agent in order to install software from a build system. The problem is that an agent install requires generating a certificate for that machine. And, if there is no user profile loaded then windows cannot access the cryptographic functions required to generate it (for some reason). The ansible deployment connects to each VM as an admin user via WinRM but this still isnt enough for things to work it seems. This is a long standing issue. See this github [page](https://github.com/OctopusDeploy/Issues/issues/353) for some solutions others have offered. I tried them all (pregenerating certificates via openssl/tentacle.exe, and psexec commands), but had no success. What makes it worse is that the only way to see the logs is to login to the machine, and so you ruin the 'not logged in before' nature of the sytem and everything starts to work remotely. Schrodingers octopus!
 
-So, I thought I would document my solution so I never have to wonder again how I did it. The way to get it to work is to create a Windows Scheduled Task which runs an install script. That process can use the users profile and allows desktop access, so it can run just like you were actually logged in. Nasty but effective. 
+So, I thought I would document my solution so I never have to wonder again how I did it. The way to get it to work is to create a Windows Scheduled Task which runs an install script. That process can use the users profile and allows desktop access, so it can run just like you were actually logged in. Nasty but effective.
 
 The ansible and script below are as to the point as I can make it, so there won't be any extras and you need to know ansible a little, but feel free to augment to your needs. It seems solid so far which is the main thing. Again, amend and augment as required, there is a lot more you could do here better, like check if the agent is already installed etc... but it does the job!
 
@@ -37,14 +37,14 @@ Ansible code below. Be sure to have some facts setup or variables in place for t
     name: Install Octopus Deploy
     description: Install
     actions:
-    - path: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
-      arguments: -ExecutionPolicy Unrestricted -NonInteractive -File c:\scripts\install-tentacle.ps1 -tentacle_service_port "10933" -octopus_server_certificate_thumbprint "{{ octopus_server_certificate_thumbprint }}"
+      - path: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+        arguments: -ExecutionPolicy Unrestricted -NonInteractive -File c:\scripts\install-tentacle.ps1 -tentacle_service_port "10933" -octopus_server_certificate_thumbprint "{{ octopus_server_certificate_thumbprint }}"
     triggers:
-    - type: daily
-      start_boundary: "2050-01-01T00:00:00Z" # Just a random time, we dont use this
+      - type: daily
+        start_boundary: "2050-01-01T00:00:00Z" # Just a random time, we dont use this
     username: "{{ hostvars['localhost']['vm_admin_username'] }}"
     password: "{{ hostvars['localhost']['vm_admin_password'] }}"
-    logon_type: password    
+    logon_type: password
     state: present
     enabled: yes
     run_level: highest

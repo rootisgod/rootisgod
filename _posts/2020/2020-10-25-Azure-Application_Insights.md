@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Azure Application Insights for Your Website"
-date:   2020-10-25 20:00:00 +0100
+title: "Azure Application Insights for Your Website"
+date: 2020-10-25 20:00:00 +0100
 categories: website hosting metrics javascript
 ---
 
@@ -35,7 +35,7 @@ We need to first create a Log Analytics Workspace to hold the metrics we collect
 
 ## Application Insights Resource
 
-Now we can create our Application Insight resource. Choose the same region as our other resources to avoid any bandwidth costs (same region traffic is free). Choose the workspace based resource mode as the classic mode will be deprecated soon. 
+Now we can create our Application Insight resource. Choose the same region as our other resources to avoid any bandwidth costs (same region traffic is free). Choose the workspace based resource mode as the classic mode will be deprecated soon.
 
 ![](/assets/images/2020/Azure-Application-Insights/050.png)
 
@@ -51,13 +51,13 @@ Once created, we can go to the resource and look for the 'Application Instrument
 
 Now, looking at the previous link above, we just add that to the example javascript snippet provided.
 
-On our site, create a javascript file in the ```/assets/js``` folder and put in the key. 
+On our site, create a javascript file in the `/assets/js` folder and put in the key.
 
 ![](/assets/images/2020/Azure-Application-Insights/090.png)
 
-Then, we can start to add this snippet as an 'include' on our content pages. 
+Then, we can start to add this snippet as an 'include' on our content pages.
 
-*I'm sure there is a way to have this added automatically via the jekyll ```_config.yml``` file but i'm not there yet, so just add it manually to your pages like below and i'll update this page later when I figure out the better way.*
+_I'm sure there is a way to have this added automatically via the jekyll `_config.yml` file but i'm not there yet, so just add it manually to your pages like below and i'll update this page later when I figure out the better way._
 
 ![](/assets/images/2020/Azure-Application-Insights/0100.png)
 

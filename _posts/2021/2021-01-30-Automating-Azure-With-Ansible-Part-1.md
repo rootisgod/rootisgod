@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Automating Azure with Ansible - Part 1"
-date:   2021-01-30 18:00:00 +0100
+title: "Automating Azure with Ansible - Part 1"
+date: 2021-01-30 18:00:00 +0100
 categories: azure devops ansible automation windows vscode
 ---
 
@@ -16,24 +16,27 @@ One question might be 'What is Ansible and why use it?'. The best answer I have 
 So, we will perform the following steps;
 
 VM Setup
- - Setup Docker
- - Install VS Code
- - Setup a Github Account (Optional)
+
+- Setup Docker
+- Install VS Code
+- Setup a Github Account (Optional)
 
 Azure
- - Create an Azure Account
- - Create an Azure Service Principal
+
+- Create an Azure Account
+- Create an Azure Service Principal
 
 Ansible
- - Create an Ansible Docker Container in VSCode
- - Create our Ansible Playbook
- - Deploy it
+
+- Create an Ansible Docker Container in VSCode
+- Create our Ansible Playbook
+- Deploy it
 
 ## VM Setup
 
 So, first thing is to get a Windows machine for developing on. As long as you are running a version of Windows 10 newer than 2018ish you should be fine.
 
-### Setup Docker 
+### Setup Docker
 
 So, first thing is to setup Docker on your Windows machine. I'll not rewrite a guide which will go out of date, so follow this link, but you need virtualization enabled in your BIOS as well, so be sure to do that first.
 
@@ -42,7 +45,6 @@ So, first thing is to setup Docker on your Windows machine. I'll not rewrite a g
 ### Install VS Code
 
 Install the 'Stable' VS Code from here - [https://code.visualstudio.com](https://code.visualstudio.com)
-
 
 ## Setup a Github Account (Optional)
 
@@ -59,7 +61,6 @@ Now, we need an Azure account. If you have one then great, if not, see the next 
 We need an Azure account. Go here and sign up! Sorry, no instructions, I'm sure you will figure it out :) If worried about cost then look at a prepaid credit card or investigate cost limits in Azure.
 
 [https://azure.microsoft.com/](https://azure.microsoft.com/)
-
 
 ### Create an Azure Service Principal
 
@@ -93,7 +94,7 @@ Go to your subscription and choose 'Access Control (IAM)' and click 'Add'.
 
 ![](/assets/images/2021/Automating-Azure-With-Ansible/030.png)
 
-Then add our 'Service Principal' and give it a 'Contributor' role as explained above. Hit save, and we are done! 
+Then add our 'Service Principal' and give it a 'Contributor' role as explained above. Hit save, and we are done!
 
 ![](/assets/images/2021/Automating-Azure-With-Ansible/035.png)
 
@@ -104,7 +105,7 @@ Just make sure you have all 4 pieces of information handy about the 'Service Pri
 - Object ID
 - Secret
 
-## Ansible 
+## Ansible
 
 ### Create an Ansible Docker Container in VSCode
 
@@ -112,7 +113,7 @@ Now we are at a point where we can start to look at what we need to do next to c
 
 ### VSCode Extensions
 
-We also need some extensions for VSCode, but only a couple! Load VSCode and find and install these. 
+We also need some extensions for VSCode, but only a couple! Load VSCode and find and install these.
 
 - Docker
 - Remote - Containers
@@ -165,7 +166,7 @@ Then we tell it want to use our Dockerfile as the remote container instance
 
 ![](/assets/images/2021/Automating-Azure-With-Ansible/070.png)
 
-Wait a few seconds... 
+Wait a few seconds...
 
 ![](/assets/images/2021/Automating-Azure-With-Ansible/075.png)
 
@@ -203,6 +204,7 @@ ansible-galaxy init configuration
 ```
 
 The structure should be like this. I've removed the role folders/files for brevity, but it will make a lot of items.
+
 ```bash
 .
 ├── Dockerfile
@@ -227,44 +229,48 @@ And note this is reflected in our VSCode, perfect. We can edit them directly fro
 
 ### Basic Playbook Setup
 
-Let's start simply and try to have ansible create a resource group in Azure for us. 
+Let's start simply and try to have ansible create a resource group in Azure for us.
 
 #### playbook.yml
 
-In ```playbook.yml``` file. Add this;
+In `playbook.yml` file. Add this;
 
 {% raw %}
+
 ```yaml
-- name: "Provision Azure infrastructure"  # Just a name for our own use really
-  hosts: localhost                        # Run this item from our 'local' machine
-  pre_tasks:                              # We want to load in our variables to customise the run
+- name: "Provision Azure infrastructure" # Just a name for our own use really
+  hosts: localhost # Run this item from our 'local' machine
+  pre_tasks: # We want to load in our variables to customise the run
     - name: Load our variables
-      include_vars: "{{ env }}"           # A variable file to load, which we tell ansible at run time
+      include_vars: "{{ env }}" # A variable file to load, which we tell ansible at run time
   roles:
-    - infrastructure                      # The role we want to run
+    - infrastructure # The role we want to run
 ```
+
 {% endraw %}
 
 #### /group_vars/all.yml
 
-Then, in ```/group_vars/all.yml```, which will store default values for us, including our azure vars we will pass at runtime, add this;
+Then, in `/group_vars/all.yml`, which will store default values for us, including our azure vars we will pass at runtime, add this;
 
 {% raw %}
+
 ```yaml
 # Turn our passed env variables into something ansible can use to talk to azure
 client_id: "{{ lookup('env','AZURE_CLIENT_ID') }}"
 secret: "{{ lookup('env','AZURE_SECRET') }}"
 tenant_id: "{{ lookup('env','AZURE_TENANT') }}"
-azure_clients_object_id: "{{ lookup('env','AZURE_CLIENTS_OBJECT_ID') }}"  #TEMP - should figure this out at runtime
+azure_clients_object_id: "{{ lookup('env','AZURE_CLIENTS_OBJECT_ID') }}" #TEMP - should figure this out at runtime
 
 # Where to deploy our resources by default
 location: "northeurope"
 ```
+
 {% endraw %}
 
 #### /roles/infrastructure/tasks/main.yml
 
-Then, in ```/roles/infrastructure/tasks/main.yml```, add this to tell it to run another set of takss we will create next;
+Then, in `/roles/infrastructure/tasks/main.yml`, add this to tell it to run another set of takss we will create next;
 
 ```yaml
 ---
@@ -272,11 +278,12 @@ Then, in ```/roles/infrastructure/tasks/main.yml```, add this to tell it to run 
 
 - name: Resource Group tasks
   include_tasks: resource-group.yml
-  ```
+```
 
-As we are asking it to run tasks in another file, create this beside main.yml and call it ```resource-group.yml``` and paste in this. It looks worse than it is. Notice the items in brackets, these are variables and ansible will fill in these values for us later based on what we pass in. This also our first 'Azure' resource creation item. Check the docs [here](https://docs.ansible.com/ansible/latest/collections/azure/azcollection/azure_rm_resourcegroup_module.html) for more info on it and what else we could specify etc...
+As we are asking it to run tasks in another file, create this beside main.yml and call it `resource-group.yml` and paste in this. It looks worse than it is. Notice the items in brackets, these are variables and ansible will fill in these values for us later based on what we pass in. This also our first 'Azure' resource creation item. Check the docs [here](https://docs.ansible.com/ansible/latest/collections/azure/azcollection/azure_rm_resourcegroup_module.html) for more info on it and what else we could specify etc...
 
 {% raw %}
+
 ```yaml
 - name: Create Resource Group
   azure.azcollection.azure_rm_resourcegroup:
@@ -287,16 +294,17 @@ As we are asking it to run tasks in another file, create this beside main.yml an
     location: "{{ location }}"
     name: "{{ resource_group_name }}"
 ```
+
 {% endraw %}
 
 #### myVM.yml
 
-And finally, add this to ```myVM.yml```. This is a config file of sorts we can use to represent an environment we want to deploy. We can create lots of these, one for each VM we want. One thing we do need to put in is our azure ```subscription_id``` as this is currently referenced in the resource-group.yml file and will be used in all azure resource declarations we make, so we define it here to keep things flexible later in case want to deploy this to another subscription later for example. Grab yours from the azure portal.
+And finally, add this to `myVM.yml`. This is a config file of sorts we can use to represent an environment we want to deploy. We can create lots of these, one for each VM we want. One thing we do need to put in is our azure `subscription_id` as this is currently referenced in the resource-group.yml file and will be used in all azure resource declarations we make, so we define it here to keep things flexible later in case want to deploy this to another subscription later for example. Grab yours from the azure portal.
 
 ```yaml
-subscription_id:     "put-in-your-subscription-id-here"
+subscription_id: "put-in-your-subscription-id-here"
 resource_group_name: "Ansible-Infra"
-vm_name:             "iainsansiblevm"
+vm_name: "iainsansiblevm"
 ```
 
 ### Deployment
@@ -315,7 +323,6 @@ And then we run our playbook...
 ```yaml
 ansible-playbook playbook.yml -e env=myVM.yml
 ```
-
 
 Success!!!
 
@@ -339,7 +346,7 @@ TASK [infrastructure : Create Resource Group] **********************************
 changed: [localhost]
 
 PLAY RECAP **************************************************************************************************************************************
-localhost                  : ok=4    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+localhost                  : ok=4    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 
 root@629eefda924e:/workspaces/azure-ansible#
 ```
@@ -348,6 +355,6 @@ It's in azure too!
 
 ![](/assets/images/2021/Automating-Azure-With-Ansible/095.png)
 
-This seems a good point to stop at. In the next post we'll create a whole VM and configure it. 
+This seems a good point to stop at. In the next post we'll create a whole VM and configure it.
 
 {% include all-footer-includes.html %}
