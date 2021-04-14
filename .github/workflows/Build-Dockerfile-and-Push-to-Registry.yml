@@ -22,7 +22,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y%m%d')"
+
       - name: build and push to dockerhub and initiate deploment
         env:
           DOCKERHUBUSERNAME: ${{ secrets.DOCKERHUBUSERNAME }}
@@ -30,4 +34,6 @@ jobs:
         run: |
           docker login --username $DOCKERHUBUSERNAME --password $DOCKERHUBPASSWORD
           docker build . -t iaingblack/rootisgod-builder:latest
+          docker tag iaingblack/rootisgod-builder:latest iaingblack/rootisgod-builder:${{ steps.date.outputs.date }}
           docker push iaingblack/rootisgod-builder:latest
+          docker push iaingblack/rootisgod-builder:${{ steps.date.outputs.date }}
