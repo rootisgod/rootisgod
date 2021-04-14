@@ -22,26 +22,18 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      
-      - name: Build and Publish Dockerfile
-        # You may pin to the exact commit or the version.
-        # uses: ryanjfrizzell/action-bpd@7d6d0456081acbdbe2adeae5da1d14f1a0e54498
-        uses: ryanjfrizzell/action-bpd@v1.0.2
-        with:
-          # the url your registry is located at, used for docker login, ex: docker.pkg.github.com
-          docker_registry_url: # default is 
-          # the owner for the registry, ex: ryanjfrizzell
-          docker_registry_owner: # default is 
-          # repository of the image, ex: action-bpd  
-          docker_repository: # default is 
-          # image name to use
-          docker_image: iaingblack/rootisgod-builder
-          docker_username: 
-          docker_password: 
-          dockerhub: true
-      
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y%m%d')"
+
+      - name: build and push to dockerhub and initiate deploment
+        env:
+          DOCKERHUBUSERNAME: ${{ secrets.DOCKERHUBUSERNAME }}
+          DOCKERHUBPASSWORD: ${{ secrets.DOCKERHUBPASSWORD }}
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          docker login --username $DOCKERHUBUSERNAME --password $DOCKERHUBPASSWORD
+          docker build . -t iaingblack/rootisgod-builder:latest
+          docker tag iaingblack/rootisgod-builder:latest iaingblack/rootisgod-builder:${{ steps.date.outputs.date }}
+          docker push iaingblack/rootisgod-builder:latest
+          docker push iaingblack/rootisgod-builder:${{ steps.date.outputs.date }}
