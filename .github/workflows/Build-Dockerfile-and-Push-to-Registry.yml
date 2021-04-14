@@ -27,13 +27,7 @@ jobs:
         env:
           DOCKERHUBUSERNAME: ${{ secrets.DOCKERHUBUSERNAME }}
           DOCKERHUBPASSWORD: ${{ secrets.DOCKERHUBPASSWORD }}
-        uses: yokiworks/deploy-github-action
-        with:
-          # The docker container image name
-          image-name: iaingblack/rootisgod-builder:latest
-          # The dockerfile used by the docker build command
-          docker-file: Dockerfile
-          # Dockerhub username
-          dockerhub-username: $DOCKERHUBUSERNAME
-          # Dockerhub password
-          dockerhub-password: $DOCKERHUBPASSWORD
+        run: |
+          docker login --username $DOCKERHUBUSERNAME --password $DOCKERHUBPASSWORD
+          docker build . -t iaingblack/rootisgod-builder:latest
+          docker push iaingblack/rootisgod-builder:latest
