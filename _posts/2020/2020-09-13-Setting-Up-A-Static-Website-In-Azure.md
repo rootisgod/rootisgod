@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Setting Up a Static Website in Azure"
-date:   2020-09-13 22:13:00 +0100
+title: "Setting Up a Static Website in Azure"
+date: 2020-09-13 22:13:00 +0100
 categories: azure websites
 ---
 
@@ -43,18 +43,18 @@ The first thing we need is a storage account inside a new resource group (the fo
 
 Storage blobs are very cheap for small amounts of data in the MB range. Check the pricing here - [https://azure.microsoft.com/en-us/pricing/details/storage/blobs/](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/). Unless you are uploading GB's of files, the best option should still be very, very cheap. Here is a thorough explanation of the different options - [https://docs.microsoft.com/en-us/azure/storage/common/storage-redundancy](https://docs.microsoft.com/en-us/azure/storage/common/storage-redundancy). Below is my simplistic guide.
 
-| Replication Level | Price | Notes |
-|---|---|---|
-| LRS (Locally Redundant Storage) | £0.0164 per GB | Most basic. Data is replicated in a regions single data center site 3 times. A single zone essentially. |
-| ZRS (Zone-Redundant Storage) | £0.0172 per GB | Data replicated at the specified region but across 3 nearby (tens of miles) data centers (zones) |
-| GRS (Geo-Redundant Storage) | £0.0275 per GB | Data is replicated to a secondary region but it is only made available in event of the primary region having an outage |
-| RA GRS (ReadAccess Geo-Redundant Storage) | £0.0343 per GB | Like above, but your data is always available read-only if the primary site has an outage |
-| GZRS (Geo-Zone-Redundant Storage) | £0.0318 per GB | Like GRS and ZRS mixed together. Data replicated to two regions and 3 sites at each region |
-| RA GZRS (ReadAccess Geo-Zone-Redundant Storage) | £0.0397 per GB | Like above but data is available read-only at any of the secondary sites zones if primary site has an outage |
+| Replication Level                               | Price          | Notes                                                                                                                  |
+| ----------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| LRS (Locally Redundant Storage)                 | £0.0164 per GB | Most basic. Data is replicated in a regions single data center site 3 times. A single zone essentially.                |
+| ZRS (Zone-Redundant Storage)                    | £0.0172 per GB | Data replicated at the specified region but across 3 nearby (tens of miles) data centers (zones)                       |
+| GRS (Geo-Redundant Storage)                     | £0.0275 per GB | Data is replicated to a secondary region but it is only made available in event of the primary region having an outage |
+| RA GRS (ReadAccess Geo-Redundant Storage)       | £0.0343 per GB | Like above, but your data is always available read-only if the primary site has an outage                              |
+| GZRS (Geo-Zone-Redundant Storage)               | £0.0318 per GB | Like GRS and ZRS mixed together. Data replicated to two regions and 3 sites at each region                             |
+| RA GZRS (ReadAccess Geo-Zone-Redundant Storage) | £0.0397 per GB | Like above but data is available read-only at any of the secondary sites zones if primary site has an outage           |
 
-Now, given that your site is likely in git and you don't mind an outage on, say a blog site, feel free to choose LRS, the most 'risky' option. It would take a single data center failure to take it down, an unlikely event in itself. But, given the site will be almost certainly under a gigabyte in size i'd just go for the most opulent option. The files that make up this site as of now come to a size of under 5 MB. So, cost of storage is £0.0397 (RA GZRS) * 0.05GB which is about £0.002p a month. I'd say just splurge out on the best. Even a 10GB website would cost about £0.40p a month. This doesn't include bandwidth [cost](https://azure.microsoft.com/en-us/pricing/details/bandwidth/) of uploads/downloads, and the first 5GB is free, but you can see that the cost for a simple site is still  pennies at £0.065 per GB in the North Europe region. 
+Now, given that your site is likely in git and you don't mind an outage on, say a blog site, feel free to choose LRS, the most 'risky' option. It would take a single data center failure to take it down, an unlikely event in itself. But, given the site will be almost certainly under a gigabyte in size i'd just go for the most opulent option. The files that make up this site as of now come to a size of under 5 MB. So, cost of storage is £0.0397 (RA GZRS) \* 0.05GB which is about £0.002p a month. I'd say just splurge out on the best. Even a 10GB website would cost about £0.40p a month. This doesn't include bandwidth [cost](https://azure.microsoft.com/en-us/pricing/details/bandwidth/) of uploads/downloads, and the first 5GB is free, but you can see that the cost for a simple site is still pennies at £0.065 per GB in the North Europe region.
 
-### Blob Storage Creation 
+### Blob Storage Creation
 
 Create the blob like below, accept all default options after the name, replication etc... screen. In this example, we don't need the advanced options of file versioning and soft deletions as the site is kept in git so nothing can really go wrong. In a real critical file keeping scenario these may be valuable settings and should be investigated.
 
@@ -91,11 +91,11 @@ Create a file called index.html like below on you computer using notepad or some
 ```html
 <!DOCTYPE html>
 <html>
-<body>
-<h1>Static Site</h1>
-<p>A great website!</p>
-</body>
-</html> 
+  <body>
+    <h1>Static Site</h1>
+    <p>A great website!</p>
+  </body>
+</html>
 ```
 
 Then, go to the storage account, Containers and the $web folder. Then upload it to the $web folder.
@@ -122,11 +122,11 @@ From the azure blob storage page we get some instructions to follow if we want t
 
 ### Blob Storage Domain Name DNS Settings Changes
 
-Go back to GoDaddy and make a change to our DNS settings to create a CNAME. Go to 'Domains' and choose your domain. 
+Go back to GoDaddy and make a change to our DNS settings to create a CNAME. Go to 'Domains' and choose your domain.
 
 ![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/190.png)
 
-Then, scroll down a bit and and find the 'Manage DNS' option (ignore the other stuff it's just GoDaddy wanting to make you buy web services from them). 
+Then, scroll down a bit and and find the 'Manage DNS' option (ignore the other stuff it's just GoDaddy wanting to make you buy web services from them).
 
 ![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/200.png)
 
@@ -166,11 +166,11 @@ Success!
 
 ## Creating an HTTPS Enabled Site with a CDN
 
-The next step is to involve a CDN (Content Delivery Network). Now, we don't exactly need this but if we enable it we can get a free HTTPS certificate and because it is a consumption cost model it will be pennies to implement and avoid us buying 'real' cert or create complexity in setting up Let's Encrypt. 
+The next step is to involve a CDN (Content Delivery Network). Now, we don't exactly need this but if we enable it we can get a free HTTPS certificate and because it is a consumption cost model it will be pennies to implement and avoid us buying 'real' cert or create complexity in setting up Let's Encrypt.
 
 ### Create a CDN
 
-We will create a CDN to get our site up to the HTTPS level. There are 4 options, see here [https://docs.microsoft.com/en-us/azure/cdn/cdn-features](https://docs.microsoft.com/en-us/azure/cdn/cdn-features). We will go for Verizon Premium because it has a rules engine (not something we will really use apart from the ability to setup an HTTP to HTTPS redirect, which I don't bother doing anyway) and real-time usage stats which is pretty cool. And the cost will be pennies for a site of our size, so just do it! Once created you can hit the 'Manage' button to access all this but I don't go into it on this post. 
+We will create a CDN to get our site up to the HTTPS level. There are 4 options, see here [https://docs.microsoft.com/en-us/azure/cdn/cdn-features](https://docs.microsoft.com/en-us/azure/cdn/cdn-features). We will go for Verizon Premium because it has a rules engine (not something we will really use apart from the ability to setup an HTTP to HTTPS redirect, which I don't bother doing anyway) and real-time usage stats which is pretty cool. And the cost will be pennies for a site of our size, so just do it! Once created you can hit the 'Manage' button to access all this but I don't go into it on this post.
 
 Choose to add a resource from our resource group. Choose a Microsoft CDN (don't worry, the Verizon option is in this one).
 

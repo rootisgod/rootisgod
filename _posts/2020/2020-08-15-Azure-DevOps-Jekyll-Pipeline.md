@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Setting Up an Azure DevOps Build Pipeline for a Jekyll Website on Azure Blob Storage"
-date:   2020-08-15 18:28:00 +0100
+title: "Setting Up an Azure DevOps Build Pipeline for a Jekyll Website on Azure Blob Storage"
+date: 2020-08-15 18:28:00 +0100
 categories: azure devops jekyll cicd blob automation
 ---
 
@@ -13,46 +13,46 @@ Anyway, this is the pipeline YAML file I ended up with. Generate a SAS token and
 
 ```yaml
 trigger:
-- master
+  - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 
 steps:
-- task: UseRubyVersion@0
-  inputs:
-    versionSpec: '>= 2.6'
- 
-- script: |
-    gem install jekyll bundler
-    bundle install --retry=3 --jobs=4
-  displayName: 'Install Jekyll'
- 
-- script: |
-    bundle install
-    jekyll -v
-    jekyll build
-  displayName: 'Build Jekyll Site'
+  - task: UseRubyVersion@0
+    inputs:
+      versionSpec: ">= 2.6"
 
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: |
-      wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux && tar -xf azcopy_v10.tar.gz --strip-components=1
-      mv azcopy azcopy10
-      azcopy10 --version
-      azcopy10 sync "./_site/" "https://rootisgodstaticwebsite.blob.core.windows.net/`$web$env:SASTOKEN" --delete-destination true
-    displayName: 'Update Static Site Blob'
-  env:
-    SASTOKEN: $(sastoken)
+  - script: |
+      gem install jekyll bundler
+      bundle install --retry=3 --jobs=4
+    displayName: "Install Jekyll"
 
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'Put in your subscription'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az cdn endpoint purge --resource-group "www.rootisgod.com" --name "rootisgod" --profile-name "rootisgod-cdn" --content-paths "/*"'
-  displayName: 'Purge CDN Cache'
+  - script: |
+      bundle install
+      jekyll -v
+      jekyll build
+    displayName: "Build Jekyll Site"
+
+  - task: PowerShell@2
+    inputs:
+      targetType: "inline"
+      script: |
+        wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux && tar -xf azcopy_v10.tar.gz --strip-components=1
+        mv azcopy azcopy10
+        azcopy10 --version
+        azcopy10 sync "./_site/" "https://rootisgodstaticwebsite.blob.core.windows.net/`$web$env:SASTOKEN" --delete-destination true
+      displayName: "Update Static Site Blob"
+    env:
+      SASTOKEN: $(sastoken)
+
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: "Put in your subscription"
+      scriptType: "bash"
+      scriptLocation: "inlineScript"
+      inlineScript: 'az cdn endpoint purge --resource-group "www.rootisgod.com" --name "rootisgod" --profile-name "rootisgod-cdn" --content-paths "/*"'
+    displayName: "Purge CDN Cache"
 ```
 
 {% include all-footer-includes.html %}

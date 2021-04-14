@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "My Must Have Software"
-date:   2020-10-11 13:00:00 +0100
+title: "My Must Have Software"
+date: 2020-10-11 13:00:00 +0100
 categories: software utilities
 ---
 
@@ -55,17 +55,18 @@ I battled with a number of Git IDEs for a while, and again (lol) I got sick of '
 
 ## [VMWare Workstation and Fusion](https://my.vmware.com/web/vmware/evalcenter?p=fusion-player-personal) - $FREE
 
-These are both free for personal use now! Worth it just for that. Generally a better option than Virtualbox and allows nested guests so you can do crazy things like run a Windows VM which runs a vagrant container which launches virtualbox. Nice! Fusion on Mac lets you load a Bootcamp partition as a VM inside Mac OSX which is ridiculously handy. 
+These are both free for personal use now! Worth it just for that. Generally a better option than Virtualbox and allows nested guests so you can do crazy things like run a Windows VM which runs a vagrant container which launches virtualbox. Nice! Fusion on Mac lets you load a Bootcamp partition as a VM inside Mac OSX which is ridiculously handy.
 
 [Free Personal Fusion and Workstation Blog Post](https://blogs.vmware.com/teamfusion/2020/08/announcing-fusion-12-and-workstation-16.html)
 
 ## [Unraid](https://unraid.net/product) - $59 (6 Disks)
 
 A bit of a different thing here. This is essentially a NAS system at heart, but it is much more than that. It has a Linux base which you can use to mount hard disks and share on a network. But, it also allows;
- - VM Host Server - Run VMs of any OS you like
- - Docker Container Server - Run whatever you like without the heaviness of a VM
- - Wireguard Server - VPN into your network
- - PCIE Passthrough to VM Ability - Run a game server or a transcoding plex media server with a GPU
+
+- VM Host Server - Run VMs of any OS you like
+- Docker Container Server - Run whatever you like without the heaviness of a VM
+- Wireguard Server - VPN into your network
+- PCIE Passthrough to VM Ability - Run a game server or a transcoding plex media server with a GPU
 
 So, if you want a do-it-all machine you can stick behind the TV or in a cupboard, this is it! I currently have an AMD 2600 machine, with 64GB of RAM and 6 hard disks of many TB's. It can do almost anything. I seriously urge anyone who needs something like this to give it a shot. I ran a home ESXi server and a Synology NAS for a few years and this beats them both hands down for a simple home setup. Even if you don't need file hosting i'd say it's worth buying just as a hypervisor and docker container host.
 

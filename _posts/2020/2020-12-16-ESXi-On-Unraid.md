@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "ESXi 7.0U1 Running on Unraid"
-date:   2020-12-16 12:00:00 +0100
+title: "ESXi 7.0U1 Running on Unraid"
+date: 2020-12-16 12:00:00 +0100
 categories: Unraid ESXi Nested Virtualization
 ---
 
@@ -9,20 +9,21 @@ categories: Unraid ESXi Nested Virtualization
 
 # How to setup an ESXi install on Unraid.
 
-I tried to find a guide on how to do this (and not the reverse of running Unraid on ESXi which seem to be everywhere!) and there seems to be a little missing in each case. The tutorial below seems to be a golden path of sorts, and is the motherboard and bios type that worked for me. The same settings on a Q35 motherboard and OVMF BIOS failed to see SATA drives for example, so you really do seem to have to be specific here. 
+I tried to find a guide on how to do this (and not the reverse of running Unraid on ESXi which seem to be everywhere!) and there seems to be a little missing in each case. The tutorial below seems to be a golden path of sorts, and is the motherboard and bios type that worked for me. The same settings on a Q35 motherboard and OVMF BIOS failed to see SATA drives for example, so you really do seem to have to be specific here.
 
-So, i've brought everything I know together into one place. This isn't likely an optimal setup, but, if you want something that works for testing it might get you through. 
+So, i've brought everything I know together into one place. This isn't likely an optimal setup, but, if you want something that works for testing it might get you through.
 
 The main reason I am doing this is because I have an Unraid box which hosts various fileshares, and a NUC. The Unraid server has 64GB RAM, but the NUC isn't so lucky. I want to have vCenter available as it does a lot of things you really need like setup VM Templates so creating a new machine is easy. I know I could probably just use Proxmox etc etc etc, but I like ESXi and so that's what i'm going for. So, the mission is to not burden my little NUC with vCenter and its 12GB RAM requirement and instead offload that role to my Unraid server so the NUC can focus on other things.
 
 ## Unraid Bootup Parameters
-First of all, We need to add ```kvm_amd.nested=1``` to bootup image params on our Unraid machine to enable nested virtualization (so we can run VMs inside our VMs). I run an AMD Unraid machine, so this is the setting for my machine. If running on an Intel system, use ```kvm_intel.nested=1``` instead and just swap what I say below.
+
+First of all, We need to add `kvm_amd.nested=1` to bootup image params on our Unraid machine to enable nested virtualization (so we can run VMs inside our VMs). I run an AMD Unraid machine, so this is the setting for my machine. If running on an Intel system, use `kvm_intel.nested=1` instead and just swap what I say below.
 
 So, go to the main page and click the Flash drive icon you have Unraid installed on
 
 ![](/assets/images/2020/ESXi-On-Unraid/Image1.png)
 
-Amend the **Syslinux configuration:** section like so by adding ```kvm_amd.nested=1``` (or ```kvm_intel.nested=1``` if you have an Intel system) to the append section. Make one if you don't have it.
+Amend the **Syslinux configuration:** section like so by adding `kvm_amd.nested=1` (or `kvm_intel.nested=1` if you have an Intel system) to the append section. Make one if you don't have it.
 
 ```bash
 kernel /bzimage
@@ -42,6 +43,7 @@ Go to VMs tab and click **Add VM**. And add a Linux machine.
 ![](/assets/images/2020/ESXi-On-Unraid/Image5.png)
 
 At a high level we want to do the following to start;
+
 - CPU Mode is Host Passthrough
 - i440fx-5.1 machine
 - SeaBIOS BIOS
@@ -63,25 +65,25 @@ Then, we want to edit it again and then choose **Form View** to change to XML vi
 
 ![](/assets/images/2020/ESXi-On-Unraid/Image9.png)
 
-#### NOTE 
+#### NOTE
 
 Never edit this again in the **Form View** as it will undo the changes or even make it an invalid config. So try to change to XML first. It's really annoying...
 
 ### CPU
 
 #### Cores
+
 If using 2 CPUs, ensure it has 2 cores and 1 thread each. ESXi needs to believe it has 2 physical cores available. If using 4 cores in your VM you won't have to do this, but I thought worth noting that it is a requirement.
 
 ```xml
 <topology sockets='1' dies='1' cores='1' threads='2'/>
 ```
 
-to 
+to
 
 ```xml
 <topology sockets='1' dies='1' cores='2' threads='1'/>
 ```
-
 
 #### Virtualization
 
@@ -95,7 +97,7 @@ And, add a nested Virtualization flag for the host inside the CPU section.
   </cpu>
 ```
 
-to 
+to
 
 ```xml
   <cpu mode='host-passthrough' check='none' migratable='on'>
@@ -108,7 +110,7 @@ to
 
 ### Virtual Network
 
-#### Adapter Type 
+#### Adapter Type
 
 Change from **virtio-net** to **vmxnet3**
 
@@ -132,7 +134,7 @@ to
     </interface>
 ```
 
-### Full Config 
+### Full Config
 
 Here is the full XML file as an example to check against.
 
@@ -354,10 +356,9 @@ Now we need to create a new datastore from the 100GB disk we also added to the V
 
 ![](/assets/images/2020/ESXi-On-Unraid/Image36.png)
 
-Success! 
+Success!
 
 ![](/assets/images/2020/ESXi-On-Unraid/Image37.png)
-
 
 ## Test VM
 
