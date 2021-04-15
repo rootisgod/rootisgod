@@ -53,7 +53,7 @@ Now, looking at the previous link above, we just add that to the example javascr
 
 On our site, create a javascript file in the `/assets/js` folder and put in the key. Take the snippet from here and put in your own instrumentation key.
 
-https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript#snippet-based-setup
+[https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript#snippet-based-setup](https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript#snippet-based-setup)
 
 ![](/assets/images/2020/Azure-Application-Insights/090.png)
 
