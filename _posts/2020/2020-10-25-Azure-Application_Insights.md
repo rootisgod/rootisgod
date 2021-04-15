@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Azure Application Insights for Your Website"
+title: "Azure Application Insights for Your Static Website"
 date: 2020-10-25 20:00:00 +0100
 categories: website hosting metrics javascript
 ---
@@ -51,7 +51,9 @@ Once created, we can go to the resource and look for the 'Application Instrument
 
 Now, looking at the previous link above, we just add that to the example javascript snippet provided.
 
-On our site, create a javascript file in the `/assets/js` folder and put in the key.
+On our site, create a javascript file in the `/assets/js` folder and put in the key. Take the snippet from here and put in your own instrumentation key.
+
+https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript#snippet-based-setup
 
 ![](/assets/images/2020/Azure-Application-Insights/090.png)
 
