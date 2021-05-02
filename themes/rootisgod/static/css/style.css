@@ -1,0 +1,246 @@
+/*! Main Size Look */
+html {
+    font-size: 1.1em;
+}
+
+/*! Main Text */
+body {
+    font-family: "dm", "Dank Mono", Arial;
+    line-height: 1.5em;
+    font-size: 1.1em;
+    color: #bbb;
+    max-width: 42rem;
+    padding: 2rem;
+    margin: auto;
+    background: #181818;
+    background-color: #181818;
+    overscroll-behavior-y: none;
+}
+
+img {
+    max-width: 100%;
+    /* vertical-align: middle; */
+    /* border-color: #bababa */
+    border-width: 50px;
+    margin-right: 0px;
+    padding: 5px;
+    background-color: #b4b4b4;
+    background-image: -webkit-linear-gradient(
+        270deg,
+        rgb(192, 192, 192) 1%,
+        rgb(128, 128, 128) 2%,
+        rgb(64, 64, 64) 10%,
+        rgb(20, 20, 20) 25%,
+        rgb(5, 5, 5) 100%
+    );
+}
+
+/*! Makes a line basically */
+.site-header {
+    border-bottom: 1px solid #404040;
+    min-height: 55.95px;
+    line-height: 54px;
+    position: relative;
+}
+
+/*! Makes a line basically */
+.site-footer {
+    border-top: 1px solid #404040;
+    min-height: 55.95px;
+    line-height: 54px;
+    position: relative;
+}
+
+.header-padding {
+    padding-bottom: 1em;
+}
+
+/*! Make the date of the post smaller */
+.post-entry {
+    padding-bottom: 1.5em;
+}
+
+/*! Make the date of the post smaller */
+.post-meta {
+    font-size: 0.75em;
+    color: #999;
+}
+
+/*! Make the post link a decent size */
+.post-link {
+    display: block;
+    font-size: 1.36rem;
+}
+
+/*! Markdown Code */
+span {
+    font-family: "dm", "Dank Mono", Arial;
+}
+
+/*! Links  without underlines */
+A {
+    color: #79b8ff;
+    text-decoration: none;
+}
+A:visited {
+    color: #79b8ff;
+}
+A:hover {
+    color: #bbb;
+    text-decoration: underline;
+}
+
+/*! Post titles... */
+H1,
+.post-title,
+.post-content H1 {
+    font-size: 2.625rem;
+    letter-spacing: -1px;
+    line-height: 1.15;
+    font-weight: bolder;
+    text-shadow: 2px 2px #555;
+    text-align: center;
+}
+
+/*! Code Blocks */
+PRE {
+    padding: 8px 12px;
+    overflow-x: auto;
+}
+
+PRE,
+CODE {
+    font-family: "Menlo", "Inconsolata", "Consolas", "Roboto Mono",
+        "Ubuntu Mono", "Liberation Mono", "Courier New", monospace;
+    font-size: 0.9375em;
+}
+
+.highlight {
+    border-radius: 3px;
+    background: #212121;
+}
+
+/*! Blank Table for Footer Items */
+.site-footer-table table,
+table th,
+table td {
+    margin-bottom: 30px;
+    text-align: left;
+    border-collapse: collapse;
+    border: 0px;
+}
+
+/*! General Tables */
+table {
+    margin-bottom: 30px;
+    width: 100%;
+    text-align: left;
+    color: #bbb;
+    border-collapse: collapse;
+    border: 1px solid #404040;
+}
+
+.site-footer-table td {
+    border: 0px;
+}
+.site-footer-table tr {
+    border: 0px;
+}
+
+table tr:nth-child(even) {
+    background-color: #222;
+}
+table th,
+table td {
+    padding: 10px 15px;
+}
+table th {
+    background-color: #323232;
+    border: 1px solid #4e4e4e;
+}
+table td {
+    border: 1px solid #404040;
+}
+@media screen and (max-width: 800px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: -ms-autohiding-scrollbar;
+    }
+}
+
+/*! Heading More Defined */
+.post-content H2 {
+    font-weight: bold;
+}
+
+H1,
+H2,
+H3,
+H4,
+H5,
+H6,
+P,
+BLOCKQUOTE,
+PRE,
+UL,
+OL,
+DL,
+FIGURE,
+.highlight {
+    margin-bottom: 0.6em;
+}
+
+/*! Post content text */
+.post-content {
+    font-size: 0.82em;
+    line-height: 1.5;
+}
+.post-content h2 {
+    font-size: 1.75rem;
+}
+@media screen and (min-width: 800px) {
+    .post-content h2 {
+        font-size: 2rem;
+    }
+}
+.post-content h3 {
+    font-size: 1.375rem;
+}
+@media screen and (min-width: 800px) {
+    .post-content h3 {
+        font-size: 1.625rem;
+    }
+}
+.post-content h4 {
+    font-size: 1.25rem;
+}
+.post-content h5 {
+    font-size: 1.125rem;
+}
+.post-content h6 {
+    font-size: 1.0625rem;
+}
+
+/*! Header Links to About page and main site */
+.alignleft {
+    float: left;
+}
+.alignright {
+    float: right;
+}
+
+/*! Post navigation */
+.post-navigation-next {
+    float: right;
+}
+.post-navigation-previous {
+    float: left;
+}
+
+/*! Clear Floats */
+.clear {
+    clear: both;
+}
+    

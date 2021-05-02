@@ -1,0 +1,28 @@
+baseURL = "https://www.rootisgod.com"
+disablePathToLower = true
+languageCode = "en-gb"
+title = "RootIsGod"
+theme = "rootisgod"
+
+[permalinks]
+  posts = "/:year/:title/"
+
+[menu]
+  	[[menu.sites]]
+      	identifier = "About"
+      	name = "About"
+      	url = "/about"
+
+[params]
+Name = "RootIsGod"
+About = "Sysadmin Blog for Cloud and General Day to Day Stuff"
+Email = "blog@rootisgod.com"
+PostLimit = 10 # Sets the number of posts to display on the front page
+
+[[params.profiles]]
+name = "GitHub"
+url = "https://github.com/rootisgod/rootisgod"
+
+[[params.profiles]]
+name = "Twitter"
+url = "https://twitter.com/rootisgodblog"

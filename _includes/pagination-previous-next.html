@@ -1,8 +1,0 @@
-<div class="Previous-next">
-    {% if page.previous.url %}
-    <a class="previous" href="{{page.previous.url}}">&laquo; {{page.previous.title | truncatewords: 6 }}</a>
-    {% endif %}
-    {% if page.next.url %}
-    <a class="next" href="{{page.next.url}}">{{page.next.title | truncatewords: 6 }} &raquo;</a>
-    {% endif %}
-</div>

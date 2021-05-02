@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    {{ partial "head.html" . }}
+
+    <div>
+		<div class="header-padding">
+			<div class="site-header">
+        		{{ partial "site-header.html" . }}
+			</div>
+			<div class="site-header">
+        		{{ partial "index-header.html" . }}
+			</div>
+		</div>
+			<!-- orders content according to the "publishdate" field in front matter -->
+			{{ range first (.Site.Params.PostLimit | default 4) (where
+			.Site.RegularPages.ByPublishDate "Section" "posts").Reverse }}
+			<div class="post-entry">
+				<div class="post-meta">
+						<time>{{ .Date.Format "Jan 2, 2006" }}</time><br />
+				</div>
+				<div class="post-link">
+					<a href="{{ .Permalink }}">{{ .Title }}</a>
+				</div>
+			</div>
+			{{ end }}
+
+		<h3><a href="posts/">View all posts</a></h3>
+
+        {{ partial "site-footer.html" . }}
+		
+    </body>
+</html>

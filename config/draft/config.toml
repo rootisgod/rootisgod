@@ -1,0 +1,4 @@
+# https://gohugo.io/getting-started/configuration/
+baseURL = "https://draft.rootisgod.com"
+buildDrafts = true
+minify = false

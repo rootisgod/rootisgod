@@ -1,0 +1,16 @@
+<div class="site-footer">
+    <!-- Add a buymeabeer js file -->
+
+    <p>{{ .Site.Params.About| markdownify }}</p>
+
+    <div class="site-footer-table">
+        <table>
+            <tr>
+                {{ if ne .Site.Params.Email "" }}
+                <td>&nbsp;<code>{{ .Site.Params.Email }}</code></td>
+                {{ end }}
+                <td><a href="{{ .Site.BaseURL }}/index.xml">RSS Feed</a></td>
+            </tr>
+        </table>
+    </div>
+</div>

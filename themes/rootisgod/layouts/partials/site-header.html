@@ -1,0 +1,12 @@
+<nav>
+    <div class="header-links"></div>
+    <p class="alignleft">
+        <a href="{{ .Site.BaseURL }}">RootIsGod</a>
+    </p>
+    <p class="alignright">
+        {{ range .Site.Menus.sites }}
+        <a href="{{ .URL }}">{{ .Name }}</a>
+        {{ end }}
+    </p>
+    </div>
+</nav>

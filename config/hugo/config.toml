@@ -1,0 +1,4 @@
+# https://gohugo.io/getting-started/configuration/
+baseURL = "https://hugorootisgod.z16.web.core.windows.net"
+buildDrafts = true
+minify = false

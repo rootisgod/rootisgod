@@ -6,8 +6,7 @@ name: DRAFT
 on:
   # Triggers the workflow on push or pull request events
   push:
-    branches-ignore:
-      - master
+    branches: [ draft ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

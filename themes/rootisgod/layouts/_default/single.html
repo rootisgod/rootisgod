@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+{{ partial "head.html" . }}
+
+<html>
+    {{ partial "site-header-js.html" . }}
+    <div class="site-header">{{ partial "site-header.html" . }}</div>
+    <div class="post-title">
+        <h1>{{ .Title }}</h1>
+    </div>
+
+    {{ partial "post-navigation-links.html" . }}
+
+    <p class="post-meta">
+        <time itemprop="datePublished"> {{ .Date.Format "Jan 2, 2006" }} </time>
+    </p>
+
+    {{ partial "post-header.html" . }}
+
+    <div class="post-content">{{ .Content }}</div>
+
+    {{ partial "post-navigation-links.html" . }}
+    {{ partial "post-footer.html" . }}
+    {{ partial "site-footer.html" . }}
+</html>

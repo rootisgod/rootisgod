@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    {{ partial "head.html" . }}
+
+    <body>
+        {{ partial "site-header-js.html" . }}
+        <div class="site-header">{{ partial "site-header.html" . }}</div>
+        {{ partial "post-header.html" . }}
+
+        <h2>Posts</h2>
+
+        <div>
+            <!-- orders content according to the "publishdate" field in front matter -->
+            {{ range .Pages.ByPublishDate.Reverse }}
+            <div>
+                <time>{{ .Date.Format "January 2, 2006" }}</time><br />
+                <a href="{{ .Permalink }}">{{ .Title }}</a>
+            </div>
+            <br />
+            {{ end }}
+        </div>
+    </body>
+</html>

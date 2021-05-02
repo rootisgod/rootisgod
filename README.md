@@ -33,3 +33,12 @@ Then, serve the jekyll site like so;
 ```
 
 Then go to your localhost to see the site - http://127.0.0.1:4000
+
+# Hugo
+
+Notes on the migration. Works, but not front page of table of contents etc...
+
+```bash
+git submodule add https://github.com/ba11b0y/lekh.git themes/lekh
+theme: "lekh"
+```
