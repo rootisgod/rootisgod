@@ -27,20 +27,15 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Install Required Gems and Show Jekyll Version
-        run: |
-          bundle install
-          bundle exec jekyll -v
-
       - name: Build Site
         run: |
-          bundle exec jekyll build
+          hugo
 
       - name: Sync Site Files to Site
         env:
           LIVESTORAGEACCOUNTANDSASTOKEN: ${{ secrets.LIVESTORAGEACCOUNTANDSASTOKEN }}
         run: |
-          azcopy10 sync "./_site/" "$LIVESTORAGEACCOUNTANDSASTOKEN" --delete-destination true
+          azcopy10 sync "./public/" "$LIVESTORAGEACCOUNTANDSASTOKEN" --delete-destination true
     
       - name: Purge CDN Cache
         env:
