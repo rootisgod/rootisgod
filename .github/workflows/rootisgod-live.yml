@@ -31,6 +31,7 @@ jobs:
         run: |
           hugo -e live
 
+
       - name: Sync Site Files to Site
         env:
           LIVESTORAGEACCOUNTANDSASTOKEN: ${{ secrets.LIVESTORAGEACCOUNTANDSASTOKEN }}
