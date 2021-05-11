@@ -29,7 +29,7 @@ jobs:
 
       - name: Build Site
         run: |
-          hugo
+          hugo -e live
 
       - name: Sync Site Files to Site
         env:
