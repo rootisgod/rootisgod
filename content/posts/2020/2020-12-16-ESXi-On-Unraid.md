@@ -1,7 +1,7 @@
 ---
 categories: Unraid ESXi Nested Virtualization
 date: "2020-12-16T12:00:00Z"
-title: ESXi 7.0U1 Running on Unraid
+title: ESXi On Unraid
 ---
 
 # How to setup an ESXi install on Unraid.
