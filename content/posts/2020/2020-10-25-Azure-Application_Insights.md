@@ -12,7 +12,9 @@ The simplest and most straightforward solution is to use Azure Application Insig
 
 For clarity this is how Application Insights is described on the azure website.
 
-![](/assets/images/2020/Azure-Application-Insights/005.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Azure-Application-Insights/005.png"><img src="/assets/images/2020/Azure-Application-Insights/005.png"></a>
+{{< /rawhtml >}}
 
 So, it is saying we create a resource and then reference a special key on our site to monitor connections. Because our site is just a static HTML page we can't use the server-side SDKs and so, we fall back to Javascript on the pages we host - [https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript#snippet-based-setup](https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript#snippet-based-setup).
 
@@ -22,27 +24,43 @@ But, there are some pre-reqs first to setting up an Application Insights solutio
 
 We need to first create a Log Analytics Workspace to hold the metrics we collect, this will also let us query this data. So, we create one first from the Azure Portal, using the defaults and placing it in the same region as your Static Site enabled blob storage.
 
-![](/assets/images/2020/Azure-Application-Insights/010.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Azure-Application-Insights/010.png"><img src="/assets/images/2020/Azure-Application-Insights/010.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Azure-Application-Insights/020.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Azure-Application-Insights/020.png"><img src="/assets/images/2020/Azure-Application-Insights/020.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Azure-Application-Insights/030.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Azure-Application-Insights/030.png"><img src="/assets/images/2020/Azure-Application-Insights/030.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Azure-Application-Insights/040.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Azure-Application-Insights/040.png"><img src="/assets/images/2020/Azure-Application-Insights/040.png"></a>
+{{< /rawhtml >}}
 
 ## Application Insights Resource
 
 Now we can create our Application Insight resource. Choose the same region as our other resources to avoid any bandwidth costs (same region traffic is free). Choose the workspace based resource mode as the classic mode will be deprecated soon.
 
-![](/assets/images/2020/Azure-Application-Insights/050.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Azure-Application-Insights/050.png"><img src="/assets/images/2020/Azure-Application-Insights/050.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Azure-Application-Insights/060.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Azure-Application-Insights/060.png"><img src="/assets/images/2020/Azure-Application-Insights/060.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Azure-Application-Insights/070.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Azure-Application-Insights/070.png"><img src="/assets/images/2020/Azure-Application-Insights/070.png"></a>
+{{< /rawhtml >}}
 
 Once created, we can go to the resource and look for the 'Application Instrumentation Key'.
 
-![](/assets/images/2020/Azure-Application-Insights/080.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Azure-Application-Insights/080.png"><img src="/assets/images/2020/Azure-Application-Insights/080.png"></a>
+{{< /rawhtml >}}
 
 ## Add the Javascript to our Jekyll Site
 
@@ -52,18 +70,26 @@ On our site, create a javascript file in the `/assets/js` folder and put in the 
 
 [https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript#snippet-based-setup](https://docs.microsoft.com/en-us/azure/azure-monitor/app/javascript#snippet-based-setup)
 
-![](/assets/images/2020/Azure-Application-Insights/090.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Azure-Application-Insights/090.png"><img src="/assets/images/2020/Azure-Application-Insights/090.png"></a>
+{{< /rawhtml >}}
 
 Then, we can start to add this snippet as an 'include' on our content pages.
 
 _I'm sure there is a way to have this added automatically via the jekyll `_config.yml` file but i'm not there yet, so just add it manually to your pages like below and i'll update this page later when I figure out the better way._
 
-![](/assets/images/2020/Azure-Application-Insights/0100.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Azure-Application-Insights/0100.png"><img src="/assets/images/2020/Azure-Application-Insights/0100.png"></a>
+{{< /rawhtml >}}
 
 **Update: There is a slightly better way. Make an include file of all your includes and use that so it is still a one item 'header' we add. Keeping original text for continuity**
 
-![](/assets/images/2020/Azure-Application-Insights/0105.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Azure-Application-Insights/0105.png"><img src="/assets/images/2020/Azure-Application-Insights/0105.png"></a>
+{{< /rawhtml >}}
 
 Then, push and build your site and start browsing a few pages to trigger some data (it's also a good idea to double-check your page source to make sure the javascript code we included is there, it should be or none of this will work!). There is a lot to dig into, and I don't know much yet, but the most useful initial thing I have found are page access counts, and the system accessing it. Look below! Cool! And, best of all, cost is minimal as Application Insights is also a pay-as-you-go, data ingress/egress, consumption based model which for my scale is almost free. Seems like a good start!
 
-![](/assets/images/2020/Azure-Application-Insights/0110.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Azure-Application-Insights/0110.png"><img src="/assets/images/2020/Azure-Application-Insights/0110.png"></a>
+{{< /rawhtml >}}

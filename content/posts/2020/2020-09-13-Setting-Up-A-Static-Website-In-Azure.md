@@ -8,7 +8,9 @@ I thought I would blog about how to create a static website on your own domain w
 
 Here is the cost of running this website for the last month. It's practically free!
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/010.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/010.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/010.png"></a>
+{{< /rawhtml >}}
 
 The process of setting up a custom domain static site is quite simple but it is easy to get some bits wrong so I thought I would document it from start to finish for my own long-term knowledge, and for anyone else struggling to figure it out.
 
@@ -20,13 +22,21 @@ But, if not, keep reading...
 
 First, buy a domain name so we can get to the site we create. I use [GoDaddy](https://www.godaddy.com) and i've never had a problem with them, but any registrar should do the job. I'm using an XYZ domain name in this example because it is cheap! Feel free to get a decent .com instead. Don't buy any extras that GoDaddy offer, you probably don't need them. Make sure you do no put something like a mobile phone number in the details when you purchase otherwise you will get calls from random people looking through whois for people to scam and create a website for. An example of a purchase using GoDaddy is below.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/020.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/020.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/020.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/030.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/030.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/030.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/040.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/040.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/040.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/050.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/050.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/050.png"></a>
+{{< /rawhtml >}}
 
 Done. We can now start setting up our storage to host the site.
 
@@ -55,31 +65,47 @@ Now, given that your site is likely in git and you don't mind an outage on, say 
 
 Create the blob like below, accept all default options after the name, replication etc... screen. In this example, we don't need the advanced options of file versioning and soft deletions as the site is kept in git so nothing can really go wrong. In a real critical file keeping scenario these may be valuable settings and should be investigated.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/060.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/060.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/060.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/070.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/070.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/070.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/080.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/080.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/080.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/090.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/090.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/090.png"></a>
+{{< /rawhtml >}}
 
 Once created, it should be in your resource group.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/100.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/100.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/100.png"></a>
+{{< /rawhtml >}}
 
 The first thing to do is enable 'Static Website' and hit save.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/110.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/110.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/110.png"></a>
+{{< /rawhtml >}}
 
 Once enabled, enter an index document name of 'index.html'. This is generally the root page of a website. If you know yours will be different, enter it here, and save the setting.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/120.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/120.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/120.png"></a>
+{{< /rawhtml >}}
 
 ### Add an index.html
 
 We now have a live site we can access. Note that we now have a $web folder where we place static website related files.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/130.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/130.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/130.png"></a>
+{{< /rawhtml >}}
 
 We just need an index.html file so we can browse and check it works as expected.
 
@@ -97,17 +123,27 @@ Create a file called index.html like below on you computer using notepad or some
 
 Then, go to the storage account, Containers and the $web folder. Then upload it to the $web folder.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/140.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/140.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/140.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/150.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/150.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/150.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/160.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/160.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/160.png"></a>
+{{< /rawhtml >}}
+
 
 Now, we can browse to [https://mystaticwebsiteblob.z16.web.core.windows.net/](https://mystaticwebsiteblob.z16.web.core.windows.net/) and see what happens.
 
 Success!
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/170.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/170.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/170.png"></a>
+{{< /rawhtml >}}
+
 
 But, it's not setup to use an HTTPS connection which isn't ideal nowadays. Now, we can look at how to use our domain name and get a free HTTPS certificate from Azure.
 
@@ -115,49 +151,72 @@ But, it's not setup to use an HTTPS connection which isn't ideal nowadays. Now, 
 
 From the azure blob storage page we get some instructions to follow if we want to use a custom domain. We will choose the first option. But we first have to make a change to our DNS so azure can check that we own the domain. I tried both DNS names suggested, but only the one with the 'z16' worked. Not sure why, so just use that one of the two (ie mystaticwebsiteblob.z16.web.core.windows.net) if following along (and it might not be z16, use your one instead going forward).
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/180.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/180.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/180.png"></a>
+{{< /rawhtml >}}
+
 
 ### Blob Storage Domain Name DNS Settings Changes
 
 Go back to GoDaddy and make a change to our DNS settings to create a CNAME. Go to 'Domains' and choose your domain.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/190.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/190.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/190.png"></a>
+{{< /rawhtml >}}
+
 
 Then, scroll down a bit and and find the 'Manage DNS' option (ignore the other stuff it's just GoDaddy wanting to make you buy web services from them).
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/200.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/200.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/200.png"></a>
+{{< /rawhtml >}}
+
 
 We actually already have a 'www' CNAME entry already, GoDaddy have set it up for us so we just have to amend it. Click the little pencil to edit the entry.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/210.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/210.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/210.png"></a>
+{{< /rawhtml >}}
 
 Change the '@' value to 'mystaticwebsiteblob.z16.web.core.windows.net'. I also change the TTL to something low just in case I make a mistake and don't want to wait too long for the update to be noticed. 600 seconds is the minimum GoDaddy allows. Hit save. We now have set www.mystaticwebsite.xyz to point to the 'z16' azure blob storage static site address.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/220.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/220.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/220.png"></a>
+{{< /rawhtml >}}
 
 ### Azure Blob Store Custom Domain
 
 Go back to Azure and our blob storage, and the 'Custom Domain' option. Enter in our website name and hit save. Don't tick 'Use indirect CNAME validation' as that is only for option 2.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/240.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/240.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/240.png"></a>
+{{< /rawhtml >}}
 
 It should succeed! Mine actually failed first time, I just hit it again. DNS can take time to propagate and so it may take a little time to verify the change, so just wait a few minutes if this happens.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/250.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/250.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/250.png"></a>
+{{< /rawhtml >}}
 
 Now, go to the [http://www.mystaticwebsite.xyz](http://www.mystaticwebsite.xyz) site, it should be live!
 
 Arggh, error.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/260.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/260.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/260.png"></a>
+{{< /rawhtml >}}
 
 What happened? Well, we are trying to access this site over a non-secure protocol (HTTP) and we have told the blob storage not to allow this. So, jump into the 'Configuration' settings page and disable 'Secure Transfer Required' and hit save. We will make this secure only again once we get an HTTPS certificate in place.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/270.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/270.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/270.png"></a>
+{{< /rawhtml >}}
 
 Retry the page.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/280.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/280.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/280.png"></a>
+{{< /rawhtml >}}
 
 Success!
 
@@ -171,59 +230,91 @@ We will create a CDN to get our site up to the HTTPS level. There are 4 options,
 
 Choose to add a resource from our resource group. Choose a Microsoft CDN (don't worry, the Verizon option is in this one).
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/290.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/290.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/290.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/300.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/300.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/300.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/310.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/310.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/310.png"></a>
+{{< /rawhtml >}}
 
 Then, enter the options like below. Be sure to choose to create a CDN endpoint in this dialog box. Some options are dropdowns so you don't have to type in too much and it should be fairly intuitive to just copy what I did.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/320.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/320.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/320.png"></a>
+{{< /rawhtml >}}
 
 Once created, click on the endpoint
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/330.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/330.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/330.png"></a>
+{{< /rawhtml >}}
 
 Then choose to add a custom domain
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/340.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/340.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/340.png"></a>
+{{< /rawhtml >}}
 
 But, we need to update our www DNS entry to show we own the domain.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/350.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/350.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/350.png"></a>
+{{< /rawhtml >}}
 
 So go back to GoDaddy and update our www record.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/360.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/360.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/360.png"></a>
+{{< /rawhtml >}}
 
 The azure custom domain should now be accepted so add it again.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/370.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/370.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/370.png"></a>
+{{< /rawhtml >}}
 
 And then, we wait for it enable. It took a while to do stage 2 (say 30 minutes) and then it took a good 7-8 hours for the certificate to be replicated across all CDN zones.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/380.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/380.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/380.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/390.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/390.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/390.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/400.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/400.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/400.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/410.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/410.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/410.png"></a>
+{{< /rawhtml >}}
 
 But, eventually... success!
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/420.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/420.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/420.png"></a>
+{{< /rawhtml >}}
 
 And a working secure website :)
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/430.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/430.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/430.png"></a>
+{{< /rawhtml >}}
 
 ## CDN Caching
 
 One thing to note is that if making an update to your site you need to purge your CDN cache. Simply click the purge button and purge all to ensure the CDN gets a copy of your changes. If you don't you will get very confused as to why nothing is changing when you upload new files.
 
-![](/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/440.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/440.png"><img src="/assets/images/2020/Setting-Up-A-Static-Website-In-Azure/440.png"></a>
+{{< /rawhtml >}}
 
 If you want to do this programmatically, you can run something like this using the az command line tools.
 

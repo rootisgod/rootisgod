@@ -18,7 +18,9 @@ First of all, We need to add `kvm_amd.nested=1` to bootup image params on our Un
 
 So, go to the main page and click the Flash drive icon you have Unraid installed on
 
-![](/assets/images/2020/ESXi-On-Unraid/Image1.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image1.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image1.png"></a>
+{{< /rawhtml >}}
 
 Amend the **Syslinux configuration:** section like so by adding `kvm_amd.nested=1` (or `kvm_intel.nested=1` if you have an Intel system) to the append section. Make one if you don't have it.
 
@@ -27,7 +29,9 @@ kernel /bzimage
 append pcie_acs_override=downstream initrd=/bzroot kvm_amd.nested=1
 ```
 
-![](/assets/images/2020/ESXi-On-Unraid/Image2.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image2.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image2.png"></a>
+{{< /rawhtml >}}
 
 Then reboot your host (sorry!).
 
@@ -35,9 +39,13 @@ Then reboot your host (sorry!).
 
 Go to VMs tab and click **Add VM**. And add a Linux machine.
 
-![](/assets/images/2020/ESXi-On-Unraid/Image3.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image3.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image3.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/ESXi-On-Unraid/Image5.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image5.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image5.png"></a>
+{{< /rawhtml >}}
 
 At a high level we want to do the following to start;
 
@@ -52,15 +60,23 @@ At a high level we want to do the following to start;
 
 So, something like below.
 
-![](/assets/images/2020/ESXi-On-Unraid/Image3b.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image3b.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image3b.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/ESXi-On-Unraid/Image7.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image7.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image7.png"></a>
+{{< /rawhtml >}}
 
 Then, we want to edit it again and then choose **Form View** to change to XML view (top right) and amend the text on the following items.
 
-![](/assets/images/2020/ESXi-On-Unraid/Image8.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image8.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image9.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/ESXi-On-Unraid/Image9.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image8.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image9.png"></a>
+{{< /rawhtml >}}
 
 #### NOTE
 
@@ -302,38 +318,65 @@ Here is the full XML file as an example to check against.
 
 Then, power it on and look at the VNC console. Nice!
 
-![](/assets/images/2020/ESXi-On-Unraid/Image10.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image10.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image10.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/ESXi-On-Unraid/Image11.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image11.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image11.png"></a>
+{{< /rawhtml >}}
 
 Now, set a password and install the system to the 16GB USB disk we created earlier.
 
-![](/assets/images/2020/ESXi-On-Unraid/Image13.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image13.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image13.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/ESXi-On-Unraid/Image14.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image14.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image14.png"></a>
+{{< /rawhtml >}}
 
 (this is a bad screenshot, you should see the 100GB disk too but I messed up here, choose the 16GB disk to install to though)
-![](/assets/images/2020/ESXi-On-Unraid/Image15.png)
 
-![](/assets/images/2020/ESXi-On-Unraid/Image16.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image15.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image15.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/ESXi-On-Unraid/Image17.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image16.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image16.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/ESXi-On-Unraid/Image18.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image17.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image17.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/ESXi-On-Unraid/Image19.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image18.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image18.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/ESXi-On-Unraid/Image20.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image19.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image19.png"></a>
+{{< /rawhtml >}}
+
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image20.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image20.png"></a>
+{{< /rawhtml >}}
 
 Then reboot the vm and look for the IP address it displays.
 
-![](/assets/images/2020/ESXi-On-Unraid/Image21.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image21.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image21.png"></a>
+{{< /rawhtml >}}
 
 Go to that page, like https://192.168.1.63 and login (ignore any browser self-signed certificate warnings)
 
-![](/assets/images/2020/ESXi-On-Unraid/Image22.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image22.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image22.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/ESXi-On-Unraid/Image23.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image23.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image23.png"></a>
+{{< /rawhtml >}}
 
 Success!
 
@@ -341,26 +384,44 @@ Success!
 
 Now we need to create a new datastore from the 100GB disk we also added to the VM. Just go to the **Storage** icon and then choose to create a new datastore. Then just go through the options like below.
 
-![](/assets/images/2020/ESXi-On-Unraid/Image24.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image24.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image24.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/ESXi-On-Unraid/Image25.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image25.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image25.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/ESXi-On-Unraid/Image33.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image33.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image33.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/ESXi-On-Unraid/Image34.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image34.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image34.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/ESXi-On-Unraid/Image35.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image35.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image35.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/ESXi-On-Unraid/Image36.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image36.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image36.png"></a>
+{{< /rawhtml >}}
 
 Success!
 
-![](/assets/images/2020/ESXi-On-Unraid/Image37.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image37.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image37.png"></a>
+{{< /rawhtml >}}
 
 ## Test VM
 
 Now, we can create a VM to test that this machine works as a virtualization host. I installed Ubuntu 64-bit and it all worked fine, done!
 
-![](/assets/images/2020/ESXi-On-Unraid/Image46.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image46.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image46.png"></a>
+{{< /rawhtml >}}
 
-![](/assets/images/2020/ESXi-On-Unraid/Image47.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2020/ESXi-On-Unraid/Image47.png"><img src="/assets/images/2020/ESXi-On-Unraid/Image47.png"></a>
+{{< /rawhtml >}}

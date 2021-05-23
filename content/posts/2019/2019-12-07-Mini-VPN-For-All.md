@@ -157,11 +157,9 @@ sudo systemctl status nebula
 
 Happy days! Be sure to setup the firewall on your home network to allow UDP 4242 traffic. This is a screenshot from my pfSense router.
 
----
-
-![](/assets/images/2019/mini-vpn-for-all/01.png)
-
----
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2019/mini-vpn-for-all/01.png"><img src="/assets/images/2019/mini-vpn-for-all/01.png"></a>
+{{< /rawhtml >}}
 
 Now to our windows node…
 
@@ -270,11 +268,9 @@ sc start nebula
 
 Be sure your firewall allows UDP 4242 traffic. This is the NSG on my Azure VM
 
----
-
-![](/assets/images/2019/mini-vpn-for-all/02.png)
-
----
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2019/mini-vpn-for-all/02.png"><img src="/assets/images/2019/mini-vpn-for-all/02.png"></a>
+{{< /rawhtml >}}
 
 ### RDP to an internal VM
 
@@ -282,19 +278,15 @@ Now we can put all this together and rdp to our home network from this azure vm 
 
 Create an RDP session and point it to something internal to your network you want to connect to. In my case 192.168.1.190 is a test windows VM I use.
 
----
-
-![](/assets/images/2019/mini-vpn-for-all/03.png)
-
----
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2019/mini-vpn-for-all/03.png"><img src="/assets/images/2019/mini-vpn-for-all/03.png"></a>
+{{< /rawhtml >}}
 
 Then connect (authenticate the lighthouse SSH then the Windows RDP). This screenshot hopefully shows that I am on a remote machine and connected into my local VM inside my home network. Without a VPN. Cool!
 
----
-
-![](/assets/images/2019/mini-vpn-for-all/04.png)
-
----
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2019/mini-vpn-for-all/04.png"><img src="/assets/images/2019/mini-vpn-for-all/04.png"></a>
+{{< /rawhtml >}}
 
 ## Pros and Cons
 
