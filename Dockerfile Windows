@@ -1,0 +1,19 @@
+FROM microsoft/windowsservercore:1607
+
+# Install hugo
+RUN wget https://github.com/gohugoio/hugo/releases/download/v0.83.1/hugo_extended_0.83.1_Windows-64bit.zip && \
+    Expand-Archive -LiteralPath 'hugo_extended_0.83.1_Windows-64bit.zip' -Force && \
+    Copy-Item -Path '.\hugo_extended_0.83.1_Windows-64bit\hugo.exe' -Destination 'C:\Windows\system32\hugo.exe' -Force && \
+    hugo version
+
+# Install az cli for pushing build to Azure storage blob
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
+# Install azcopy to copy site to blob storage later
+RUN wget -O azcopy_v10.zip https://aka.ms/downloadazcopy-v10-windows && \
+    Expand-Archive -LiteralPath 'azcopy_v10.zip' && \
+    mv '.\azcopy_windows_amd64_10.10.0\azcopy.exe' azcopy10.exe && \
+    cp azcopy10.exe 'C:\Windows\system32\' && \
+    azcopy --version
+
+EXPOSE 1313
