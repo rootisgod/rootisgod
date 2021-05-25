@@ -33,6 +33,6 @@ RUN Expand-Archive -LiteralPath 'c:\kits\azcopy_v10.zip' -DestinationPath 'c:\ki
 # Show Installed Items
 RUN hugo version; \
     az version; \
-    azcopy --version ;
+    azcopy10 --version ;
 
 EXPOSE 1313
