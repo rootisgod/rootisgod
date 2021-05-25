@@ -19,18 +19,20 @@ RUN [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tl
 # Install Hugo
 RUN Expand-Archive -LiteralPath 'c:\kits\hugo.zip' -DestinationPath 'c:\kits\' -Force ; \
     rm c:\kits\hugo.zip ; \
-    mv 'c:\kits\hugo.exe' 'C:\Windows\system32\hugo.exe' ; \
-    hugo version
+    mv 'c:\kits\hugo.exe' 'C:\Windows\system32\hugo.exe' ;
 
 # Install az cli for pushing build to Azure storage blob
 RUN Start-Process msiexec.exe -Wait -ArgumentList '/I c:\kits\AzureCLI.msi /quiet'; \
-    rm c:\kits\AzureCLI.msi ; \
-    az version;
+    rm c:\kits\AzureCLI.msi ;
 
 # Install azcopy to copy site to blob storage later
 RUN Expand-Archive -LiteralPath 'c:\kits\azcopy_v10.zip' -DestinationPath 'c:\kits\' ; \
     rm c:\kits\azcopy_v10.zip ; \
-    mv 'c:\kits\azcopy_windows_amd64_10.10.0\azcopy.exe' 'C:\Windows\system32\azcopy10.exe' ; \
-    azcopy --version
+    mv 'c:\kits\azcopy_windows_amd64_10.10.0\azcopy.exe' 'C:\Windows\system32\azcopy10.exe' ;
+
+# Show Installed Items
+RUN hugo version; \
+    az version; \
+    azcopy --version ;
 
 EXPOSE 1313
