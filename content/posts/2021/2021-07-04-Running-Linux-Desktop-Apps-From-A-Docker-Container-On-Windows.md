@@ -75,5 +75,5 @@ docker run -it --rm -e DISPLAY=10.9.0.15:0.0 firefox
 Tada!
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2021/Running-Linux-Desktop-Apps-From-A-Docker-Container-On-Windows/015.png"><img src="/assets/images/2021/Running-Linux-Desktop-Apps-From-A-Docker-Container-On-Windows/015.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2021/Running-Linux-Desktop-Apps-From-A-Docker-Container-On-Windows/020.png"><img src="/assets/images/2021/Running-Linux-Desktop-Apps-From-A-Docker-Container-On-Windows/020.png"></a>
 {{< /rawhtml >}}
