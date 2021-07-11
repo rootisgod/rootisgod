@@ -99,21 +99,6 @@ services:
       - prometheus_data:/prometheus
       - ./prometheus-config/prometheus.yml:/etc/prometheus/prometheus.yml
 
-  consul-server:
-    image: consul:1.10.0
-    container_name: consul-server
-    volumes:
-      - ./consul-config/server.json:/consul/config/server.json:ro
-    ports:
-      - '8300:8300'
-      - '8301:8301'
-      - '8500:8500'
-      - '8600:8600/tcp'
-      - '8600:8600/udp'
-    command: 'agent -bootstrap-expect=1'
-    links:
-      - prometheus
-
 volumes:
   prometheus_data:
   grafana_data:
@@ -123,6 +108,14 @@ And then start our stack
 
 ```bash
 sudo docker-compose up -d
+```
+
+Then, install consul
+
+```bash
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+sudo apt-get update && sudo apt-get install consul
 ```
 
 Success! Try going to your machine like (if IP is 192.168.35)
@@ -159,6 +152,16 @@ Unzip it to somewhere like c:\consul\consul.exe
 
 Then, 
 
+```bash
+consul agent -server -bootstrap-expect=1 -node=prometheus -bind="192.168.1.35" -data-dir=/home/iain/prometheus/consul-data -config-dir=/home/iain/prometheus/consul-config
+```
+vagrant@n1:~$ consul agent \
+  -server \
+  -bootstrap-expect=1 \
+  -node=agent-one \
+  -bind=172.20.20.10 \
+  -data-dir=/tmp/consul \
+  -config-dir=/etc/consul.d
 
 #### Update Prometheus YML Config for Consul Discovery
 
@@ -194,6 +197,8 @@ Then running
 ```bash
 .\consul.exe agent -node=nuc -bind="192.168.1.251" -config-dir=c:\consul\config  -join "192.168.1.35"
 ```
+
+
 
 Then run this (from another terminal) to have the service join our cluster
 
