@@ -192,14 +192,12 @@ On the consul agent,
 Then running
 
 ```bash
-.\consul.exe agent -node=nuc -bind="192.168.1.251" -config-dir=c:\consul\config
+.\consul.exe agent -node=nuc -bind="192.168.1.251" -config-dir=c:\consul\config  -join "192.168.1.35"
 ```
 
 Then run this (from another terminal) to have the service join our cluster
 
 ```bash
-.\consul.exe join 192.168.1.35
-Successfully joined cluster by contacting 1 nodes.
 .\consul.exe members
 Node           Address             Status  Type    Build   Protocol  DC   Segment
 consul-server  172.19.0.3:8301     alive   server  1.10.0  2         dc1  <all>
