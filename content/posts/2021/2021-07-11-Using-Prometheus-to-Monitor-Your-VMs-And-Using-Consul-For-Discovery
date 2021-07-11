@@ -1,0 +1,178 @@
+---
+categories: linux docker windows prometheus consul monitoring grafana ubuntu
+date: "2021-07-011T22:00:00Z"
+title: Using Prometheus to Monitor Your VMs And Using Consul For Discovery
+---
+
+At work we recently had a need to some mointoring of internal servers and I was trying to avoid going down the 'We can use Zabbix!' route as it seems like Prometheus is becoming a standard of sorts which is simple to setup and easy to mange via config files etc... And it seemts to be evolving into a stack of Prometheus (data) and Grafana (graphs). So, I thought I would write down the simplest route to getting to a point where everything works and we can inspect the result in a nice Grafana dashboard. We will use Docker compose to get the services in place as quickly as possible and then just try tie everything together.
+
+If you want some really good detail on everything prometheus and what to do to get it going I can highly recommend this book https://www.prometheusbook.com.
+
+# Installing the services
+
+We will use Docker Compose to get a stack running very quickly. None of this is very 'production' but it will get usgoing very quickly.
+
+## Ubuntu Docker VM
+
+Install a fresh Ubuntu 20.04 Server VM (2 CPUs, 8GB RAM and 64GB Disk will be more than plenty for testing) and choose to install Docker a part of the 'System Snaps' setup. Avoid the urge to tick 'Prometheus'!.
+
+PICTURE
+
+## Docker Compose Stack
+
+We can get going very quickly using DOcker Compose. This guy (https://github.com/danguita/prometheus-monitoring-stack) has a great Docker Compose Image which I am stealing and simplifying for this guide.
+
+So, create a folder to host the file and touch it to create it 
+
+```bash
+mkdir prometheus
+cd prometheus
+mkdir prometheus-config
+nano ./prometheus-config/prometheus.yml
+```
+
+Then enter this simple prometheus.yml config (or else it wont start)
+
+```
+global:
+    scrape_interval: 15s # By default, scrape targets every 15 seconds.
+    external_labels:
+        monitor: "codelab-monitor"
+
+scrape_configs:
+    - job_name: "prometheus"
+      scrape_interval: 30s
+      static_configs:
+          - targets: ["localhost:9090"]
+```
+
+```bash
+mkdir consul-config
+nano ./consul-config/server.json
+```
+
+Enter this;
+
+```YAML
+{
+  "node_name": "consul-server",
+  "server": true,
+  "ui_config": {
+    "enabled": true
+  },
+  "data_dir": "/consul/data",
+  "addresses": {
+    "http": "0.0.0.0"
+  }
+}
+```
+
+The, we can create our docker compose file.
+
+```
+nano docker-compose.yml
+```
+
+Then put in this.
+
+```docker
+version: "3"
+
+services:
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    links:
+      - prometheus
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus_data:/prometheus
+      - ./prometheus-config/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  consul-server:
+    image: consul:1.10.0
+    container_name: consul-server
+    volumes:
+      - ./consul-config/server.json:/consul/config/server.json:ro
+    ports:
+      - '8500:8500'
+      - '8600:8600/tcp'
+      - '8600:8600/udp'
+    command: 'agent -bootstrap-expect=1'
+    links:
+      - prometheus
+
+volumes:
+  prometheus_data:
+  grafana_data:
+```
+
+And then start our stack
+
+```bash
+sudo docker-compose up -d
+```
+
+Success! Try going to your machine like (if IP is 192.168.35)
+
+http://192.168.1.35:8500  - Consul
+http://192.168.1.35:9090  - Prometheus
+http://192.168.1.35:3000  - Grafana
+
+
+## Addind a Test Grafana dashboard
+
+https://grafana.com/grafana/dashboards/3662
+
+
+## Prometheus Targets via Consul
+
+By default, Prometheus only monitors itself. We must add our own additional targets. The general way to do this is to add more 'jobs' (like a group) which have server targets in it. But, the general way to do this is to amend the prometheus.yml file which means restarting the server to update it, which is a bit meh. Or, you can have a file discoverer which can look at a folder for changes to the config and update on the fly. This is better, but still means adding machines manually. The ideal sweet spot is using Consul which we can query for anything which registers itself on the cluster with a specific value.
+
+### Windows Server setup
+
+We will use a Windows machine (I still prefer a GUI) to install Consul and a Prometheus 'exporter'. The 'exporter' will present metrics that Prometheus can 'scrape'. In Windows land we use a WMI_Exporter. The other is install Consul on the machine so it can add itself to the cluster.
+
+By doing both at once we can have the ideal situation that the exporter is installed and then registered in Prometheus without any extra work!
+
+#### WMI Exporter Install
+
+Install this MSI file from here - https://github.com/prometheus-community/windows_exporter/releases. Done! Check it is alive at your IP and :9182/metrics (ie http://192.168.1.252:9182/metrics)
+
+#### Consul Install
+
+Grab the latest release from here - https://www.consul.io/downloads
+
+Unzip it to somewhere like c:\consul\consul.exe
+
+Then, 
+
+
+#### Update Prometheus YML Config for Consul Discovery
+
+Add this to your prometheus.yml config file
+```yaml
+  - job_name: 'consul'
+    consul_sd_configs:
+      - server: 'localhost:8500'
+        services: []
+```
+
+Then retart our stack
+
+```bash
+sudo docker-compose restart
+
+```
+
+https://medium.com/trendyol-tech/consul-prometheus-monitoring-service-discovery-7190bae50516
+https://visibilityspots.github.io/blog/prometheus-consul.html?utm_source=pocket_mylist
+https://www.digitalocean.com/community/tutorials/how-to-configure-consul-in-a-production-environment-on-ubuntu-14-04
+
