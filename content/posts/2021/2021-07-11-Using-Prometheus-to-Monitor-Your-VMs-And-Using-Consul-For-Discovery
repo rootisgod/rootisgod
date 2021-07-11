@@ -63,6 +63,9 @@ Enter this;
   "data_dir": "/consul/data",
   "addresses": {
     "http": "0.0.0.0"
+  },
+  "connect": {
+    "enabled": true
   }
 }
 ```
@@ -102,6 +105,8 @@ services:
     volumes:
       - ./consul-config/server.json:/consul/config/server.json:ro
     ports:
+      - '8300:8300'
+      - '8301:8301'
       - '8500:8500'
       - '8600:8600/tcp'
       - '8600:8600/udp'
@@ -169,10 +174,64 @@ Then retart our stack
 
 ```bash
 sudo docker-compose restart
-
 ```
 
+
+On the consul agent,
+
+```
+{
+    "server": false,
+    "datacenter": "dc1",
+    "data_dir": "c:/consul/data",
+    "log_level": "INFO",
+    "start_join": ["192.168.1.35"]
+}
+```
+
+Then running
+
+```bash
+.\consul.exe agent -node=nuc -bind="192.168.1.251" -config-dir=c:\consul\config
+```
+
+Then run this (from another terminal) to have the service join our cluster
+
+```bash
+.\consul.exe join 192.168.1.35
+Successfully joined cluster by contacting 1 nodes.
+.\consul.exe members
+Node           Address             Status  Type    Build   Protocol  DC   Segment
+consul-server  172.19.0.3:8301     alive   server  1.10.0  2         dc1  <all>
+nuc            192.168.1.251:8301  alive   client  1.10.0  2         dc1  <default>
+```
+
+PICTURE:
+
+### Adding a Service
+
+So, this is all good, but we dont have anything happening... We need to register a service. Create a file like 'webserver.json' and create something like this;
+
+```bash
+{
+  "service": {
+    "name": "web",
+    "tags": [ "monitored" ],
+    "port": 80
+  }
+}
+```
+
+Check services
+
+```bash
+curl http://192.168.1.35:8500/v1/catalog/services\?pretty
+```
+
+
+LINKS
 https://medium.com/trendyol-tech/consul-prometheus-monitoring-service-discovery-7190bae50516
 https://visibilityspots.github.io/blog/prometheus-consul.html?utm_source=pocket_mylist
 https://www.digitalocean.com/community/tutorials/how-to-configure-consul-in-a-production-environment-on-ubuntu-14-04
 
+https://learn.hashicorp.com/tutorials/consul/get-started-create-datacenter?in=consul/getting-started
