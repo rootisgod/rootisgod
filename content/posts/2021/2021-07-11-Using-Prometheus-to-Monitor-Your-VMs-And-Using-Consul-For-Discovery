@@ -2,6 +2,7 @@
 categories: linux docker windows prometheus consul monitoring grafana ubuntu
 date: "2021-07-011T22:00:00Z"
 title: Using Prometheus to Monitor Your VMs and Using Consul For Discovery
+draft: true
 ---
 
 At work we recently had a need to some monitoring of various internal servers and I was trying to avoid going down the 'We can use Zabbix!' route as it seems like Prometheus is becoming a standard of sorts which is simple to setup and easy to mange via config files etc... And it seems to be evolving into a stack of Prometheus for data and Grafana for graphs. So, I thought I would write down the simplest route to getting to a point where everything works and we can inspect the results in a nice simple system which monitors whatever we need. We will also add Consul as a service discovery mechanism which means that we dont have to tell Prometheus about any new machines we add, it will discover them automatically. I'll skip Alertmanager for now as it will add extra steps, but is a simple follow up if you do some googling. 
