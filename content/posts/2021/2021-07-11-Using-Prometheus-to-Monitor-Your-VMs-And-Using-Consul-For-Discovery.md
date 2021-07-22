@@ -1,6 +1,6 @@
 ---
 categories: linux docker windows prometheus consul monitoring grafana ubuntu
-date: "2021-07-011T22:00:00Z"
+date: "2021-07-22T20:00:00Z"
 title: Using Prometheus to Monitor Your VMs and Using Consul For Discovery
 draft: true
 ---
@@ -251,14 +251,14 @@ On the consul agent,
 
 Then running
 
-```bash
+```cmd
 .\consul.exe agent -node=nuc -bind="192.168.1.251" -config-dir=c:\consul\config  -join "192.168.1.35"
 ```
 
 
 Then run this (from another terminal) to have the service join our cluster
 
-```bash
+```cmd
 .\consul.exe members
 Node           Address             Status  Type    Build   Protocol  DC   Segment
 consul-server  172.19.0.3:8301     alive   server  1.10.0  2         dc1  <all>
