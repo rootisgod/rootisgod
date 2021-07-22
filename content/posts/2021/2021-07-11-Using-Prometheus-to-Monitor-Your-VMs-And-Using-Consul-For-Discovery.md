@@ -58,6 +58,12 @@ scrape_configs:
       consul_sd_configs:
         - server: 'localhost:8500'
           services: []
+      relabel_configs:
+        - source_labels: [__meta_consul_tags]
+          regex: .*,prod,.*
+          action: keep
+        - source_labels: [__meta_consul_service]
+          target_label: job
 ```
 
 Done. Now we need to define our Docker Compose file to run the services.
@@ -161,7 +167,7 @@ And make it executable and run it.
 
 ```bash
 chmod +x start-consul.sh
-.\start-consul.sh
+./start-consul.sh
 ...
 ==> Starting Consul agent...
            Version: '1.10.0'
@@ -176,70 +182,50 @@ chmod +x start-consul.sh
 
 Success! Try going to your machine like (again, change the IP from my example). Note the name is dc1 as this is the default consul server name if one is not supplied.
 
-http://192.168.1.35:8500  - Consul
+http://192.168.1.35:8500  - Consul Server
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2021/Using-Prometheus-to-Monitor-Your-VMs-And-Using-Consul-For-Discovery/005.png"><img src="/assets/images/2021/Using-Prometheus-to-Monitor-Your-VMs-And-Using-Consul-For-Discovery/005.png"></a>
 {{< /rawhtml >}}
 
+If you want to keep this running permanently then you will have to use systemctl or a cronjob to run it, but for simplicity, we will just start it ourselves in this guide and assume it is always running.
+
 ## Prometheus Targets via Consul
 
-By default, Prometheus only monitors itself. We must add our own additional targets. The general way to do this is to add more 'jobs' (like a group) which have server targets in it. But, the general way to do this is to amend the prometheus.yml file which means restarting the server to update it, which is a bit meh. Or, you can have a file discoverer which can look at a folder for changes to the config and update on the fly. This is better, but still means adding machines manually. The ideal sweet spot is using Consul which we can query for anything which registers itself on the cluster with a specific value.
+By default, Prometheus only monitors itself. Go to the targets page of your prometheus server, like [http://192.168.1.35:9090/targets](http://192.168.1.35:9090/targets) and you will see just the one item.
 
-### Windows Server setup
 
-We will use a Windows machine (I still prefer a GUI) to install Consul and a Prometheus 'exporter'. The 'exporter' will present metrics that Prometheus can 'scrape'. In Windows land we use the Windows_Exporter. And we install Consul on the machine, but in agent mode, so it can add itself to the Consul cluster we have.
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2021/Using-Prometheus-to-Monitor-Your-VMs-And-Using-Consul-For-Discovery/007.png"><img src="/assets/images/2021/Using-Prometheus-to-Monitor-Your-VMs-And-Using-Consul-For-Discovery/007.png"></a>
+{{< /rawhtml >}}
 
-By installing both at the same time we can get the metrics system installed and the machine automatically registered in Prometheus without having to amend the prometheus config settings!
+But, we have already added Consul Discovery to our Prometheus config, so let's add a new machine to monitor by installing the required pieces.
+
+### Windows System Setup
+
+We will use a Windows machine (I still prefer a nice simple GUI) to install Consul and a Prometheus 'exporter'. The 'exporter' presents metrics that Prometheus can 'scrape' over a simple web page. In Windows land we use the Windows_Exporter. And, for consul discovery, we install Consul on the machine, but in agent mode.
+
+By installing both at the same time we can get the metrics system installed and the machine automatically registered in Prometheus without having to amend the prometheus config settings. When you have to do this to hundreds of machines, it is super efficient. Combine it with something like Ansible and you are almost fully automated.
 
 #### Windows Exporter Install
 
-Install this MSI file from here - https://github.com/prometheus-community/windows_exporter/releases. I would create screenshots but it is honestly just a a Next, Next, Finsh. Onces installed check it is alive at your machines IP and :9182/metrics (ie http://192.168.1.252:9182/metrics). You will see something like this, which is simple data which is scraped by prometheus.
-
+Install this MSI file from here - https://github.com/prometheus-community/windows_exporter/releases. I would create screenshots but it is honestly just a a Next, Next, Finsh. Once installed, check it is alive and started as a Windows Service called 'Windows Expoerter', and by checking via **http://your_machines_ip:9182/metrics** (ie http://192.168.1.252:9182/metrics). You will see something like this, which is simple data which is scraped by prometheus.
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2021/Using-Prometheus-to-Monitor-Your-VMs-And-Using-Consul-For-Discovery/010.png"><img src="/assets/images/2021/Using-Prometheus-to-Monitor-Your-VMs-And-Using-Consul-For-Discovery/010.png"></a>
 {{< /rawhtml >}}
 
+It's working, now lets install Consul in agent mode so prometheus can know about it.
+
 #### Consul Install
 
-Grab the latest release from here - https://www.consul.io/downloads
+Grab the latest Windows release from here - https://www.consul.io/downloads
 
 Unzip it to somewhere like c:\consul\consul.exe
 
-Then, 
+We need to create a config file with some required info on where our server is (can consul agents service discover the server? I'd imagine so, i'll need to look more!). If using ansible you could template this. But, for us, create a file called config.json and save it in a folder called ```c:\consul\config\``` as ```config.json```. Note that the ```start_join``` is our Consul server IP address, so adjust as required. The ```data_dir``` folder doesnt have to exist, so just place somewhere reasonable.
 
-```bash
-consul agent -server -bootstrap-expect=1 -node=prometheus -bind="192.168.1.35" -data-dir=/home/iain/prometheus/consul-data -config-dir=/home/iain/prometheus/consul-config
-```
-vagrant@n1:~$ consul agent \
-  -server \
-  -bootstrap-expect=1 \
-  -node=agent-one \
-  -bind=172.20.20.10 \
-  -data-dir=/tmp/consul \
-  -config-dir=/etc/consul.d
-
-#### Update Prometheus YML Config for Consul Discovery
-
-Add this to your prometheus.yml config file
-```yaml
-  - job_name: 'consul'
-    consul_sd_configs:
-      - server: 'localhost:8500'
-        services: []
-```
-
-Then retart our stack
-
-```bash
-sudo docker-compose restart
-```
-
-
-On the consul agent,
-
-```
+```json
 {
     "server": false,
     "datacenter": "dc1",
@@ -248,15 +234,28 @@ On the consul agent,
     "start_join": ["192.168.1.35"]
 }
 ```
+And, we need to give it a couple of 'labels' so that when it runs, there is some metadata of sorts for prometheus to latch onto. So, create another file called webserver.json into the same config folder as before.
 
-Then running
-
-```cmd
-.\consul.exe agent -node=nuc -bind="192.168.1.251" -config-dir=c:\consul\config  -join "192.168.1.35"
+```json
+{
+  "service": {
+    "name": "web",
+    "tags": [
+      "prod"
+    ]
+  }
+}
 ```
 
+TODO: NSSM service details and make this command better. Also, discovery not working
 
-Then run this (from another terminal) to have the service join our cluster
+Then run this to get it registered in the Consul database. Bind to the machines IP and give it a reasonable name (like the machines hostname)
+
+```cmd
+.\consul agent -node=nuc -bind="192.168.1.251" -config-dir="c:/consul/config/" -join "192.168.1.35"
+```
+
+Then run this (from another terminal) to see if we managed to add it to our list of machines. We have!
 
 ```cmd
 .\consul.exe members
@@ -265,21 +264,11 @@ consul-server  172.19.0.3:8301     alive   server  1.10.0  2         dc1  <all>
 nuc            192.168.1.251:8301  alive   client  1.10.0  2         dc1  <default>
 ```
 
-PICTURE:
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2021/Using-Prometheus-to-Monitor-Your-VMs-And-Using-Consul-For-Discovery/015.png"><img src="/assets/images/2021/Using-Prometheus-to-Monitor-Your-VMs-And-Using-Consul-For-Discovery/015.png"></a>
+{{< /rawhtml >}}
 
-### Adding a Service
-
-So, this is all good, but we dont have anything happening... We need to register a service. Create a file like 'webserver.json' and create something like this;
-
-```bash
-{
-  "service": {
-    "name": "web",
-    "tags": [ "monitored" ],
-    "port": 80
-  }
-}
-```
+Now, lets check prometheus...
 
 Check services
 
@@ -289,6 +278,7 @@ curl http://192.168.1.35:8500/v1/catalog/services\?pretty
 
 
 LINKS
+https://www.robustperception.io/finding-consul-services-to-monitor-with-prometheus
 https://medium.com/trendyol-tech/consul-prometheus-monitoring-service-discovery-7190bae50516
 https://visibilityspots.github.io/blog/prometheus-consul.html?utm_source=pocket_mylist
 https://www.digitalocean.com/community/tutorials/how-to-configure-consul-in-a-production-environment-on-ubuntu-14-04
