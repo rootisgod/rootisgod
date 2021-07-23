@@ -44,20 +44,23 @@ Enter this simple YAML.  It says we will do checks (scrapes) on machines every 1
 
 ```yaml
 global:
-    scrape_interval: 15s # By default, scrape targets every 15 seconds.
+    scrape_interval: 15s     # By default, scrape targets every 15 seconds.
+    evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
 
 scrape_configs:
     # Monitor this machine
     - job_name: "prometheus"
-      scrape_interval: 30s
       static_configs:
           - targets: ["localhost:9090"]
 
     # This is how we tell prometheus to ask the consul service for targets
     - job_name: 'consul-discovery'
       consul_sd_configs:
-        - server: 'localhost:8500'
+        # The server value HAS to be an IP address. If you use 'localhost:8500' as it is on the same machine 
+        # as prometheus, you will spend hours scratching your head wondering why it won't work...
+        - server: '192.168.1.35:8500'
           services: []
+      # This essentially says, look for a consul machine with a tag of 'prod' in it, and then monitor it
       relabel_configs:
         - source_labels: [__meta_consul_tags]
           regex: .*,prod,.*
@@ -238,11 +241,10 @@ And, we need to give it a couple of 'labels' so that when it runs, there is some
 
 ```json
 {
-  "service": {
-    "name": "web",
-    "tags": [
-      "prod"
-    ]
+  "service":
+  {"name": "windows_exporter",
+   "tags": ["prod"],
+   "port": 9182
   }
 }
 ```
