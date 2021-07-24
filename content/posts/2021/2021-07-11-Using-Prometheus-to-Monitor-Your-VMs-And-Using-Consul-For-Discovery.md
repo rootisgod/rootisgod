@@ -1,6 +1,6 @@
 ---
 categories: linux docker windows prometheus consul monitoring grafana ubuntu
-date: "2021-07-24T16:32:00Z"
+date: "2021-07-24T13:32:00Z"
 title: Using Prometheus to Monitor Your VMs and Using Consul For Discovery
 ---
 
