@@ -103,7 +103,7 @@ Consul too needs a config file. So, lets overwrite the original one like below.
 sudo nano /etc/consul.d/consul.hcl
 ```
 
-Enter this. **CHANGE TO YOUR SERVER'S IP ON THE BOTTOM LINE**. It really just says to listen to anyone, run in server mode, and also give us the UI. We have to specify a bind address as we have to tell it which one we use if there are multiple IPV4 addresses on the machine (if you have docker installed for example, this would mess up it being able to guess correctly)
+Enter this. **CHANGE TO YOUR SERVER IP ON THE BOTTOM LINE**. It really just says to listen to anyone, run in server mode, and also give us the UI. We have to specify a bind address as we have to tell it which one we use if there are multiple IPV4 addresses on the machine (if you have docker installed for example, this would mess up it being able to guess correctly)
 
 ```HCL
 "node_name" = "consul-server"
