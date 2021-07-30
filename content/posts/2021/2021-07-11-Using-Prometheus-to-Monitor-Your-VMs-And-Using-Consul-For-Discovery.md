@@ -68,7 +68,7 @@ scrape_configs:
     # This is how we tell prometheus to ask the consul service for targets
     - job_name: 'consul-discovery'
       consul_sd_configs:
-        - server: 'localhost8500'
+        - server: 'localhost:8500'
           services: []
       # This essentially says, look for a consul machine with a tag of 'prod' in it, and then monitor it
       relabel_configs:
