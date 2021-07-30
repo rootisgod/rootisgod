@@ -324,7 +324,7 @@ az cdn endpoint purge --resource-group "www.mystaticwebsite.xyz" --name "mystati
 
 See here for setting up a Jekyll static website using Azure DevOps. It updates this site on a git push.
 
-[https://www.rootisgod.com/2020/Azure-DevOps-Jekyll-Pipeline/](https://www.rootisgod.com/2020/Azure-DevOps-Jekyll-Pipeline/)
+{https://www.rootisgod.com/2020/Setting-Up-an-Azure-DevOps-Build-Pipeline-for-a-Jekyll-Website-on-Azure-Blob-Storage/}(https://www.rootisgod.com/2020/Setting-Up-an-Azure-DevOps-Build-Pipeline-for-a-Jekyll-Website-on-Azure-Blob-Storage/)
 
 And that's it. Enjoy a cheap static site and an easy HTTPS certificate thanks to the consumption model of the cloud!
 
