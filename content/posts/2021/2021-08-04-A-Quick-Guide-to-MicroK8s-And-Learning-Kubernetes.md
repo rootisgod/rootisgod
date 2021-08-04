@@ -4,11 +4,11 @@ date: "2021-08-04T21:05:00Z"
 title: A Quick Guide to MicroK8S And Learning Kubernetes
 ---
 
-I spent far too long trying to find a simple way to learn Kubernetes. I spun up Kubernetes clusters in Azure (expensive!), Docker for Windows (argggh. what's going on!) and various other things. And, for some reason, I finally stumbled on `microk8s` from Canonical. Before finding it, I was doing various searches in this space and learned about a whoel ecosystem of solutions, including K3S, minikube, KIND, K0S, and probably many more! Perhaps I will do a comparison as a future blog post. But, I settled on microk8s for now as it has lots of features, seems idiot proof, works on Mac, Windows and Linux, and just seems to be ideal. So, lets get it going and install Jenkins as a test. If you havent used Kubernetes before then maybe give this a read first [https://kubernetes.io/docs/tutorials/kubernetes-basics/](https://kubernetes.io/docs/tutorials/kubernetes-basics/). At the end of it you should have a cluster you can use to do something pretty real-world. This is just the tip of the iceberg, but it will hopefully get you going very very quickly.
+I spent far too long trying to find a simple way to learn Kubernetes. I spun up Kubernetes clusters in Azure (expensive!), Docker for Windows (argggh. what's going on!) and various other things. And, for some reason, I finally stumbled on `microk8s` from Canonical. Before finding it, I was doing various searches in this space and learned about a whole ecosystem of solutions, including K3S, minikube, KIND, K0S, and probably many more! Perhaps I will do a comparison as a future blog post. But, I settled on microk8s for now as it has lots of features, seems idiot proof, works on Mac, Windows and Linux, and just seems to be ideal. So, lets get it going and install Jenkins as a test. If you haven't used Kubernetes before then maybe give this a read first [https://kubernetes.io/docs/tutorials/kubernetes-basics/](https://kubernetes.io/docs/tutorials/kubernetes-basics/). At the end of it you should have a cluster you can use to do something pretty real-world. This is just the tip of the iceberg, but it will hopefully get you going very very quickly.
 
 # What is microk8s?
 
-It is pretty much a kubernetes managed cluster in a command line. As you start learning Kubernetes you realise that command line and YAML fles are king. So, this is actually a fairly good win, you get experience doing things quickly and simply, but also in a realistic mannner so that you can take that muscle memory to a 'real' cluster. What kind of tools do you get then? Well...
+It is pretty much a kubernetes managed cluster in a command line. As you start learning Kubernetes you realise that command line and YAML files are king. So, this is actually a fairly good win, you get experience doing things quickly and simply, but also in a realistic manner so that you can take that muscle memory to a 'real' cluster. What kind of tools do you get then? Well...
 
 ```bash
 rootisgod@kubernetes:~$ microk8s --help
@@ -38,7 +38,7 @@ Available subcommands are:
         inspect
 ```
 
-OMG! If you have used Kubernetes in any capacity previously, you read this and start to have palpatations. It looks like we have a simple way to add nodes, get a dashboard going, install istio/linkerd service meshes, reset the cluster, and just generally do anything with a command or two. Fantastic!
+OMG! If you have used Kubernetes in any capacity previously, you read this and start to have palpitations. It looks like we have a simple way to add nodes, get a dashboard going, install istio/linkerd service meshes, reset the cluster, and just generally do anything with a command or two. Fantastic!
 
 And, if you run `microk8s status` you can see we can enable LOTS of addons with a simple command. Traefik, Kubeflow etc etc.. Finally you can try out all these buzzwords in a simple way!
 
@@ -178,7 +178,7 @@ microk8s enable helm3
 
 #### Jenkins helm3 Installation
 
-Let's install everyones favourite (free) CICD tool! Add the official Jenkins helm repo, search for jenkins, and install to the cluster.
+Let's install everyone's favourite (free) CICD tool! Add the official Jenkins helm repo, search for jenkins, and install to the cluster.
 
 ```bash
 microk8s helm3 repo add jenkins https://charts.jenkins.io
@@ -203,7 +203,7 @@ Install like this
 microk8s helm3 install jenkins jenkins/jenkins
 ```
 
-Then, access via the handy information it will provide after intallation. Get the admin password, and then proxy the website out to our local machine
+Then, access via the handy information it will provide after installation. Get the admin password, and then proxy the website out to our local machine
 
 ```bash
 microk8s kubectl exec --namespace default -it svc/jenkins -c jenkins -- /bin/cat /run/secrets/chart-admin-password
@@ -235,7 +235,7 @@ microk8s config | grep token
 
 ## Reset!
 
-If you want to go back to square one just run the reset command again. Local development is dead easy, you could even script everything to get a rudimentary local pipeline going. The possiblities are endless. Have fun!
+If you want to go back to square one just run the reset command again. Local development is dead easy, you could even script everything to get a rudimentary local pipeline going. The possibilities are endless. Have fun!
 
 # Next Steps
 

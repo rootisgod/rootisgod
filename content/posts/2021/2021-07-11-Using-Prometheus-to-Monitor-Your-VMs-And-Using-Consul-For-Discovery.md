@@ -169,7 +169,7 @@ Grab the latest Windows release from here - https://www.consul.io/downloads
 
 Unzip it to somewhere like c:\consul\consul.exe
 
-We need to create a config file with some required info on where our server is (can consul agents service discover the server? I'd imagine so, i'll need to look more!). If using ansible you could template this. But, for us, save the below text in a folder called ```c:\consul\config\``` as ```config.json```. Note that the ```start_join``` is our Consul server IP address, so adjust as required. The ```data_dir``` folder will be created if it doesnt exist already, so just make it somewhere reasonable.
+We need to create a config file with some required info on where our server is (can consul agents service discover the server? I'd imagine so, i'll need to look more!). If using ansible you could template this. But, for us, save the below text in a folder called ```c:\consul\config\``` as ```config.json```. Note that the ```start_join``` is our Consul server IP address, so adjust as required. The ```data_dir``` folder will be created if it doesn't exist already, so just make it somewhere reasonable.
 
 ```json
 {
