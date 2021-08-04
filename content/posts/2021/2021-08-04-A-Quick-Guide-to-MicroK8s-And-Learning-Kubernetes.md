@@ -186,6 +186,11 @@ microk8s helm3 repo update
 microk8s helm3 search repo jenkins
 ```
 
+```
+NAME            CHART VERSION   APP VERSION     DESCRIPTION
+jenkins/jenkins 3.5.9           2.289.3         Jenkins - Build great things at any scale! The ...
+```
+
 This will show us that the jenkins chart is called `jenkins/jenkins`. We will install it. But, first notice that the command is like this. So we are installing it as an app release called `jenkins`, from chart `jenkins/jenkins`.
 
 ```
