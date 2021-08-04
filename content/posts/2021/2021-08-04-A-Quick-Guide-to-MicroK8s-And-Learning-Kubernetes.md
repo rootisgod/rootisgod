@@ -1,6 +1,6 @@
 ---
-categories: linux docker microk8s kubernetes k8s ubuntu
-date: "2021-08-04T22:05:00Z"
+categories: linux docker microk8s kubernetes k8s ubuntu jenkins
+date: "2021-08-04T21:05:00Z"
 title: A Quick Guide to MicroK8S And Learning Kubernetes
 ---
 
