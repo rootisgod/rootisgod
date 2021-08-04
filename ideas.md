@@ -5,6 +5,8 @@
 - Unraid and Kubernetes?
 - Hugo and migrating to it?
 - Pinegrow
+- Hugo search
+- Microk8s and ArgoCD Post, maybe seperate?
 
 
 # TODO
