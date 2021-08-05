@@ -4,11 +4,15 @@ date: "2021-08-04T21:05:00Z"
 title: A Quick Guide to MicroK8S And Learning Kubernetes
 ---
 
-I spent far too long trying to find a simple way to learn Kubernetes. I spun up Kubernetes clusters in Azure (expensive!), Docker for Windows (argggh. what's going on!) and various other things. And, for some reason, I finally stumbled on `microk8s` from Canonical. Before finding it, I was doing various searches in this space and learned about a whole ecosystem of solutions, including K3S, minikube, KIND, K0S, and probably many more! Perhaps I will do a comparison as a future blog post. But, I settled on microk8s for now as it has lots of features, seems idiot proof, works on Mac, Windows and Linux, and just seems to be ideal. So, lets get it going and install Jenkins as a test. If you haven't used Kubernetes before then maybe give this a read first [https://kubernetes.io/docs/tutorials/kubernetes-basics/](https://kubernetes.io/docs/tutorials/kubernetes-basics/). At the end of it you should have a cluster you can use to do something pretty real-world. This is just the tip of the iceberg, but it will hopefully get you going very very quickly.
+I spent far too long trying to find a simple way to learn Kubernetes. I spun up Kubernetes clusters in Azure (expensive!), Docker for Windows (argggh. what's going on!) and various other things. And, for some reason, I finally stumbled on ```microk8s``` from Canonical. Before finding it, I was doing various searches in this space and learned about a whole ecosystem of solutions, including K3S, minikube, KIND, K0S, and probably many more! Perhaps I will do a comparison as a future blog post. But, I settled on microk8s for now as it has lots of features, seems idiot proof, works on Mac, Windows and Linux, and just seems to be ideal. So, lets get it going and install Jenkins as a test. 
+
+If you haven't used Kubernetes before then maybe give this a read first [https://kubernetes.io/docs/tutorials/kubernetes-basics/](https://kubernetes.io/docs/tutorials/kubernetes-basics/). 
+
+At the end of this post you should have a cluster you can use to do something pretty real-world. This is just the tip of the iceberg though, but it will hopefully get you going very very quickly.
 
 # What is microk8s?
 
-It is pretty much a kubernetes managed cluster in a command line. As you start learning Kubernetes you realise that command line and YAML files are king. So, this is actually a fairly good win, you get experience doing things quickly and simply, but also in a realistic manner so that you can take that muscle memory to a 'real' cluster. What kind of tools do you get then? Well...
+```microk8s``` is pretty much a kubernetes managed cluster in a command line. As you start learning Kubernetes you realise that management via the commandline and YAML files are king. So, this is actually a fairly good win, you get experience doing things quickly and simply, but also in a realistic manner so that you can take that muscle memory to a 'real' cluster. What kind of tools do you get then? Well...
 
 ```bash
 rootisgod@kubernetes:~$ microk8s --help
