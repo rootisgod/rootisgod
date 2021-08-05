@@ -124,7 +124,7 @@ It will take a while and do crazy things, but just leave it until it is finished
 microk8s start
 ```
 
-The, lets check it's status. It will show what is enabled and disabled on the cluster.
+The, lets check its status. It will show what is enabled and disabled on the cluster.
 
 ```bash
 microk8s status
@@ -146,7 +146,7 @@ addons:
 ...
 ```
 
-Okay, so, running, but nothing seems enabled. There are a few things we will want to re-enable. In particular, CoreDNS, the Kubernetes Dashboard and Persistent Volume Storage for starters. DNS helps us in general find things and is recommended in every install. The Kubernetes Dashboard can be used to access the cluster via a WEB UI and is very useful. Storage ensures that deployments that require PersistentVolumeClaims (think of as a Docker volume) can get some disk space. With those we are pretty much good to go. So type this to get those enabled
+Okay, so, running, but nothing seems enabled. There are a few things we will want to re-enable. In particular, CoreDNS, the Kubernetes Dashboard and Persistent Volume Storage for starters. DNS helps us in general find things and is recommended in every install. The Kubernetes Dashboard can be used to access the cluster via a WEB UI and is very useful. Storage ensures that deployments that require PersistentVolumeClaims (think of it as a Docker volume) can get some disk space. With those enabled we are pretty much good to go. So type this to enable them
 
 ```bash
 microk8s enable dns dashboard storage
@@ -154,7 +154,7 @@ microk8s enable dns dashboard storage
 
 ### Kubernetes Dashboard Access
 
-Lets check if the Dashboard is available. Run the `microk8s dashboard-proxy` command which will forward the ports of the pod it is running on and let us access it from our machine.
+Let's check if the Dashboard is available. Run the `microk8s dashboard-proxy` command which will forward the ports of the pod it is running on, and let us access it from our machine.
 
 ```bash
 microk8s dashboard-proxy
@@ -168,11 +168,11 @@ eyJhbGciOiJSUzI1NiIsImtpZCI6IjAzRHJzeFZyZ05PQVk2dWx6UlV4amo3SkUzU1kxSWphVXZScXFs
 Forwarding from 0.0.0.0:10443 -> 8443
 ```
 
-Once the dashboard starts, it may take quite a few seconds, access it the provided link in the output. Enter the token it spits out to authenticate on the page. Voila!
+Once the dashboard starts, it may take quite a few seconds, access it via the provided link in the output. Enter the token it spits out to authenticate on the page. Voila!
 
 ### Installing Something With Helm3
 
-Let's enable helm3 support (avoid helm 2 as it is old) to unlock access to a wealth of pre-made application. Helm is kinda like the docker-compose of kubernetes, and makes complicated installations much simpler, at the cost of not quite having full control of the setup (which spooks me out a bit I must admit). If you are interested, have a google to see what they are made up of, it's pretty much a bunch of YAML templates files with variables, and they get complex quickly!
+Let's enable helm3 support (avoid helm 2 as it is old) to unlock access to a wealth of pre-made application. Helm is kinda like the docker-compose of kubernetes, and makes complicated installations much simpler, at the cost of not quite having full control of the setup (which spooks me out a bit I must admit). If you are interested, have a google to see what they are made up of, it's pretty much a bunch of YAML template files with variables, and they get complex quickly!
 
 So enable, helm3 as follows. Simple!
 
