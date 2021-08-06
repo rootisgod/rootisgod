@@ -18,6 +18,7 @@ pipeline {                           // We are using a declarative pipeline
         docker {                     // We want to use docker for this
             image 'alpine'           // The docker image to run in
             label 'Docker && Linux'  // Use a node/agent with these labels
+            args '-u root:sudo'      // Add this to be root in the container
         }
     }
     stages {                         // We want to define our job stages
