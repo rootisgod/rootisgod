@@ -80,7 +80,7 @@ param (
     $octopus_server_certificate_thumbprint
 )
 
-$dt=get-date -Format "MM-dd-yyyy"
+$dt=get-date -Format "yyyy-MM-dd"
 Start-Transcript -Path "c:\kits\$dt-OctopusInstall.txt"
 
 cd "C:\Program Files\Octopus Deploy\Tentacle"
