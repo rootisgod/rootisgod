@@ -39,9 +39,14 @@ Ansible code below. Be sure to have some facts setup or variables in place for t
       triggers:
           - type: daily
             start_boundary: "2050-01-01T00:00:00Z" # Just a random time, we dont use this
-      username: "{{ hostvars['localhost']['vm_admin_username'] }}"
-      password: "{{ hostvars['localhost']['vm_admin_password'] }}"
-      logon_type: password
+      #---------------------------------------------------------------------------------------------------------------------------------------------
+      # Only use an accounts username and password if you have to run the tentacle as specific user. Note, this will fail in Desktop Editions
+      # of Windows as it seems to NEED a real login to occur for the user to exist and do thi. This limitation isn't on server editions. Just FYI!
+      #username: "{{ hostvars['localhost']['vm_admin_username'] }}"
+      #password: "{{ hostvars['localhost']['vm_admin_password'] }}"
+      #logon_type: password
+      #---------------------------------------------------------------------------------------------------------------------------------------------
+      username: SYSTEM
       state: present
       enabled: yes
       run_level: highest
