@@ -6,9 +6,6 @@
 - Hugo and migrating to it?
 - Pinegrow
 - Hugo search
-- Microk8s and ArgoCD Post, maybe seperate?
+- ArgoCD Post
+- Creating a custom prometheus metrics service using powershell?
 
-
-# TODO
-
-- Add a 'picture enlarge' jquery thingy
