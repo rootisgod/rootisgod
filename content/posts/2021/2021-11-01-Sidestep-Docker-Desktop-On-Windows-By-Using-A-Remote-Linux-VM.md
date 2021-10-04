@@ -1,6 +1,6 @@
 ---
 categories: linux docker windows desktop
-date: "2021-09-22T21:05:00Z"
+date: "2021-11-01T21:05:00Z"
 title: Sidestep Docker Desktop On Windows By Using A Remote Linux VM.md
 draft: true
 ---
