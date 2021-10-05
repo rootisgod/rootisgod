@@ -1,6 +1,6 @@
 ---
 categories: linux windows vmware workstation vm pfsense firewall homelab
-date: "2021-10-04T21:05:00Z"
+date: "2021-10-006T21:05:00Z"
 title: Routing Between Host Only Networks in VMWare Workstation
 draft: true
 ---
@@ -19,47 +19,39 @@ So, it seems like we need to create two host only networks, add a VM to each one
 ## Without pfSense
 
 ```
-                  .─────────. 
-             X─ ▶( Internet  )
-             │    `─────────' 
-             ▼                
-┌──────VMWARE─VNETS──────┐    
-│┌─┐┌─┐┌─┐┌─┐┌─┐┌─┐┌─┐┌─┐│    
-│└1┘└2┘└3┘└4┘└5┘└6┘└7┘└8┘│    
-└─────────────▲──▲───────┘    
-     ┌────────┘  └──────┐     
-Host Only          Host Only  
-     │                  │     
- ┌───────┐          ┌───────┐ 
- │  VM   │◀─ ─X─ ─ ▶│  VM   │ 
- │(VNET5)│ ISOLATED │(VNET6)│ 
- └───────┘          └───────┘ 
+┌──────VMWARE─VNETS──────┐       .─────────. 
+│┌─┐┌─┐┌─┐┌─┐┌─┐┌─┐┌─┐┌─┐◀ ─ X ▶( Internet  )
+│└1┘└2┘└3┘└4┘└5┘└6┘└7┘└8┘│       `─────────' 
+└─────────────▲──▲───────┘                   
+     ┌────────┘  └──────┐                    
+Host Only          Host Only                 
+     │                  │                    
+ ┌───────┐          ┌───────┐                
+ │  VM   │◀─ ─X─ ─ ▶│  VM   │                
+ │(VNET5)│ ISOLATED │(VNET6)│                
+ └───────┘          └───────┘                 
 ```
 
 ## With pfSense
 
 ```
-                     .─────────. 
-                ┌──▶( Internet  )
-                │    `─────────' 
-                ▼                
-   ┌──────VMWARE─VNETS──────┐    
-   │┌─┐┌─┐┌─┐┌─┐┌─┐┌─┐┌─┐┌─┐│    
-   │└1┘└2┘└3┘└4┘└5┘└6┘└7┘└8┘◀═╗  
-   └─────────────▲──▲───────┘ ║  
-    ┌────────────┤  ├────┐    ║  
-    │   Host Only│  │Host Only║  
-    │            │  │    │    ║  
-┌───────┐ ┌──────┴──┤┌───────┐║  
-│  VM   │ │   VM    ││  VM   │║  
-│(VNET5)│ │ pfSense ││(VNET6)│║  
-└───────┘ │(VNET5+6)│└───────┘║  
-          │  VNET1  │         ║  
-          └─────────┘         ║  
-               ║              ║  
-               ║ Internet Link║  
-               ╚═════VNET8════╝  
-                     (NAT)                        
+   ┌──────VMWARE─VNETS──────┐      .─────────. 
+   │┌─┐┌─┐┌─┐┌─┐┌─┐┌─┐┌─┐┌─┐◀────▶( Internet  )
+   │└1┘└2┘└3┘└4┘└5┘└6┘└7┘└8┘◀═╗    `─────────' 
+   └─────────────▲──▲───────┘ ║                
+    ┌────────────┤  ├────┐    ║                
+    │   Host Only│  │Host Only║                
+    │            │  │    │    ║                
+┌───────┐ ┌──────┴──┤┌───────┐║                
+│  VM   │ │   VM    ││  VM   │║                
+│(VNET5)│ │ pfSense ││(VNET6)│║                
+└───────┘ │(VNET5+6)│└───────┘║                
+          │  VNET1  │         ║                
+          └─────────┘         ║                
+               ║              ║                
+               ║ Internet Link║                
+               ╚═════VNET8════╝                
+                     (NAT)                                 
 ```
 
 ## What You Need
