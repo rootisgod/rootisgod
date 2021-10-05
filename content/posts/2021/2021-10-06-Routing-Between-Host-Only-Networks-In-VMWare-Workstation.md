@@ -1,6 +1,6 @@
 ---
 categories: linux windows vmware workstation vm pfsense firewall homelab
-date: "2021-10-006T21:05:00Z"
+date: "2021-10-04T21:05:00Z"
 title: Routing Between Host Only Networks in VMWare Workstation
 draft: true
 ---
