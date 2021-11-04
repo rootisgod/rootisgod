@@ -197,6 +197,8 @@ kubectl config current-context
     - - - - - - - - - - - - - - - - - - - - - - - - - -
 ```
 
+## Remote Access
+
 Then, in Octopus, or wherever you setup the cluster, use that IP address, port, and token as the connection details and you are sorted! Octopus log from a connectivity test below.
 ```bash
 Creating kubectl context to https://192.168.1.45:45001 (namespace default) using a Token 
