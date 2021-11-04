@@ -19,9 +19,9 @@ KIND (Kubernetes in Docker - https://kind.sigs.k8s.io) is another option in the 
 ## Installation
 
 We really only need two things, Docker installed on the host (left as an exercise to the reader!) and kubectl. The process to install KIND is almost identical to kubectl so let me just explain it at a high level;
-- Download the binary file for KIND: ```curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64```
-- Move it to the /usr/bin folder: ```sudo mv kind /usr/bin/kind```
-- Run a ```sudo chmod +x /usr/bin/kind``` to make it executable
+- Download the binary file for KIND: **curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64**
+- Move it to the /usr/bin folder: **sudo mv kind /usr/bin/kind**
+- Run a **sudo chmod +x /usr/bin/kind** to make it executable
 
 The URLS are below;
 
@@ -31,7 +31,7 @@ The URLS are below;
 
 ## Creating Clusters
 
-The command to create a cluster, called ```k8s1```, is like this
+The command to create a cluster, called **k8s1**, is like this
 
 ```bash
 kind create cluster --name k8s1
@@ -55,7 +55,7 @@ kubectl cluster-info --context kind-k8s1
 
 Simple! We now have a working cluster.
 
-NOTE: The kubernetes context name has ```kind-``` in front of OUR name. Just remember this...
+NOTE: The kubernetes context name has **kind-** in front of **OUR** name. Just remember this...
 
 Lets see what our context is just to be sure. 
 
@@ -76,13 +76,13 @@ kubectl cluster-info --context kind-k8s1
     To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
-If we make another cluster called ```k8s2``` (not shown), and we want to change contexts, this is how we do so with kubectl
+If we make another cluster called **k8s2** (not shown), and we want to change contexts, this is how we do so with kubectl
 
 ```bash
 kubectl config use-context kind-k8s2
 ```
 
-Back to ```k8s1``` though, and now we need to make an admin user and get a token so we can do something useful, like connect to it.
+Back to **k8s1** though, and now we need to make an admin user and get a token so we can do something useful, like connect to it.
 
 ## Creating an admin-user
 
@@ -113,7 +113,7 @@ subjects:
   namespace: kube-system
 ```
 
-Then, we can write a script to setup an admin user on the current cluster in our context. Create a file called ```setup-admin-user.sh``` with the content below and then ```chmod +x setup-admin-user.sh``` and run the file. It will create the admin user and also give us a token as output, and write it to a file called token.txt
+Then, we can write a script to setup an admin user on the current cluster in our context. Create a file called **setup-admin-user.sh** with the content below and then **chmod +x setup-admin-user.sh** and run the file. It will create the admin user and also give us a token as output, and write it to a file called token.txt
 
 ```bash
 kubectl apply -f admin-user-serviceaccount.yaml
@@ -124,7 +124,7 @@ echo
 echo '- - - - - - - - - - - - - - - - - - - - - - - - - -'
 ```
 
-Then, we can install a dashboard, and then proxy it. Create a file called ```dashboard-and-proxy.sh``` and then ```chmod +x dashboard-and-proxy.sh``` and run the file.
+Then, we can install a dashboard, and then proxy it. Create a file called **dashboard-and-proxy.sh** and then **chmod +x dashboard-and-proxy.sh** and run the file.
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.3.1/aio/deploy/recommended.yaml
@@ -137,9 +137,9 @@ Login with the token. Voila! We have a working dashboard and cluster. Create ano
 
 ## YAML File Defined Clusters
 
-We have a fairly solid setup. But one thing that is a problem is that we cannot access the cluster remotely from another machine. Thus, it's kinda useless in a pipeline or remote build etc... If I want to have Octopus Deploy access this cluster, it currently cannot as it is listening on localhost and a random port (remember ```kubectl cluster-info --context kind-k8s1```.
+We have a fairly solid setup. But one thing that is a problem is that we cannot access the cluster remotely from another machine. Thus, it's kinda useless in a pipeline or remote build etc... If I want to have Octopus Deploy access this cluster, it currently cannot as it is listening on localhost and a random port (remember **kubectl cluster-info --context kind-k8s1**)
 
-If we want to override some parameters on cluster creation, we can. KIND has a kubernetes inspired YAML template format available to us (https://kind.sigs.k8s.io/docs/user/configuration/). This means we can create clusters to a known spec and set them up as we want. What a great feature! So let's delete our original ```k8s1``` cluster and recreate it from a YAML file. We will have the cluster exposed on the network with an IP address of the host. Let's just assume our host has an IP address of 192.168.1.45, and we'll set the cluster port number as 45001 (see what I did there?).
+If we want to override some parameters on cluster creation, we can. KIND has a kubernetes inspired YAML template format available to us (https://kind.sigs.k8s.io/docs/user/configuration/). This means we can create clusters to a known spec and set them up as we want. What a great feature! So let's delete our original **k8s1** cluster and recreate it from a YAML file. We will have the cluster exposed on the network with an IP address of the host. Let's just assume our host has an IP address of 192.168.1.45, and we'll set the cluster port number as 45001 (see what I did there?).
 
 **NOTE:** The KIND team say not to expose a cluster outside your local dev machine, but as long as you aren't hosting this in a production scenario I can't really see the harm, but so you know - https://github.com/kubernetes-sigs/kind/issues/873
 
@@ -149,7 +149,7 @@ Delete our original cluster
 kind delete cluster --name=k8s1
 ```
 
-Then, create a file called ```k8s1.yaml```. In  this, we shall put in the following;
+Then, create a file called **k8s1.yaml** In  this, we shall put in the following;
 
 ```bash
 kind: Cluster
