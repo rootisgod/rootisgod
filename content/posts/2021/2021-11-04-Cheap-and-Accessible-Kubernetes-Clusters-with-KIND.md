@@ -14,7 +14,7 @@ The other issue is cost. Ideally we could use the cloud to create instances and 
 # Enter KIND
 
 ## Overview 
-KIND (Kubernetes in Docker) is another option in the varied dev/desktop Kubernetes market. It seems slightly less feature rich than microk8s but it makes up for it in giving a nice simple setup experience for very little effort. And it has a few tricks up its sleeve. 
+KIND (Kubernetes in Docker - https://kind.sigs.k8s.io) is another option in the varied dev/desktop Kubernetes market. It seems slightly less feature rich than microk8s but it makes up for it in giving a nice simple setup experience for very little effort. And it has a few tricks up its sleeve. 
 
 ## Installation
 
@@ -39,18 +39,18 @@ kind create cluster --name k8s1
 
 Then it goes off and creates a cluster.
 
-```
-    Creating cluster "k8s1" ...
-    ✓ Ensuring node image (kindest/node:v1.21.1) 🖼
-    ✓ Preparing nodes 📦  
-    ✓ Writing configuration 📜 
-    ✓ Starting control-plane 🕹️ 
-    ✓ Installing CNI 🔌 
-    ✓ Installing StorageClass 💾 
-    Set kubectl context to "kind-k8s1"
-    You can now use your cluster with:
+```bash
+Creating cluster "k8s1" ...
+✓ Ensuring node image (kindest/node:v1.21.1) 🖼
+✓ Preparing nodes 📦  
+✓ Writing configuration 📜 
+✓ Starting control-plane 🕹️ 
+✓ Installing CNI 🔌 
+✓ Installing StorageClass 💾 
+Set kubectl context to "kind-k8s1"
+You can now use your cluster with:
 
-    kubectl cluster-info --context kind-k8s1
+kubectl cluster-info --context kind-k8s1
 ```
 
 Simple! We now have a working cluster.
@@ -140,6 +140,10 @@ Login with the token. Voila! We have a working dashboard and cluster. Create ano
 We have a fairly solid setup. But one thing that is a problem is that we cannot access the cluster remotely from another machine. Thus, it's kinda useless in a pipeline or remote build etc... If I want to have Octopus Deploy access this cluster, it currently cannot as it is listening on localhost and a random port (remember ```kubectl cluster-info --context kind-k8s1```.
 
 If we want to override some parameters on cluster creation, we can. KIND has a kubernetes inspired YAML template format available to us (https://kind.sigs.k8s.io/docs/user/configuration/). This means we can create clusters to a known spec and set them up as we want. What a great feature! So let's delete our original ```k8s1``` cluster and recreate it from a YAML file. We will have the cluster exposed on the network with an IP address of the host. Let's just assume our host has an IP address of 192.168.1.45, and we'll set the cluster port number as 45001 (see what I did there?).
+
+**NOTE:** The KIND team say not to expose a cluster outside your local dev machine, but as long as you aren't hosting this in a production scenario I can't really see the harm, but so you know - https://github.com/kubernetes-sigs/kind/issues/873
+
+Delete our original cluster
 
 ```bash
 kind delete cluster --name=k8s1
