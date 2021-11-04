@@ -208,3 +208,7 @@ Server Version: v1.21.1
 ```
 
 Now, rinse and repeat. We can add as many clusters from file definitions as we like. We give each a different name and port number, and we can have lots of Kubernetes clusters ready for testing. A simple script could even set them up for you and delete when finished. Put all this in source control for automation of a process and you can be even happier. The sky is the limit! Enjoy!
+
+# Github Repo 
+
+If you made it this far, the files and a cheatsheet are here: https://github.com/iaingblack/Kind-Config
