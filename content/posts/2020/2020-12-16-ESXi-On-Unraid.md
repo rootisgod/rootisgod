@@ -4,7 +4,9 @@ date: "2020-12-16T12:00:00Z"
 title: ESXi On Unraid
 ---
 
-# How to setup an ESXi install on Unraid.
+UPDATE: While this works, i've since learned that it won't actually join to a vCenter. So, treat it more as a a fun experiment. If you really do want to get something that works I would probably suggest just buying a copy of VMWare Workstation and running ESXi in that, which is supported and tested. In case that is disappointing, just think that you would be using the Unraid OS to run that VM, then running VMWare Workstation in that VMs OS, installing ESXi as an OS on the VM, and then installing a VM in that OS. Do it again, attach both ESXI 'hosts' to a vCenter cluster and try a vMotion. If you thought things weren't 'inceptiony' enough already then enjoy that thought experiment!
+
+# How to setup an ESXi install on Unraid
 
 I tried to find a guide on how to do this (and not the reverse of running Unraid on ESXi which seem to be everywhere!) and there seems to be a little missing in each case. The tutorial below seems to be a golden path of sorts, and is the motherboard and bios type that worked for me. The same settings on a Q35 motherboard and OVMF BIOS failed to see SATA drives for example, so you really do seem to have to be specific here.
 
