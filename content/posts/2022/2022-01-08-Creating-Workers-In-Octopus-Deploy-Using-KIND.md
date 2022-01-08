@@ -7,17 +7,26 @@ draft: true
 
 Nice title, eh? This post will discuss how to setup Octopus Deploy with Worker agents created from a KIND Kubernetes cluster running on a Linux box setup as an Octopus Listening Tentacle. Simple. The reason for doing this is to try and cram as much possible into a single machine. With a single Linux host we can have many worker agents instead of a multiple Linux hosts for each one, and that means many different projects can 'reuse' that one machine.
 
+This is the basic architecture.
+
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/005-Architecture.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/005-Architecture.png"></a>
+{{< /rawhtml >}}
+
 ### Octopus Deploy
-Let me just start by saying that i've used Octopus Deploy for many years and always loved it for deploying software to different environments. But, recently, they have started to really get to a place where I think it can handle almost any situation and I would recommend it as a one-stop shop for doing many different tasks. It can likely replace Rundeck and Jenkins, and do so in a more efficient, and importantly, visible way, than almost anything else I have seen. Teams can work together with confidence and that is a large driver in why I think it is so valuable. If you can afford it!
 
-Having said that, one of the relatively new features in Octopus that I think is a complete gamechanger is the ability to run steps from a docker container. This simple addition means you can have a container decked out with all the tools you need to do a terraform/ansible/whatever deployment and no longer have to worry about the worker agent having the software available or installed. This is fantastic. That feature turns a single worker can handle an almost unlimited set of scenarios. See here for more info: https://octopus.com/blog/workers-explained#customized-software
+One of the relatively new features in Octopus that I think is a complete gamechanger is the ability to run steps from a docker container. This simple addition means you can have a container decked out with all the tools you need to do a terraform/ansible/whatever deployment and no longer have to worry about the worker agent having the software available or installed. This is fantastic. That feature turns a single worker that can handle an almost unlimited set of scenarios. See here for more info.
 
-The main problem is that while workers now run containers and will run multiple tasks at once, they can start to block each other and so one worker for everyone to share probably doesn't cut it, except for small environments. If only we could have dynamic workers that would start and stop when required, much like Octopus Cloud (https://octopus.com/docs/infrastructure/workers/dynamic-worker-pools). Well, I don't think we can have that in an Octopus Server which is self-hosted. There is a blog post on running workers on a Kubernetes Cluster here (https://octopus.com/blog/kubernetes-workers) and that is a great way to get that kind of behaviour. But, as always their is a downside, and in case it is that K8S clusters tend to be;
+https://octopus.com/blog/workers-explained#customized-software
+
+The only real issue is that while workers now run containers and will run multiple tasks at once, they can start to block each other and so one worker that everyone shares probably doesn't cut it, except for small environments. If we could have dynamic workers that would start and stop when required, much like Octopus Cloud (https://octopus.com/docs/infrastructure/workers/dynamic-worker-pools), things would be much nicer. Well, I don't think we can have that in an Octopus Server which is self-hosted. There is a blog post on running workers on a Kubernetes Cluster here (https://octopus.com/blog/kubernetes-workers) and that is a great way to get that kind of behavior. But, as always their is a downside, and in case it is that K8S clusters tend to be;
 - Expensive to run
-- Outside of the host network where the Octopus Deploy Server VM is (im sure you could do VNET peers and things, but again, the cost in Azure/AWS is not trivial)
+- Outside of the host network where the Octopus Deploy Server VM is (i'm sure you could do VNET peers and things, but again, the cost in Azure/AWS is not trivial)
 - Can be a real pain to configure and permission
 
 In my particular use case I would much prefer to host the Octopus Server as a VM and then take advantage of hosting workers in a K8s cluster that is as local as possible. So, finally i'll get to the point, this post will show how to use [KIND](https://www.rootisgod.com/2021/Cheap-and-Accessible-Kubernetes-Clusters-with-KIND/) to host multiple clusters on a single Linux host and create workers from them.
+
+### Setting Up the Required System
 
 So, some pre-reqs are
 - A Octopus Deploy Server running on a local VM
@@ -31,15 +40,9 @@ Profit! It looks worse than it is. Really, we are just getting a K8S cluster goi
 
 Some of this will be a bit rough and hard coded, I leave it to the reader to make it work for their environment, this is just a blast through the basic setup.
 
-This is hte basic setup
-
-{{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/005-Architecture.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/005-Architecture.png"></a>
-{{< /rawhtml >}}
-
 ## Octopus Deploy Setup
 
-Have a server ready to go with Octopus Deploy installed. The community edition is plenty. Simple.
+Have a server ready to go with Octopus Deploy installed. The community edition is plenty.
 
 https://octopus.com/downloads
 
