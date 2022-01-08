@@ -91,13 +91,13 @@ Create an Account with our Token for the KIND cluster in it. We will reference t
 Then add a Kubernetes Cluster: Infrastructure -> Deployment Target -> Add Deployment Target -> Kubernetes Cluster -> Listening Tentacle
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/010-Kubernetes-Cluster.png"><img src="/assets/images/2022/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/010-Kubernetes-Cluster.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/010-Kubernetes-Cluster.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/010-Kubernetes-Cluster.png"></a>
 {{< /rawhtml >}}
 
 The health check should pass.
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/020-Kubernetes-Cluster-Health-Check.png"><img src="/assets/images/2022/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/020-Kubernetes-Cluster-Health-Check.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/020-Kubernetes-Cluster-Health-Check.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/020-Kubernetes-Cluster-Health-Check.png"></a>
 {{< /rawhtml >}}
 
 ### Add Polling Workers
@@ -107,23 +107,23 @@ This is where this comes in: https://octopus.com/blog/kubernetes-workers
 Be sure to have an API key ready first though. 
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/030-Create-API-Key.png"><img src="/assets/images/2022/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/030-Create-API-Key.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/030-Create-API-Key.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/030-Create-API-Key.png"></a>
 {{< /rawhtml >}}
 
 Follow these exact steps, but also choose 'Privileged Mode'!
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/040-Kubernetes-Deployment-Priviliged-Mode.png"><img src="/assets/images/2022/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/040-Kubernetes-Deployment-Priviliged-Mode.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/040-Kubernetes-Deployment-Priviliged-Mode.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/040-Kubernetes-Deployment-Priviliged-Mode.png"></a>
 {{< /rawhtml >}}
 
 Once the Runbook finishes, you should have some new workers!
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/050-Runbook-Output.png"><img src="/assets/images/2022/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/050-Runbook-Output.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/050-Runbook-Output.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/050-Runbook-Output.png"></a>
 {{< /rawhtml >}}
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/060-New-Workers.png"><img src="/assets/images/2022/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/060-New-Workers.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/060-New-Workers.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/060-New-Workers.png"></a>
 {{< /rawhtml >}}
 
 ### Test Run
@@ -131,16 +131,16 @@ Once the Runbook finishes, you should have some new workers!
 Then, do a test deployment in a project using that worker pool. Note you can use any container you want, I just used the Octopus Deploy worker to show a 'real-world' image being pulled and used.
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/070-Worker-Test-Run.png"><img src="/assets/images/2022/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/070-Worker-Test-Run.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/070-Worker-Test-Run.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/070-Worker-Test-Run.png"></a>
 {{< /rawhtml >}}
 
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/080-Container-Being-Pulled-From-KIND-Workers-Pool-Worker.png"><img src="/assets/images/2022/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/080-Container-Being-Pulled-From-KIND-Workers-Pool-Worker.png></a>
+<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/080-Container-Being-Pulled-From-KIND-Workers-Pool-Worker.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/080-Container-Being-Pulled-From-KIND-Workers-Pool-Worker.png></a>
 {{< /rawhtml >}}
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/090-It-Ran.png"><img src="/assets/images/2022/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/090-It-Ran.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/090-It-Ran.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/090-It-Ran.png"></a>
 {{< /rawhtml >}}
 
 OTHER NOTES
