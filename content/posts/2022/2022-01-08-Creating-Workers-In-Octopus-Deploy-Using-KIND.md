@@ -31,6 +31,12 @@ Profit! It looks worse than it is. Really, we are just getting a K8S cluster goi
 
 Some of this will be a bit rough and hard coded, I leave it to the reader to make it work for their environment, this is just a blast through the basic setup.
 
+This is hte basic setup
+
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/005-Architecture.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/005-Architecture.png"></a>
+{{< /rawhtml >}}
+
 ## Octopus Deploy Setup
 
 Have a server ready to go with Octopus Deploy installed. The community edition is plenty. Simple.
