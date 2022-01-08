@@ -5,7 +5,7 @@ title: Creating Workers In Octopus Deploy Using KIND to Create Local K8S Cluster
 draft: true
 ---
 
-Nice title, eh? This post will discuss how to setup Octopus Deploy with Worker agents created from a KIND Kubernetes cluster running on a Linux box setup as an Octopus Listening Tentacle. Simple, eh? So, the reason for doing this is to try and cram as much possible into a single machine. With a single Linux host we can have many worker agents instead of a multiple Linux hosts for each one, and that means many different projects can 'reuse' that one machine.
+Nice title, eh? This post will discuss how to setup Octopus Deploy with Worker agents created from a KIND Kubernetes cluster running on a Linux box setup as an Octopus Listening Tentacle. Simple. The reason for doing this is to try and cram as much possible into a single machine. With a single Linux host we can have many worker agents instead of a multiple Linux hosts for each one, and that means many different projects can 'reuse' that one machine.
 
 ### Octopus Deploy
 Let me just start by saying that i've used Octopus Deploy for many years and always loved it for deploying software to different environments. But, recently, they have started to really get to a place where I think it can handle almost any situation and I would recommend it as a one-stop shop for doing many different tasks. It can likely replace Rundeck and Jenkins, and do so in a more efficient, and importantly, visible way, than almost anything else I have seen. Teams can work together with confidence and that is a large driver in why I think it is so valuable. If you can afford it!
@@ -33,7 +33,9 @@ Some of this will be a bit rough and hard coded, I leave it to the reader to mak
 
 ## Octopus Deploy Setup
 
-Have a server ready to go with Octopus Deploy Server installed. The community edition is plenty. Simple.
+Have a server ready to go with Octopus Deploy installed. The community edition is plenty. Simple.
+
+https://octopus.com/downloads
 
 ## Linux Agent
 
@@ -77,7 +79,7 @@ networking:
 Then we can use this config file to create a local K8S KIND cluster like so
 
 ```
-kind create cluster --config=workers.yaml
+sudo kind create cluster --config=workers.yaml
 ```
 
 It should say the cluster has been created. We need to create and admin user. So, to set those permissions and get an token for Octopus later see this blog post and section 'Creating an Admin User'
@@ -88,7 +90,7 @@ We can now add it to Octopus Deploy as a Kubernetes Cluster.
 
 ## Octopus Deploy
 
-### Add Cluster to Octopus
+### Add KIND K8S Cluster to Octopus
 
 Create an Account in teh Infrastructure section with our Token for the KIND cluster we just created in it. We will reference this later
 
@@ -112,7 +114,7 @@ The health check should pass if all is well.
 <a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/020-Kubernetes-Cluster-Health-Check.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/020-Kubernetes-Cluster-Health-Check.png"></a>
 {{< /rawhtml >}}
 
-### Add Polling Workers
+### Add Polling Workers to the KIND K8S CLuster
 
 It is now available to start taking deployments. Be sure to have an API key ready though as it will need to be able to talk back to the Octopus Server in the next steps. Create one from your user account page.
 
@@ -138,7 +140,7 @@ Once you have completed the steps and Runbook finishes, you should have some new
 <a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/060-New-Workers.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/060-New-Workers.png"></a>
 {{< /rawhtml >}}
 
-### Test Run
+### Test Run a Container Deployment Step
 
 You can use these workers as normal workers, but hte thing I really wanted was that they had the ability to run docker containers inside of these docker containers. So, let's do a test deployment in a project using that worker pool and run the steps in a docker container. I will use the official Octopus Deploy worker image. Note that you can use any container you want though, I just used this to show a chunky 'real-world' image being pulled and used.
 
