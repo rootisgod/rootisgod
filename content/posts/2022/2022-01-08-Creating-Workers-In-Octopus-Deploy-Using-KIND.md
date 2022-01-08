@@ -2,19 +2,21 @@
 categories: linux docker kubernetes k8s kind octopusdeploy
 date: "2022-01-08T09:00:00Z"
 title: Creating Workers In Octopus Deploy Using KIND to Create Local K8S Clusters
-draft: true
+draft: false
 ---
+
+This will be a post foremost about Octopus Deploy. I appreciate not everyone uses this, so it's appeal will be limited, but I found a great trick that is too good not to share. So here it is.
 
 One of the relatively new features in Octopus that I think is a complete gamechanger is the ability to run steps from a docker container. This simple addition means you can have a container decked out with all the tools you need to do a terraform/ansible/whatever deployment and no longer have to worry about the worker agent having the software available or installed. This is fantastic. That feature turns a single worker that can handle an almost unlimited set of scenarios. See here for more info.
 
 https://octopus.com/blog/workers-explained#customized-software
 
-The only real issue is that while workers now run containers and will run multiple tasks at once, they can start to block each other and so one worker that everyone shares probably doesn't cut it, except for small environments. If we could have dynamic workers that would start and stop when required, much like Octopus Cloud (https://octopus.com/docs/infrastructure/workers/dynamic-worker-pools), things would be much nicer. Well, I don't think we can have that in an Octopus Server which is self-hosted. There is a blog post on running workers on a Kubernetes Cluster here (https://octopus.com/blog/kubernetes-workers) and that is a great way to get that kind of behavior. But, as always their is a downside, and in case it is that K8S clusters tend to be;
+The only real issue is that while workers now run containers and will run multiple tasks at once, they can start to block each other and so one worker that everyone shares probably doesn't cut it, except for small environments. If we could have dynamic workers that would start and stop when required, much like Octopus Cloud (https://octopus.com/docs/infrastructure/workers/dynamic-worker-pools), things would be much nicer. Well, I don't think we can have that in an Octopus Server which is self-hosted. There is a blog post on running workers on a Kubernetes Cluster here (https://octopus.com/blog/kubernetes-workers) and that is a great way to get towards that kind of behavior. But, as always there is a downside, and in case it is that K8S clusters tend to be;
 - Expensive to run
 - Outside of the host network where the Octopus Deploy Server VM is (i'm sure you could do VNET peers and things, but again, the cost in Azure/AWS is not trivial)
 - Can be a real pain to configure and permission
 
-In my particular use case I would much prefer to host the Octopus Server as a VM and then take advantage of hosting workers in a K8s cluster that is as local as possible. So, finally i'll get to the point, this post will show how to use [KIND](https://www.rootisgod.com/2021/Cheap-and-Accessible-Kubernetes-Clusters-with-KIND/) to host multiple clusters on a single Linux host and create workers from them.
+In my particular use case I would much prefer to host the Octopus Server as a VM and then take advantage of hosting workers in a K8S cluster that is as local as possible. So, finally i'll get to the point, this post will show how to use [KIND](https://www.rootisgod.com/2021/Cheap-and-Accessible-Kubernetes-Clusters-with-KIND/) to host multiple clusters on a single Linux host and create workers from them.
 
 Something like this maybe? Well, we can make it a reality!
 
@@ -44,7 +46,9 @@ https://octopus.com/downloads
 
 ## Linux Agent
 
-We need a linux machine with Docker installed. In this example I have Ubuntu with Docker installed. I wont explain this as it would take up time and be worse than the official instructions. Follow this and choose the default options for the tentacle: https://octopus.com/docs/infrastructure/deployment-targets/linux/tentacle#installing-and-configuring-linux-tentacle
+We need a linux machine with Docker installed. In this example I have Ubuntu with Docker installed. I wont explain this as it would take up time and be worse than the official instructions. Follow this and choose the default options for the tentacle
+
+https://octopus.com/docs/infrastructure/deployment-targets/linux/tentacle#installing-and-configuring-linux-tentacle
 
 Then register it into Octopus as a WORKER (again, if you use Octopus you should know how to do this: Infrastructure -> Workers -> Add Worker -> Linux -> Listening Tentacle)
 
@@ -161,7 +165,7 @@ You can use these workers as normal workers, but hte thing I really wanted was t
 <a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/090-It-Ran.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/090-It-Ran.png"></a>
 {{< /rawhtml >}}
 
-# OMG
+# OMG!
 
 ## OTHER NOTES
 - It's too much information for the general post, but I initially did this to also get around a 'feature' of Spaces in Octopus Deploy. Spaces allow a complete segregation of different projects. Each space is almost like a separate Octopus Deploy instance. This is great but it also means you cannot use a shared pool of workers. By creating a KIND cluster for each space and running the code to add the workers, you can very easily have workers in each space. All running from one agent. Mega.
