@@ -7,6 +7,7 @@ draft: true
 
 Nice title, eh? This post will discuss how to setup Octopus Deploy with Worker agents created from a KIND Kubernetes cluster running on a Linux box setup as an Octopus Listening Tentacle. Simple, eh? So, the reason for doing this is to try and cram as much possible into a single machine. With a single Linux host we can have many worker agents instead of a multiple Linux hosts for each one, and that means many different projects can 'reuse' that one machine.
 
+### Octopus Deploy
 Let me just start by saying that i've used Octopus Deploy for many years and always loved it for deploying software to different environments. But, recently, they have started to really get to a place where I think it can handle almost any situation and I would recommend it as a one-stop shop for doing many different tasks. It can likely replace Rundeck and Jenkins, and do so in a more efficient, and importantly, visible way, than almost anything else I have seen. Teams can work together with confidence and that is a large driver in why I think it is so valuable. If you can afford it!
 
 Having said that, one of the relatively new features in Octopus that I think is a complete gamechanger is the ability to run steps from a docker container. This simple addition means you can have a container decked out with all the tools you need to do a terraform/ansible/whatever deployment and no longer have to worry about the worker agent having the software available or installed. This is fantastic. That feature turns a single worker can handle an almost unlimited set of scenarios. See here for more info: https://octopus.com/blog/workers-explained#customized-software
@@ -20,18 +21,19 @@ In my particular use case I would much prefer to host the Octopus Server as a VM
 
 So, some pre-reqs are
 - A Octopus Deploy Server running on a local VM
-- Setup a single Linux Agent in Octopus with Docker Installed
-- Install KIND on it
+- A Linux Agent registered in Octopus as a worker with Docker Installed
+- Install KIND on that worker (Kubernetes in Docker)
+- Create a cluster via KIND
 - Register the Cluster in Octopus Deploy
 - Do this: https://octopus.com/blog/kubernetes-workers
 
-Profit!
+Profit! It looks worse than it is. Really, we are just getting a K8S cluster going and running some tentacle containers that will register in the Octopus Server. But doing it in a very, very efficient manner.
 
 Some of this will be a bit rough and hard coded, I leave it to the reader to make it work for their environment, this is just a blast through the basic setup.
 
 ## Octopus Deploy Setup
 
-Have a server ready to go with Octopus Deploy. Simple.
+Have a server ready to go with Octopus Deploy Server installed. The community edition is plenty. Simple.
 
 ## Linux Agent
 
@@ -43,7 +45,7 @@ Then register it into Octopus as a WORKER (again, if you use Octopus you should 
 
 ### Install
 
-Install KIND like so on this agent
+Install [KIND](https://kind.sigs.k8s.io) like so on this agent
 
 ```
 curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
@@ -51,7 +53,7 @@ sudo mv kind /usr/bin/kind
 sudo chmod +x /usr/bin/kind
 ```
 
-We also need Kubectl
+We also need Kubectl so install it using snap
 
 ```
 sudo snap install kubectl --classic
@@ -60,7 +62,7 @@ sudo snap install kubectl --classic
 
 ### Create Cluster
 
-Create a file like this called ```workers.yaml``` and put in the IP of your linux agent
+Create a file like this called ```workers.yaml``` and put in the IP of your linux agent (don't use 192.168.1.70 like I have!)
 
 ```
 kind: Cluster
@@ -72,29 +74,39 @@ networking:
   apiServerPort: 45001
 ```
 
-Then create it like so
+Then we can use this config file to create a local K8S KIND cluster like so
 
 ```
 kind create cluster --config=workers.yaml
 ```
 
-Then set permissions and get a token for later (see this blog post and section 'Creating an Admin User': https://www.rootisgod.com/2021/Cheap-and-Accessible-Kubernetes-Clusters-with-KIND/)
+It should say the cluster has been created. We need to create and admin user. So, to set those permissions and get an token for Octopus later see this blog post and section 'Creating an Admin User'
 
-We can now add it to Octopus Deploy as a Kubernetes Cluster
+https://www.rootisgod.com/2021/Cheap-and-Accessible-Kubernetes-Clusters-with-KIND/)
+
+We can now add it to Octopus Deploy as a Kubernetes Cluster.
 
 ## Octopus Deploy
 
 ### Add Cluster to Octopus
 
-Create an Account with our Token for the KIND cluster in it. We will reference this later: Infrastructure -> Accounts -> Add Account -> Token
+Create an Account in teh Infrastructure section with our Token for the KIND cluster we just created in it. We will reference this later
 
-Then add a Kubernetes Cluster: Infrastructure -> Deployment Target -> Add Deployment Target -> Kubernetes Cluster -> Listening Tentacle
+```
+Infrastructure -> Accounts -> Add Account -> Token
+```
+
+Then add our Kubernetes Cluster like so
+
+```
+Infrastructure -> Deployment Target -> Add Deployment Target -> Kubernetes Cluster -> Listening Tentacle
+```
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/010-Kubernetes-Cluster.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/010-Kubernetes-Cluster.png"></a>
 {{< /rawhtml >}}
 
-The health check should pass.
+The health check should pass if all is well.
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/020-Kubernetes-Cluster-Health-Check.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/020-Kubernetes-Cluster-Health-Check.png"></a>
@@ -102,21 +114,21 @@ The health check should pass.
 
 ### Add Polling Workers
 
-This is where this comes in: https://octopus.com/blog/kubernetes-workers
-
-Be sure to have an API key ready first though. 
+It is now available to start taking deployments. Be sure to have an API key ready though as it will need to be able to talk back to the Octopus Server in the next steps. Create one from your user account page.
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/030-Create-API-Key.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/030-Create-API-Key.png"></a>
 {{< /rawhtml >}}
 
-Follow these exact steps, but also choose 'Privileged Mode'!
+Then follow these instructions exactly. This is the part which will create workers for us in this kubernetes cluster. And, these containers will have DIND (Docker-in-Docker) setup for us. It's pretty simple but there are a LOT of options, ignore almost all of them. But be sure to choose 'Privileged Mode' though or Docker-In-Docker won't work. That's the only difference from the official instructions I had to make for this.
+
+https://octopus.com/blog/kubernetes-workers
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/040-Kubernetes-Deployment-Priviliged-Mode.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/040-Kubernetes-Deployment-Priviliged-Mode.png"></a>
 {{< /rawhtml >}}
 
-Once the Runbook finishes, you should have some new workers!
+Once you have completed the steps and Runbook finishes, you should have some new workers running in the cluster, and now registered in Octopus!
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/050-Runbook-Output.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/050-Runbook-Output.png"></a>
@@ -128,12 +140,11 @@ Once the Runbook finishes, you should have some new workers!
 
 ### Test Run
 
-Then, do a test deployment in a project using that worker pool. Note you can use any container you want, I just used the Octopus Deploy worker to show a 'real-world' image being pulled and used.
+You can use these workers as normal workers, but hte thing I really wanted was that they had the ability to run docker containers inside of these docker containers. So, let's do a test deployment in a project using that worker pool and run the steps in a docker container. I will use the official Octopus Deploy worker image. Note that you can use any container you want though, I just used this to show a chunky 'real-world' image being pulled and used.
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/070-Worker-Test-Run.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/070-Worker-Test-Run.png"></a>
 {{< /rawhtml >}}
-
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/080-Container-Being-Pulled-From-KIND-Workers-Pool-Worker.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/080-Container-Being-Pulled-From-KIND-Workers-Pool-Worker.png></a>
@@ -143,6 +154,8 @@ Then, do a test deployment in a project using that worker pool. Note you can use
 <a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/090-It-Ran.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/090-It-Ran.png"></a>
 {{< /rawhtml >}}
 
-OTHER NOTES
-- I initially did this to also get around a feature of Spaces in Octopus Deploy. Spaces allow a complete segregation of different projects. Each space is almost like a seperate Octopus Deploy instance. This is great but it also means you cannot use a shared pool of workers. By creating a KIND cluster for each space and running the code to add the workers, you can very easily have workers in each space.
+# OMG
+
+## OTHER NOTES
+- It's too much information for the general post, but I initially did this to also get around a 'feature' of Spaces in Octopus Deploy. Spaces allow a complete segregation of different projects. Each space is almost like a separate Octopus Deploy instance. This is great but it also means you cannot use a shared pool of workers. By creating a KIND cluster for each space and running the code to add the workers, you can very easily have workers in each space. All running from one agent. Mega.
 - If you run Octopus Deploy on a Linux server you could potentially have everything described running from a single machine!
