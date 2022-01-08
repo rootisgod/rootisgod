@@ -5,16 +5,6 @@ title: Creating Workers In Octopus Deploy Using KIND to Create Local K8S Cluster
 draft: true
 ---
 
-Nice title, eh? This post will discuss how to setup Octopus Deploy with Worker agents created from a KIND Kubernetes cluster running on a Linux box setup as an Octopus Listening Tentacle. Simple. The reason for doing this is to try and cram as much possible into a single machine. With a single Linux host we can have many worker agents instead of a multiple Linux hosts for each one, and that means many different projects can 'reuse' that one machine.
-
-This is the basic architecture.
-
-{{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/005-Architecture.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/005-Architecture.png"></a>
-{{< /rawhtml >}}
-
-### Octopus Deploy
-
 One of the relatively new features in Octopus that I think is a complete gamechanger is the ability to run steps from a docker container. This simple addition means you can have a container decked out with all the tools you need to do a terraform/ansible/whatever deployment and no longer have to worry about the worker agent having the software available or installed. This is fantastic. That feature turns a single worker that can handle an almost unlimited set of scenarios. See here for more info.
 
 https://octopus.com/blog/workers-explained#customized-software
@@ -25,6 +15,12 @@ The only real issue is that while workers now run containers and will run multip
 - Can be a real pain to configure and permission
 
 In my particular use case I would much prefer to host the Octopus Server as a VM and then take advantage of hosting workers in a K8s cluster that is as local as possible. So, finally i'll get to the point, this post will show how to use [KIND](https://www.rootisgod.com/2021/Cheap-and-Accessible-Kubernetes-Clusters-with-KIND/) to host multiple clusters on a single Linux host and create workers from them.
+
+Something like this maybe? Well, we can make it a reality!
+
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/005-Architecture.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/005-Architecture.png"></a>
+{{< /rawhtml >}}
 
 ### Setting Up the Required System
 
