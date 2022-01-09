@@ -5,7 +5,7 @@ title: Creating Workers In Octopus Deploy Using KIND to Create Local K8S Cluster
 draft: false
 ---
 
-This will be a post foremost about Octopus Deploy. I appreciate not everyone uses this, so what follows will be of limited appeal to people who don't use it, but I found a great trick that is too good not to share.
+This will be a post foremost about Octopus Deploy. I appreciate not everyone uses this, so what follows will be of limited appeal to people who don't, but I found a great trick that is too good not to share.
 
 ## Octopus Deploy Workers and Containers
 
@@ -43,7 +43,7 @@ https://octopus.com/downloads
 
 ### Ubuntu
 
-We need a linux machine with Docker installed. I used Ubuntu 20.04 and chose Docker as an option during installation. I wont explain this as it would take up time and be worse than the official instructions. Just make sure the Octopus Server and it can see each other on the netowrk.
+We need a linux machine with Docker installed. I used Ubuntu 20.04 and chose Docker as an option during installation. I won't explain this as it would take up time and be worse than the official instructions. Just make sure the Octopus Server and it can see each other on the network.
 
 ### Octopus Tentacle
 An Octopus Deploy worker needs the Octopus Tentacle software installed. Follow this and choose the default options for the tentacle
@@ -53,7 +53,7 @@ https://octopus.com/docs/infrastructure/deployment-targets/linux/tentacle#instal
 Then register it into Octopus as a WORKER
 
 ```
-Infrastructure -> Workers -> Add Worker -> Linux -> Listening Tentacle)
+Infrastructure -> Workers -> Add Worker -> Linux -> Listening Tentacle
 ```
 
 ## KIND
@@ -64,7 +64,7 @@ This what let's us run Kubernetes clusters on a single machine. KIND can run mul
 
 Install [KIND](https://kind.sigs.k8s.io) like so on the worker
 
-```
+```bash
 curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
 sudo mv kind /usr/bin/kind
 sudo chmod +x /usr/bin/kind
@@ -72,7 +72,7 @@ sudo chmod +x /usr/bin/kind
 
 We also need Kubectl to talk to K8S clusters, so install it using snap
 
-```
+```bash
 sudo snap install kubectl --classic
 ```
 
@@ -81,7 +81,7 @@ sudo snap install kubectl --classic
 
 Create a file like this called ```workers.yaml``` and put in the IP of your linux VM (don't use 192.168.1.70 like I have, yours will be different!). This ensures it is exposed on the whole network and not just local to the machine.
 
-```
+```yaml
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 name: workers
@@ -93,7 +93,7 @@ networking:
 
 Then we can use this config file to create a local K8S KIND cluster like so
 
-```
+```bash
 sudo kind create cluster --config=workers.yaml
 ```
 
