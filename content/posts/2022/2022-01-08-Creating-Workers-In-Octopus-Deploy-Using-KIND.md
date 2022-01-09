@@ -115,7 +115,7 @@ Create an Account in the Infrastructure section with our Token for the KIND clus
 Infrastructure -> Accounts -> Add Account -> Token
 ```
 
-#### Add CLuster as a Resource
+#### Add Cluster as a Resource
 
 Then add our Kubernetes Cluster like so
 
