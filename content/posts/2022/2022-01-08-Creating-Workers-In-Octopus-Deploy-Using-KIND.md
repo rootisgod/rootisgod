@@ -5,7 +5,7 @@ title: Creating Workers In Octopus Deploy Using KIND to Create Local K8S Cluster
 draft: false
 ---
 
-This will be a post foremost about Octopus Deploy. I appreciate not everyone uses this, so what follows will be of limited appeal to people who don't, but I found a great trick that is too good not to share.
+This will be a post foremost about Octopus Deploy. I appreciate not everyone uses this, so what follows will be of limited appeal to people who don't. It will also make use of Privileged Containers for Docker-In-Docker, so if that's a non-starter then it's also probably not for you! But, I found a great trick that is too good not to share.
 
 ## Octopus Deploy Workers and Containers
 
@@ -145,7 +145,7 @@ Be sure to have an API key ready though as it will need to be able to talk back 
 <a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/030-Create-API-Key.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/030-Create-API-Key.png"></a>
 {{< /rawhtml >}}
 
-#### Creating Worker Agents in the CLuster
+#### Creating Worker Agents in the Cluster
 
 Then follow these instructions exactly. This is the part which will create workers for us in this kubernetes cluster. And, these containers will have DIND (Docker-in-Docker) setup for us. It's pretty simple but there are a LOT of options, ignore almost all of them. But be sure to choose 'Privileged Mode' though or Docker-In-Docker won't work. That's the only difference from the official instructions I had to make for this.
 
