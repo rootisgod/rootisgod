@@ -58,7 +58,7 @@ Infrastructure -> Workers -> Add Worker -> Linux -> Listening Tentacle
 
 ## KIND
 
-This what let's us run Kubernetes clusters on a single machine. KIND can run multiple clusters, but we will just create one for this scenario.
+This is what let's us run Kubernetes clusters on a single machine. KIND can run multiple clusters, but we will just create one for this scenario.
 
 ### Install on the Worker
 
@@ -167,7 +167,7 @@ Once you have completed the steps and Runbook finishes, you should have some new
 
 ### Test Run a Container Deployment Step
 
-You can use these workers as normal workers, but hte thing I really wanted was that they had the ability to run docker containers inside of these docker containers. So, let's do a test deployment in a project using that worker pool and run the steps in a docker container. I will use the official Octopus Deploy worker image. Note that you can use any container you want though, I just used this to show a chunky 'real-world' image being pulled and used.
+You can use these workers as normal workers, but the thing I really wanted them for was the ability to run other docker containers inside of these docker containers (which are running inside a kubernetes cluster running in docker!). So, let's do a test deployment in a project using that worker pool and run the steps in a docker container. I will use the official Octopus Deploy worker image. Note that you can use any container you want though, I just used this to show a chunky 'real-world' image being pulled and used.
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/070-Worker-Test-Run.png"><img src="/assets/images/2022/Creating-Workers-In-Octopus-Deploy-Using-KIND/070-Worker-Test-Run.png"></a>
