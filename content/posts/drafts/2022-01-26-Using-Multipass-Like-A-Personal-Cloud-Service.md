@@ -7,7 +7,7 @@ draft: true
 
 I'd heard of Multipass for a while, but didn't quite appreciate what it's reason for existence was. Now I get it, and hopefully I will explain it to you as well.
 
-Mutipass is basically a command line driven VM creation service. Doesn't sound too fancy does it? Well, how about I told you it could replace Digitalocean or Linode as your source of quick test machines for 'that little peronsal project' you've been chipping away at for weeks? We can use multipass to;
+Mutipass is basically a command line driven VM creation service. Doesn't sound too fancy does it? Well, how about I told you it could replace Digitalocean or Linode as your source of quick test machines for 'that little personal project' you've been chipping away at for weeks? We can use multipass to;
 - Create an Ubuntu Server VM (any edition you want)
 - Set the CPU, RAM and Disk Space
 - Connect it to your local network so it can get a 'real' IP, and not some barely useful NAT thing
@@ -18,6 +18,54 @@ Mutipass is basically a command line driven VM creation service. Doesn't sound t
 Now, the part of this that excites me is that seems awfully similar to what you get from Linode or DigitalOcean. Now granted, if you spin up a few machines for a few hours then those services are basically perfect, but when you have a machine hanging around a few days you start to get itchy. It's frustrating!
 
 So, lets go over what we need to do to replicate this setup locally. 
+
+SCREECH
+
+Let's go back a bit. I did intend to write this for a Linux Server, ideally Ubuntu 20.04 and run it as a headless UBER system. It would be fast and efficient. Things didn't work out that way. The one thing that stopped it was the inability to get a LAN DHCP address on the multipass VM. It seems almost impossible doing this from Linux. Without that feature, accessing a VM's services (say a docker container port) is actually impossible. Deal breaker. I want to SSH to the UBER machine, spin up a box, and then be able to access it's 'things' from my main desktop. So, Linux is out...
+
+The following guide now uses Windows 10 and Hyper-V as a guid (I know, I know) but it still meets the requirements. And, if you happen to be running Windows 10 as your desktop OS anyway perhaps you don't need the networky bit. Nonetheless, this is how to make some quick VMs and then access them for testing.
+
+
+Install Hyper-V
+```
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+```
+
+Install Multipass
+```
+```
+
+Install Openssh
+https://docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse
+
+```pwsh
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+# Start the sshd service
+Start-Service sshd
+
+# OPTIONAL but recommended:
+Set-Service -Name sshd -StartupType 'Automatic'
+
+# Confirm the Firewall rule is configured. It should be created automatically by setup. Run the following to verify
+if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyContinue | Select-Object Name, Enabled)) {
+    Write-Output "Firewall Rule 'OpenSSH-Server-In-TCP' does not exist, creating it..."
+    New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+} else {
+    Write-Output "Firewall rule 'OpenSSH-Server-In-TCP' has been created and exists."
+}
+```
+
+Setup Multipass
+
+```
+multipass networks
+
+multipass launch --name=test --network=Ethernet0
+
+multipass launch --name=test --cpus=2 --mem=4G --disk=16G --network=Ethernet0 
+```
+----------------------------------------------
+
 
 You will firstly need an Ubuntu Server 20.04 VM (with or without desktop, but I like to keep it light). Ideally you overspec this system as it will host our other machines. I'll use a 4CPU, 16GB RAM and 256GB Disk VM running on the always excellent Unraid.
 
