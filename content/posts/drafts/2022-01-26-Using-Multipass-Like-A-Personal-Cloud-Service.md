@@ -8,16 +8,17 @@ draft: true
 I'd heard of Multipass for a while, but didn't quite appreciate what it's reason for existence was. Now I get it, and hopefully I will explain it to you as well.
 
 Mutipass is basically a command line driven VM creation service. Doesn't sound too fancy does it? Well, how about I told you it could replace Digitalocean or Linode as your source of quick test machines for 'that little personal project' you've been chipping away at for weeks? We can use multipass to;
-- Create an Ubuntu Server VM (any edition you want)
-- Set the CPU, RAM and Disk Space
-- Connect it to your local network so it can get a 'real' IP, and not some barely useful NAT thing
-- Run a Cloud Init script on boot
-- Test everything works
-- Delete when done
+
+-   Create an Ubuntu Server VM (any edition you want)
+-   Set the CPU, RAM and Disk Space
+-   Connect it to your local network so it can get a 'real' IP, and not some barely useful NAT thing
+-   Run a Cloud Init script on boot
+-   Test everything works
+-   Delete when done
 
 Now, the part of this that excites me is that seems awfully similar to what you get from Linode or DigitalOcean. Now granted, if you spin up a few machines for a few hours then those services are basically perfect, but when you have a machine hanging around a few days you start to get itchy. It's frustrating!
 
-So, lets go over what we need to do to replicate this setup locally. 
+So, lets go over what we need to do to replicate this setup locally.
 
 SCREECH
 
@@ -25,14 +26,16 @@ Let's go back a bit. I did intend to write this for a Linux Server, ideally Ubun
 
 The following guide now uses Windows 10 and Hyper-V as a guid (I know, I know) but it still meets the requirements. And, if you happen to be running Windows 10 as your desktop OS anyway perhaps you don't need the networky bit. Nonetheless, this is how to make some quick VMs and then access them for testing.
 
-
 Install Hyper-V
+
 ```
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
 ```
 
 Install Multipass
+
 ```
+
 ```
 
 Install Openssh
@@ -56,16 +59,95 @@ if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyCon
 ```
 
 Setup Multipass
+Download: https://multipass.run/download/windows
+Install and choose Hyper-V, add to PATH. Reboot
+
+Run the following
 
 ```
 multipass networks
-
-multipass launch --name=test --network=Ethernet0
-
-multipass launch --name=test --cpus=2 --mem=4G --disk=16G --network=Ethernet0 
 ```
-----------------------------------------------
 
+Note the names
+
+```
+Name            Type      Description
+Default Switch  switch    Virtual Switch with internal networking
+Ethernet        ethernet  Red Hat VirtIO Ethernet Adapter
+```
+
+The 'Ethernet' one should be the 'real' one in our Hyper-V setup, so we want to bridge dircetly onto that. But, lets launch a VM first to show what we get by default.
+
+```
+multipass launch
+```
+
+We will get a randomly named machine and the latest Ubuntu LTS edition.
+
+```
+multipass launch
+Launched: glorious-crake
+
+multipass list
+Name                    State             IPv4             Image
+glorious-crake          Running           172.17.81.160    Ubuntu 20.04 LTS
+```
+
+But, note the IPv4, it's a weirdo Multipass created subnet! This isn't routable from any machine other than the one running multipass. Ugh.
+
+Lets delete it immediately!
+
+```
+multipass delete glorious-crake
+multipass purge
+```
+
+Now, lets create one and specify the 'Ethernet' network.
+
+```
+multipass launch --network=Ethernet
+```
+
+It will ask us to create a bridged network (note, i lost RDP as well, just reconnect)
+
+```
+Multipass needs to create a switch to connect to Ethernet.
+This will temporarily disrupt connectivity on that interface.
+
+Do you want to continue (yes/no)? yes
+```
+
+Then, let's list the VMs
+
+```
+multipass list
+
+Name                    State             IPv4             Image
+innocent-earthworm      Running           172.17.93.170    Ubuntu 20.04 LTS
+                                          192.168.1.92
+```
+
+OMG, we are own the main network. Excellent! Lets install nginx on it (seperate commands for teh machine by a --)
+
+```
+multipass exec innocent-earthworm -- sudo apt install nginx -y
+```
+
+Then, lets see... (from another machine)
+
+```
+http://192.168.1.92
+```
+
+Excellent. Job done. To launch a chunkier machine run something like this
+
+```
+multipass launch --name=test --cpus=2 --mem=4G --disk=16G --network=Ethernet
+---
+
+Happy multipassing!
+
+=========================================================================================================================================
 
 You will firstly need an Ubuntu Server 20.04 VM (with or without desktop, but I like to keep it light). Ideally you overspec this system as it will host our other machines. I'll use a 4CPU, 16GB RAM and 256GB Disk VM running on the always excellent Unraid.
 
@@ -73,22 +155,25 @@ So, create the VM and get to the terminal.
 
 Run the following (i'm do this as root, cos, y'know, rootisgod)
 
-
 ## Multipass Installation
 
 As easy as...
 
 bash
-``` 
-snap install multipass
+
 ```
+
+snap install multipass
+
+````
+
 ## Our First VM
 
 Let's kick the tyres. Lets make a small VM to see what happens (if we dont specify any params we get a random name and 1CPU, 1GB RAM and 5GB disk).
 
 ```bash
 multipass launch --name vm1 --cpus 2 --mem 4G --disk 16G
-```
+````
 
 Then, we can interrogate the system we created, and even connect to it.
 
@@ -97,7 +182,6 @@ multipass shell vm1
 ```
 
 This is a full blown VM. Go crazy and enjoy!
-
 
 But, we have a problem. The IP is a NAT'd one.
 
@@ -134,6 +218,7 @@ multipass delete vm1
 ```
 
 Now we need to install and change to LXD. So run
+
 ```
 apt install lxd -y
 multipass set local.driver=lxd
@@ -160,50 +245,45 @@ https://gitanswer.com/multipass-launch-network-eth-fails-on-opaque-d-bus-network
 apt install network-manager -y
 ```
 
- multipass launch --network enp1s0 --network name=bridge0,mode=manual
+multipass launch --network enp1s0 --network name=bridge0,mode=manual
 
-
-CHEATSHEET
-----------
+## CHEATSHEET
 
 apt install lxd network-manager -y
 snap install multipass
 multipass set local.driver=lxd
 multipass launch --network ens33
 
-
 LIBVIRT
 https://multipass.run/docs/using-libvirt
 apt install libvirt-daemon-system
 snap connect multipass:libvirt
 
-
-
 multipass launch -n bar --cloud-init cloud-config.yaml
 
+---
 
-------------------
- multipass list
-    5  multipass info foo
-    6  multipass exec
-    7  multipass exec --name foo ls
-   28  multipass launch --help
-   29  multipass launch --name foo --network bridged
-   30  multipass set local.bridged-network=bridged
-   31  sudo multipass set local.bridged-network=bridged
-   32  multipass launch --name foo --network bridged
-   33  multipass launch --name foo
-   34  multipass delete foo
-   35  multipass launch --name foo --network bridged
-   36  multipass get local.driver
-   37  apt install lxd
-   38  sudo apt install lxd
-   39  sudo multipass set local.driver=lxd
-   40  multipass get local.driver
-   41  multipass launch --name foo --network bridged
-   42  multipass networks
-   43  sudo multipass set local.bridged-network=enp1s0
-   44  multipass networks
-   45  multipass launch --name foo --network enp1s0
-   46  multipass list
-   47  sudo multipass launch --name foo --network enp1s0
+multipass list
+5 multipass info foo
+6 multipass exec
+7 multipass exec --name foo ls
+28 multipass launch --help
+29 multipass launch --name foo --network bridged
+30 multipass set local.bridged-network=bridged
+31 sudo multipass set local.bridged-network=bridged
+32 multipass launch --name foo --network bridged
+33 multipass launch --name foo
+34 multipass delete foo
+35 multipass launch --name foo --network bridged
+36 multipass get local.driver
+37 apt install lxd
+38 sudo apt install lxd
+39 sudo multipass set local.driver=lxd
+40 multipass get local.driver
+41 multipass launch --name foo --network bridged
+42 multipass networks
+43 sudo multipass set local.bridged-network=enp1s0
+44 multipass networks
+45 multipass launch --name foo --network enp1s0
+46 multipass list
+47 sudo multipass launch --name foo --network enp1s0
