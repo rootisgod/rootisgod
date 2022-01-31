@@ -9,13 +9,18 @@ I'd heard of Multipass for a while, but didn't quite appreciate what the need fo
 
 ## A Quick Example
 
-As a sneak peek, to create a multipass machine, we can run something like this
+As a sneak peek, to create a multipass machine, we can run something like this. And then see what we have. Great!
 
 ```bash
 multipass launch --name vm1 --cpus 2 --mem 4G --disk 16G
+
+multipass list
+
+  Name                    State             IPv4             Image
+  demented-native         Running           10.86.127.172    Ubuntu 20.04 LTS
 ```
 
-## Why Do This?
+## Why Do This In Multipass?
 
 Now, the part of Multipass this that excites me most is that it seems awfully similar to what you get from Linode or DigitalOcean. You can get a machine in around a minute for very little effort. Now granted, if you spin up a few machines for a few hours then those services are basically perfect, but when you have a machine hanging around a few days you start to get itchy. It's frustrating! And, DigitalOcean has a per-hour minimum pricing model, so if you spin up a chunky machine, mess it up and delete it after a few minutes, you get charged the full hours worth. It's pennies, but it all adds up. Also, when you launch a VM in these environments, it is exposed to the internet immediately. By keeping everything local you can confidently go crazy without worrying about getting shouted at (quite rightly) by Infosec...
 
