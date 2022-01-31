@@ -5,11 +5,11 @@ title: Using Multipass Like a Personal Cloud Service
 draft: false
 ---
 
-I'd heard of Multipass for a while, but didn't quite appreciate what the need for it was. It's basically a command line driven VM/LXD creation service, exclusively for Canonical based products (Ubuntu, microk8s etc...). You can make a machine and then SSH/exec commands to it in a couple minutes. That's really neat.
+I'd heard of Multipass for a while, but didn't quite appreciate what the need for it was. It's basically a command line driven VM/LXD creation service, exclusively for Canonical based products (Ubuntu, microk8s etc...). You can make a machine and then SSH/exec commands to it in a couple minutes. That's really neat. In a containerised world, it's refreshingly old school and functional.
 
 ## A Quick Example
 
-As a sneak peek, to create a multipass machine, we can run something like this. And then see what we have. Great!
+As a sneak peek, to create a multipass machine, we can run something like this. We got a new machine!
 
 ```bash
 multipass launch --name vm1 --cpus 2 --mem 4G --disk 16G
@@ -22,7 +22,7 @@ multipass list
 
 ## Why Do This In Multipass?
 
-Now, the part of Multipass this that excites me most is that it seems awfully similar to what you get from Linode or DigitalOcean. You can get a machine in around a minute for very little effort. Now granted, if you spin up a few machines for a few hours then those services are basically perfect, but when you have a machine hanging around a few days you start to get itchy. It's frustrating! And, DigitalOcean has a per-hour minimum pricing model, so if you spin up a chunky machine, mess it up and delete it after a few minutes, you get charged the full hours worth. It's pennies, but it all adds up. Also, when you launch a VM in these environments, it is exposed to the internet immediately. By keeping everything local you can confidently go crazy without worrying about getting shouted at (quite rightly) by Infosec...
+Now, the part of Multipass that excites me most is that it seems awfully similar to what you get from Linode or DigitalOcean. You can get a machine in around a minute for very little effort. Now granted, if you spin up a few machines for a few hours then those services are basically perfect, but when you have a machine hanging around a few days you start to get itchy. It's frustrating! And, DigitalOcean has a per-hour minimum pricing model, so if you spin up a chunky machine, mess it up and delete it after a few minutes, you get charged the full hours worth. It's pennies, but it all adds up. Also, when you launch a VM in these environments, it is exposed to the internet immediately. By keeping everything local you can confidently go crazy without worrying about getting shouted at (quite rightly) by Infosec...
 
 So, what's the catch? There is one limitation I hit, networking. By default, the machine(s) you create are given a weird NAT'd type of address by Multipass. Ideally I want to run a chunkyish headless Linux VM which will run Multipass and then access those systems from anywhere on my LAN. But, the systems I launch on that won't be accessible externally without setting up a route rule on my 'desktop' machine like this (assuming the Multipass NAT addresses are subnet 10.68.127.0 and the Multipass host server has IP 192.168.1.10);
 
