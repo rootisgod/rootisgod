@@ -13,7 +13,7 @@ As a sneak peek, to create a multipass machine, we can run something like this
 multipass launch --name vm1 --cpus 2 --mem 4G --disk 16G
 ```
 
-Now, the part of Multipass this that excites me most is that seems awfully similar to what you get from Linode or DigitalOcean. You can get a machine in around a minute for very little effort. Now granted, if you spin up a few machines for a few hours then those services are basically perfect, but when you have a machine hanging around a few days you start to get itchy. It's frustrating! And, DigitalOcean has a per-hour minimum pricing model, so if you spin up a chunky machine, mess it up and delete it after a few mintues, you get charged the full hours worth. It's pennies, but it all adds up.
+Now, the part of Multipass this that excites me most is that seems awfully similar to what you get from Linode or DigitalOcean. You can get a machine in around a minute for very little effort. Now granted, if you spin up a few machines for a few hours then those services are basically perfect, but when you have a machine hanging around a few days you start to get itchy. It's frustrating! And, DigitalOcean has a per-hour minimum pricing model, so if you spin up a chunky machine, mess it up and delete it after a few minutes, you get charged the full hours worth. It's pennies, but it all adds up. Also, when you launch a VM in these environments, it is exposed to the internet immediately. By keeping everything local you can confidently go crazy without worrying about getting shouted at (quite rightly) by Infosec...
 
 So, what's the catch? There is one limitation I hit, networking. By default, the machine(s) you create are given a weird NAT'd type of address by Multipass. Ideally I want to run a chunkyish headless Linux VM which will run Multipass andthen access the systems from anywhere. But, the systems I launch on that won't be accessible externally without setting up a route rule on my 'desktop' machine like this (assuming the Multipass host server has IP 192.168.1.7);
 
@@ -76,3 +76,9 @@ Tada!
 ```bash
 sudo ip route add 10.86.127.0/24 via 192.168.1.10 (IP of your multipass server)
 ```
+
+### MOAR!
+
+There is way more. Multipass can also launch a cloud-init script on boot, so it is even more of a Linode/DigitalOcean replacement.
+
+https://multipass.run/docs/working-with-instances
