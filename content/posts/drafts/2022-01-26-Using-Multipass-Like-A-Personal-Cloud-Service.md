@@ -18,7 +18,7 @@ So, a basic workflow can look like this;
 
 Now, the part of this that excites me is that seems awfully similar to what you get from Linode or DigitalOcean. Now granted, if you spin up a few machines for a few hours then those services are basically perfect, but when you have a machine hanging around a few days you start to get itchy. It's frustrating! And, DigitalOcean has a per-hour minimum pricing model, so if you spin up a chunky machine, mess it upa dn delete it after a few mintues, you get charged the full hours worth. It's pennies, but it all adds up.
 
-Multipass will work just fine if you look at the docs and run a command like the below. 
+Multipass will work just fine if you look at the docs and run a command like the below.
 
 ```
 multipass launch --name vm1 --cpus 2 --mem 4G --disk 16G
@@ -30,7 +30,7 @@ Done, great! But, there is one limitation I hit, networking. By default, the mac
 sudo ip route add 172.17.81.160/24 via 192.168.1.7
 ```
 
-This is a decent workaround, but I would prefer the Multipass VMs I create have an IP address on my LAN, then I never have to add rules to any of my machines. We do have the ability to change networking modes on Multipass, but from an Ubuntu Server 20.04 install I seemed to get issues with the network bridge creation, so this should show the procedure that works. 
+This is a decent workaround, but I would prefer the Multipass VMs I create have an IP address on my LAN, then I never have to add rules to any of my machines. We do have the ability to change networking modes on Multipass, but from an Ubuntu Server 20.04 install I seemed to get issues with the network bridge creation, so this should show the procedure that works.
 
 ### Install an Ubuntu VM
 
@@ -54,7 +54,7 @@ multipass get local.driver
 qemu
 ```
 
-So, we need to change LXD. Let's install it. 
+So, we need to change LXD. Let's install it.
 
 ```bash
 apt install lxc -y
@@ -76,7 +76,7 @@ Then launch a test VM and use our 'ethernet' address which is the one connected 
 
 ```bash
 multipass launch --network=ens33
-Multipass needs to create a bridge to connect to ens33.                         
+Multipass needs to create a bridge to connect to ens33.
 This will temporarily disrupt connectivity on that interface.
 
 Do you want to continue (yes/no)? yes
@@ -96,15 +96,15 @@ Then re-run our command, a different problem now...
 launch failed: Could not create bridge. Failed DBus call. (Service: org.freedesktop.NetworkManager; Object: /org/freedesktop/NetworkManager; Interface: org.freedesktop.NetworkManager; Method: ActivateConnection): No suitable device found for this connection (device br-ens33 not available because profile is not compatible with software device (mismatching interface name)).
 ```
 
-The trick is that we need to modify the netplan. So, I have this by default in ```/etc/netplan/00-installer-config.yaml```
+The trick is that we need to modify the netplan. So, I have this by default in `/etc/netplan/00-installer-config.yaml`
 
 ```yaml
 # This is the network config written by 'subiquity'
 network:
-  ethernets:
-    ens33:
-      dhcp4: true
-  version: 2
+    ethernets:
+        ens33:
+            dhcp4: true
+    version: 2
 ```
 
 We change it to this
@@ -112,8 +112,8 @@ We change it to this
 ```yaml
 # This is the network config written by 'subiquity'
 network:
-  version: 2
-  renderer: NetworkManager
+    version: 2
+    renderer: NetworkManager
 ```
 
 And then run reboot for total effect! NOTE: My IP changed on this machine so network changes are made.
@@ -122,10 +122,27 @@ Reconnect, and try again!
 
 ```bash
 multipass launch --network=ens33
-Multipass needs to create a bridge to connect to ens33.                         
+Multipass needs to create a bridge to connect to ens33.
 This will temporarily disrupt connectivity on that interface.
 
 Do you want to continue (yes/no)? yes
+```
+
+So, teh cheatsheet for all this is;
+
+```bash
+apt install lxd network-manager -y
+snap install multipass
+multipass set local.driver=lxd
+echo $'network:\n  version: 2\n  renderer: NetworkManager' > /etc/netplan/00-installer-config.yaml
+reboot
+```
+
+Then launch your VM from the ethernet adapter you have. Done!
+
+```bash
+multipass networks
+multipass launch --network=ens33
 ```
 
 SCREECH
