@@ -67,7 +67,7 @@ multipass set local.driver=lxd
 multipass networks
 
 Name    Type      Description
-ens33   ethernet  Ethernet device
+enp1s0   ethernet  Ethernet device
 lxcbr0  bridge    Network bridge
 mpbr0   bridge    Network bridge for Multipass
 ```
@@ -75,8 +75,8 @@ mpbr0   bridge    Network bridge for Multipass
 Then launch a test VM and use our 'ethernet' address which is the one connected to our LAN. It will offer to create a bridge for us
 
 ```bash
-multipass launch --network=ens33
-Multipass needs to create a bridge to connect to ens33.
+multipass launch --network=enp1s0
+Multipass needs to create a bridge to connect to enp1s0.
 This will temporarily disrupt connectivity on that interface.
 
 Do you want to continue (yes/no)? yes
@@ -93,7 +93,7 @@ apt install network-manager -y
 Then re-run our command, a different problem now...
 
 ```bash
-launch failed: Could not create bridge. Failed DBus call. (Service: org.freedesktop.NetworkManager; Object: /org/freedesktop/NetworkManager; Interface: org.freedesktop.NetworkManager; Method: ActivateConnection): No suitable device found for this connection (device br-ens33 not available because profile is not compatible with software device (mismatching interface name)).
+launch failed: Could not create bridge. Failed DBus call. (Service: org.freedesktop.NetworkManager; Object: /org/freedesktop/NetworkManager; Interface: org.freedesktop.NetworkManager; Method: ActivateConnection): No suitable device found for this connection (device br-enp1s0 not available because profile is not compatible with software device (mismatching interface name)).
 ```
 
 The trick is that we need to modify the netplan. So, I have this by default in `/etc/netplan/00-installer-config.yaml`
@@ -102,7 +102,7 @@ The trick is that we need to modify the netplan. So, I have this by default in `
 # This is the network config written by 'subiquity'
 network:
     ethernets:
-        ens33:
+        enp1s0:
             dhcp4: true
     version: 2
 ```
@@ -121,14 +121,18 @@ And then run reboot for total effect! NOTE: My IP changed on this machine so net
 Reconnect, and try again!
 
 ```bash
-multipass launch --network=ens33
-Multipass needs to create a bridge to connect to ens33.
-This will temporarily disrupt connectivity on that interface.
+multipass launch --network=enp1s0
+  Multipass needs to create a bridge to connect to enp1s0.
+  This will temporarily disrupt connectivity on that interface.
 
-Do you want to continue (yes/no)? yes
+  Do you want to continue (yes/no)? yes
 ```
 
-So, teh cheatsheet for all this is;
+It should create a VM and if you run multipass list you will get the Local LAN IP you can use.
+
+## Cheatsheet
+
+So, the cheatsheet for all this is below;
 
 ```bash
 apt install lxd network-manager -y
@@ -138,277 +142,26 @@ echo $'network:\n  version: 2\n  renderer: NetworkManager' > /etc/netplan/00-ins
 reboot
 ```
 
-Then launch your VM from the ethernet adapter you have. Done!
+Then launch your VM from the ethernet adapter you have (note, a bridge adapter will be created, but use the 'rea' name). Done!
 
 ```bash
 multipass networks
-multipass launch --network=ens33
-```
 
-SCREECH
+  Name       Type      Description
+  enp1s0     ethernet  Ethernet device
+  mpbr0      bridge    Network bridge for Multipass
 
-Let's go back a bit. I did intend to write this for a Linux Server, ideally Ubuntu 20.04 and run it as a headless UBER system. It would be fast and efficient. Things didn't work out that way. The one thing that stopped it was the inability to get a LAN DHCP address on the multipass VM. It seems almost impossible doing this from Linux. Without that feature, accessing a VM's services (say a docker container port) is actually impossible. Deal breaker. I want to SSH to the UBER machine, spin up a box, and then be able to access it's 'things' from my main desktop. So, Linux is out...
+multipass launch --network=enp1s0
 
-The following guide now uses Windows 10 and Hyper-V as a guid (I know, I know) but it still meets the requirements. And, if you happen to be running Windows 10 as your desktop OS anyway perhaps you don't need the networky bit. Nonetheless, this is how to make some quick VMs and then access them for testing.
-
-Install Hyper-V
-
-```
-Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
-```
-
-Install Multipass
-
-```
-
-```
-
-Install Openssh
-https://docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse
-
-```pwsh
-Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
-# Start the sshd service
-Start-Service sshd
-
-# OPTIONAL but recommended:
-Set-Service -Name sshd -StartupType 'Automatic'
-
-# Confirm the Firewall rule is configured. It should be created automatically by setup. Run the following to verify
-if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyContinue | Select-Object Name, Enabled)) {
-    Write-Output "Firewall Rule 'OpenSSH-Server-In-TCP' does not exist, creating it..."
-    New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
-} else {
-    Write-Output "Firewall rule 'OpenSSH-Server-In-TCP' has been created and exists."
-}
-```
-
-Setup Multipass
-Download: https://multipass.run/download/windows
-Install and choose Hyper-V, add to PATH. Reboot
-
-Run the following
-
-```
-multipass networks
-```
-
-Note the names
-
-```
-Name            Type      Description
-Default Switch  switch    Virtual Switch with internal networking
-Ethernet        ethernet  Red Hat VirtIO Ethernet Adapter
-```
-
-The 'Ethernet' one should be the 'real' one in our Hyper-V setup, so we want to bridge dircetly onto that. But, lets launch a VM first to show what we get by default.
-
-```
-multipass launch
-```
-
-We will get a randomly named machine and the latest Ubuntu LTS edition.
-
-```
-multipass launch
-Launched: glorious-crake
+  Multipass needs to create a bridge to connect to enp1s0.
+  Do you want to continue (yes/no)? yes
+  Creating vm....
 
 multipass list
-Name                    State             IPv4             Image
-glorious-crake          Running           172.17.81.160    Ubuntu 20.04 LTS
+
+  Name                    State             IPv4             Image
+  sinewy-kookaburra       Running           10.86.127.216    Ubuntu 20.04 LTS
+                                          192.168.1.35
 ```
 
-But, note the IPv4, it's a weirdo Multipass created subnet! This isn't routable from any machine other than the one running multipass. Ugh.
-
-Lets delete it immediately!
-
-```
-multipass delete glorious-crake
-multipass purge
-```
-
-Now, lets create one and specify the 'Ethernet' network.
-
-```
-multipass launch --network=Ethernet
-```
-
-It will ask us to create a bridged network (note, i lost RDP as well, just reconnect)
-
-```
-Multipass needs to create a switch to connect to Ethernet.
-This will temporarily disrupt connectivity on that interface.
-
-Do you want to continue (yes/no)? yes
-```
-
-Then, let's list the VMs
-
-```
-multipass list
-
-Name                    State             IPv4             Image
-innocent-earthworm      Running           172.17.93.170    Ubuntu 20.04 LTS
-                                          192.168.1.92
-```
-
-OMG, we are own the main network. Excellent! Lets install nginx on it (seperate commands for teh machine by a --)
-
-```
-multipass exec innocent-earthworm -- sudo apt install nginx -y
-```
-
-Then, lets see... (from another machine)
-
-```
-http://192.168.1.92
-```
-
-Excellent. Job done. To launch a chunkier machine run something like this
-
-```
-multipass launch --name=test --cpus=2 --mem=4G --disk=16G --network=Ethernet
----
-
-Happy multipassing!
-
-=========================================================================================================================================
-
-You will firstly need an Ubuntu Server 20.04 VM (with or without desktop, but I like to keep it light). Ideally you overspec this system as it will host our other machines. I'll use a 4CPU, 16GB RAM and 256GB Disk VM running on the always excellent Unraid.
-
-So, create the VM and get to the terminal.
-
-Run the following (i'm do this as root, cos, y'know, rootisgod)
-
-## Multipass Installation
-
-As easy as...
-
-bash
-
-```
-
-snap install multipass
-
-````
-
-## Our First VM
-
-Let's kick the tyres. Lets make a small VM to see what happens (if we dont specify any params we get a random name and 1CPU, 1GB RAM and 5GB disk).
-
-```bash
-multipass launch --name vm1 --cpus 2 --mem 4G --disk 16G
-````
-
-Then, we can interrogate the system we created, and even connect to it.
-
-```
-multipass shell vm1
-```
-
-This is a full blown VM. Go crazy and enjoy!
-
-But, we have a problem. The IP is a NAT'd one.
-
-```bash
-multipass list
-```
-
-So, because I am running on a headless VM without a GUI, I cant really do anything useful, the network is out of reach of anything else I own. Let's fix that.
-
-## Making It Better
-
-What we want to change is our network driver. To do that, run;
-
-```bash
-multipass networks
-```
-
-Hmm, it says what!?!
-
-```
-networks failed: The networks feature is not implemented on this backend.
-```
-
-Crap, so, apprrently we are running on QEMU
-
-```bash
-multipass get local.driver
-```
-
-But, we need LXD instead. Lets delete the first machine as we will change hypervisors in a minute
-
-```bash
-multipass delete vm1
-```
-
-Now we need to install and change to LXD. So run
-
-```
-apt install lxd -y
-multipass set local.driver=lxd
-```
-
-Then, let's see what networks we have. Aha!
-
-```bash
-multipass networks
-Name    Type      Description
-enp1s0  ethernet  Ethernet device
-mpbr0   bridge    Network bridge for Multipass
-```
-
-multipass launch --name=vm1 --network=en1ps0
-
-https://gitanswer.com/multipass-launch-network-eth-fails-on-opaque-d-bus-networkmanager-error-cplusplus-1071240751
-launch failed: Could not create bridge. Could not reach remote D-Bus object: The name org.freedesktop.NetworkManager was not provided by any .service files
-
-So, we actually need to also install Network Manager
-https://gitanswer.com/multipass-launch-network-eth-fails-on-opaque-d-bus-networkmanager-error-cplusplus-1071240751
-
-```bash
-apt install network-manager -y
-```
-
-multipass launch --network enp1s0 --network name=bridge0,mode=manual
-
-## CHEATSHEET
-
-apt install lxd network-manager -y
-snap install multipass
-multipass set local.driver=lxd
-multipass launch --network ens33
-
-LIBVIRT
-https://multipass.run/docs/using-libvirt
-apt install libvirt-daemon-system
-snap connect multipass:libvirt
-
-multipass launch -n bar --cloud-init cloud-config.yaml
-
----
-
-multipass list
-5 multipass info foo
-6 multipass exec
-7 multipass exec --name foo ls
-28 multipass launch --help
-29 multipass launch --name foo --network bridged
-30 multipass set local.bridged-network=bridged
-31 sudo multipass set local.bridged-network=bridged
-32 multipass launch --name foo --network bridged
-33 multipass launch --name foo
-34 multipass delete foo
-35 multipass launch --name foo --network bridged
-36 multipass get local.driver
-37 apt install lxd
-38 sudo apt install lxd
-39 sudo multipass set local.driver=lxd
-40 multipass get local.driver
-41 multipass launch --name foo --network bridged
-42 multipass networks
-43 sudo multipass set local.bridged-network=enp1s0
-44 multipass networks
-45 multipass launch --name foo --network enp1s0
-46 multipass list
-47 sudo multipass launch --name foo --network enp1s0
+Tada!
