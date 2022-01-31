@@ -1,8 +1,8 @@
 ---
 categories: linux linode digitalocean cloudinit multipass vm ubuntu
-date: "2022-01-22T15:50:00Z"
+date: "2022-01-31T20:00:00Z"
 title: Using Multipass Like a Personal Cloud Service
-draft: true
+draft: false
 ---
 
 I'd heard of Multipass for a while, but didn't quite appreciate what the need for it was. It's basically a command line driven VM/LXD creation service, exclusively for Canonical based products (Ubuntu, microk8s etc...). You can make a machine and then SSH/exec commands to it in a couple minutes. That's really neat.
