@@ -16,7 +16,22 @@ So, a basic workflow can look like this;
 -   Test everything works
 -   Delete when done
 
-Now, the part of this that excites me is that seems awfully similar to what you get from Linode or DigitalOcean. Now granted, if you spin up a few machines for a few hours then those services are basically perfect, but when you have a machine hanging around a few days you start to get itchy. It's frustrating! And, DigitalOcean has a per-hour minimum pricing model, so if you spin up a chunky machine, mess it upa dn delete it after a few mintues, you get charged the full hours worth. It's pennies, but it all adds up.
+Now, the part of this that excites me is that seems awfully similar to what you get from Linode or DigitalOcean. Now granted, if you spin up a few machines for a few hours then those services are basically perfect, but there are some drawbacks;
+
+- Running a large __nice__ machine is still pretty expensive (an 8GB RAM, 4 CPU machine is $40 a month)
+- DigitalOcean has a per-hour minimum pricing model, so if you spin up that nice machine, mess with it and delete it after 5 minutes, you get charged the full hours worth. It's pennies (about 5 cents in this case), but it all adds up.
+- You have to firewall it, else it's exposed to the internet
+- It's not self hosting. If you have a nice enough machine at home, why not just use that if you can?
+- Your learning a 3rd paries proprietary service. If you change you have to learn everything again
+
+The benefits of Digitalocean/Linode are also good though so to be clear, there are some real benefits to them;
+
+- It really is a good service if you just want to get going
+- Multiple OS choices
+- Lots of options (kubernetes, applications, databases etc...)
+
+
+## Multipass Basics
 
 Multipass will work just fine if you look at the docs and run a command like the below. 
 
@@ -57,7 +72,7 @@ qemu
 So, we need to change LXD. Let's install it. 
 
 ```bash
-apt install lxc -y
+apt install lxd -y
 ```
 
 And then change multipass to use it (note it is 'lxd' though, not 'lxc'), and then see what networks we have
