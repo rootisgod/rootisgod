@@ -30,6 +30,9 @@ But that's not to say Terraform is all milk and honey. The state file aspect of 
 
 The main point of this post is to show how we are trying to build up a way that allows our (small) team to standardise on deployments. The number one issue most people find when they start using Terraform is that you can't easily create multiple environments without duplicating code. You'll go mad looking on youtube for videos about this. The solution seems to be Terragrunt, but that seems overkill (although I may be proven wrong). So, this post will explain the architecture we have come up with.
 
+The main goal is to have environments represented individually and without duplication of code. And if you have used Terrafrom, you’ll know that generally you can create a folder per environment and place a main.tf file and a tfvars file to represent and environment. The issue with this is that you have to create a main.tf file and tfvars for every environment, and keep them consistent. It’s messy. If we only had out tfvars ‘answer file’ things could be manageable. And that’s what we will try and do. 
+
+
 
 
 
