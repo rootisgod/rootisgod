@@ -1,0 +1,56 @@
+version: "3.7"
+
+services:
+  # ---KEYCLOAK---
+  docker-keycloak.docker.local:
+    image: quay.io/keycloak/keycloak:16.1.1
+    #    container_name: keycloak
+    restart: unless-stopped
+    environment:
+#      KEYCLOAK_ADMIN: admin
+#      KEYCLOAK_ADMIN_PASSWORD: Password123!?
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: Password123!?
+      PROXY_ADDRESS_FORWARDING: true  #important for reverse proxy
+      REDIRECT_SOCKET: http
+      # https://stackoverflow.com/questions/50670734/keycloak-in-docker-compose-network:
+      KEYCLOAK_FRONTEND_URL: http://docker-keycloak.docker.local:8080/auth
+    ports:
+      - 8080:8080
+  # ---NGINX WEBSITE---
+  # Listens on port 80 by default
+  docker-webapp.docker.local:
+    image: nginxdemos/hello
+    # We want to hide this and have Oauth2 Proxy to it for us
+    ports:
+      - 8181:80
+  # OAUTH2-PROXY - https://oauth2-proxy.github.io/oauth2-proxy/docs/configuration/oauth_provider/#keycloak-oidc-auth-provider
+  docker-oauth2-proxy.docker.local:
+    image: bitnami/oauth2-proxy:7.4.0
+    depends_on:
+      - docker-keycloak.docker.local
+    command:
+      - --http-address
+      - 0.0.0.0:80
+    # Every command line argument can be specified as an environment variable by prefixing it with OAUTH2_PROXY_, capitalising it, and replacing hypens (-) with underscores (_).
+    environment:
+      # Required
+      OAUTH2_PROXY_EMAIL_DOMAINS: '*'
+      # This is the site to deliver to the user. Use the URL that OAUTH2-PROXY can see. NOT what the user can see. It will reverse proxy this to the user
+      OAUTH2_PROXY_UPSTREAMS: http://docker-webapp.docker.local/test/
+      OAUTH2_PROXY_PROVIDER: keycloak-oidc
+      OAUTH2_PROXY_CLIENT_ID: account
+      OAUTH2_PROXY_CLIENT_SECRET: aqTgqinI2KMIISj4YIKW8PPnhRrvqwow
+      # Should match Oauth2-Proxy External Port. Stops an https redirect
+      OAUTH2_PROXY_REDIRECT_URL: http://docker-oauth2-proxy.docker.local/oauth2/callback
+      OAUTH2_PROXY_OIDC_ISSUER_URL: http://docker-keycloak.docker.local:8080/auth/realms/Website
+      # Skip Oauth2-Proxy welcome sign-in page, go straight to auth/IDP
+      # OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: true
+      # Invalid authentication via OAuth2: unable to obtain CSRF cookie: https://github.com/oauth2-proxy/oauth2-proxy/issues/1488
+      OAUTH2_PROXY_COOKIE_DOMAINS: '.docker.local'
+      OAUTH2_PROXY_WHITELIST_DOMAINS: '.docker.local'
+      OAUTH2_PROXY_COOKIE_SECRET: NOT_USED_BUT_REQUIRED_VALUE_32b_
+      # https://stackoverflow.com/questions/71353947/why-am-i-getting-a-csrf-403-from-oauth2-proxy-when-running-on-gke-but-not-locall:
+      OAUTH2_PROXY_COOKIE_SECURE: false
+    ports:
+      - 80:80
