@@ -2,7 +2,7 @@
 categories: intellij jetbrains vscode mkdocs wiki notes exams study
 date: "2022-12-12T08:00:00Z"
 title: Using Intellij As A Documentation Tool
-draft: true
+draft: false
 ---
 
 I have been trying to do more studying and IT certifications, but before I started studying I have been stuck in one of those dreaded loops of finding the right tool for the job. I initially thought that something like Dokuwiki would do, but it has a glaring error much like many others I tried
