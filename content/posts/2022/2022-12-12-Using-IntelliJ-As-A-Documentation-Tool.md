@@ -5,7 +5,7 @@ title: Using Intellij As A Documentation Tool
 draft: false
 ---
 
-I have been trying to do more studying and IT certifications, but before I started studying I have been stuck in one of those dreaded loops of finding the right tool for the job. I initially thought that something like Dokuwiki would do, but it has a glaring error much like many others I tried
+I have been trying to do more studying and IT certifications, but before I started studying I have been stuck in one of those dreaded loops of finding the right tool for the job. I initially thought that something like Dokuwiki would do, but it has a glaring error much like many others I tried.
 
 **You cannot copy and paste an image from your clipboard to the page!**
 
@@ -16,12 +16,13 @@ My requirements are also fairly strict in that I want the data to be preferably 
 So, after trying the below;
 - Dokuwiki - No image copy/paste simplicity
 - Wiki JS - Despite all the fanciness, again, same issue
+- Many others - Things like Joplin, Notion etc... All leave me a little worried about my data portability or other issues
 - Obsidian - It does do this! It uploads the file in the folder for you. But, it got me thinking...
 
 I would have to install obsidian on every machine I use... It looks very similar to vscode... Why dont I just see if my current IDE of choice (IntelliJ) has an image upload markdown plugin? It does! It is called 'Markdown Image Support'. Install that, tell it to save 'assets' in a subfolder with a timestamp, and you are done! 
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2022/sing-IntelliJ-As-A-Documentation-Tool/1670838624083.png"><img src="/assets/images/2022/sing-IntelliJ-As-A-Documentation-Tool/1670838624083.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2022/Using-IntelliJ-As-A-Documentation-Tool/1670838624083.png"><img src="/assets/images/2022/Using-IntelliJ-As-A-Documentation-Tool/1670838624083.png"></a>
 {{< /rawhtml >}}
 
 I've using it just now! No more photo uploads and manually linking in blog posts either, the same principle applies. I feel dumb for not discovering this earlier. 
