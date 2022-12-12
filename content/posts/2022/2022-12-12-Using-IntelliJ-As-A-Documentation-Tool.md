@@ -9,7 +9,7 @@ I have been trying to do more studying and IT certifications, but before I start
 
 **You cannot copy and paste an image from your clipboard to the page!**
 
-Instead, you have to upload an image file first adn then reference it. This is a severe productivity killer. I am used to Confluence at work and that ability alone seems a killer feature that others struggle to match. You want to be able to just type, screenshot, paste and upload as you go. 
+Instead, you have to upload an image file first and then reference it. This is a severe productivity killer. I am used to Confluence at work and that ability alone seems a killer feature that others struggle to match. You want to be able to just type, screenshot, paste and upload as you go. 
 
 My requirements are also fairly strict in that I want the data to be preferably in markdown and 'gittable'. 
 
@@ -20,7 +20,9 @@ So, after trying the below;
 
 I would have to install obsidian on every machine I use... It looks very similar to vscode... Why dont I just see if my current IDE of choice (IntelliJ) has an image upload markdown plugin? It does! It is called 'Markdown Image Support'. Install that, tell it to save 'assets' in a subfolder with a timestamp, and you are done! 
 
-![](./assets/2022-12-12-Using-IntelliJ-As-A-Documentation-Tool/1670838624083.png)
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2022/sing-IntelliJ-As-A-Documentation-Tool/1670838624083.png"><img src="/assets/images/2022/sing-IntelliJ-As-A-Documentation-Tool/1670838624083.png"></a>
+{{< /rawhtml >}}
 
 I've using it just now! No more photo uploads and manually linking in blog posts either, the same principle applies. I feel dumb for not discovering this earlier. 
 
