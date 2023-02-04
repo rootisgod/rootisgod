@@ -1,6 +1,6 @@
 ---
 categories: ephemeral github kubernetes k8s container docker azure AKS
-date: "2023-02-03-23:00:00Z"
+date: "2023-02-04T08:00:00Z"
 title: Creating Ephemeral Github Action Runners In A Kubernetes Cluster
 draft: false
 ---
@@ -56,14 +56,13 @@ spec:
 
 Run that with `kubectl apply -f k8s-runner.yaml`, and voila!
 
-We have an agent!
+We should now have an agent in our Github repo!
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2023/2023-02-04-Creating-Github-Runners-in-a-Kubernetes-Cluster/github-runner-created.png"><img src="/assets/images/2023/Creating-Github-Runners-in-a-Kubernetes-Cluster/github-runner-created.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2023/Creating-Ephemeral-Github-Action-Runners-In-A-Kubernetes-Cluster/github-runner-created.png"><img src="/assets/images/2023/Creating-Ephemeral-Github-Action-Runners-In-A-Kubernetes-Cluster/github-runner-created.png"></a>
 {{< /rawhtml >}}
 
-
-Amend your GitHub Actions like so. The important part is the `runs-on: self-hosted` part. This will run a GitHub action, from your runner, on a container iamge. The dream come true. 
+Amend your GitHub Actions like so. The important part is the `runs-on: self-hosted` part. This will run a GitHub action, from your runner, on a container image. The dream come true. 
 
 ```yaml
 name: Test-Job
