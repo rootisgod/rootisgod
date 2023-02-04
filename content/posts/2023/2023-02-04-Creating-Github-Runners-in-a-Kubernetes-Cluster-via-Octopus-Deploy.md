@@ -1,6 +1,6 @@
 ---
-categories:  ephemeral github kubernetes k8s octopusdeploy container docker azure AKS
-date: "2022-12-12T08:00:00Z"
+categories:  ephemeral github kubernetes k8s container docker azure AKS
+date: "2023-02-04-01:30:00Z"
 title: Creating Ephemeral Github Action Runners In A Kubernetes Cluster
 draft: false
 ---
@@ -62,11 +62,6 @@ Run that with `kubectl apply -f k8s-runner.yaml`, and voila!
 We have an agent!
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2022/Using-IntelliJ-As-A-Documentation-Tool/1670838624083.png"><img src="/assets/images/2022/Using-IntelliJ-As-A-Documentation-Tool/1670838624083.png"></a>
-{{< /rawhtml >}}
-
-
-{{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2023/2023-02-04-Creating-Github-Runners-in-a-Kubernetes-Cluster/github-runner-created.png"><img src="/assets/images/2023/Creating-Github-Runners-in-a-Kubernetes-Cluster/github-runner-created.png"></a>
 {{< /rawhtml >}}
 
@@ -90,9 +85,3 @@ jobs:
 ```
 
 Each job run is an ephemeral agent. It will renew on each run. To create more agents in case of many long running jobs being active, simply adjust the replica value.
-
-## Octopus Deploy
-
-If you want to automate this, we can use Octopus Deploy. Create a new project and reference a new Kubernetes Deployment Target.
-
-Then create a new project. 
