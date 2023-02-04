@@ -1,12 +1,9 @@
 ---
-categories:  ephemeral github kubernetes k8s container docker azure AKS
+categories: ephemeral github kubernetes k8s container docker azure AKS
 date: "2023-02-04-01:30:00Z"
 title: Creating Ephemeral Github Action Runners In A Kubernetes Cluster
 draft: false
 ---
-
-
-## Premilinaries 
 
 I recently had a challenge at work where I had to allow developers to deploy a functioning Azure environment, but also allow them to access the environment from GitHub Actions. The problem in a corporate environment is that we really really really like to know the IP address you are coming from, and whitelist that. The GitHub Action runners hosted by GitHub fail this requirement. The solution is to use a 'self-hosted' runner that you can create and know the IP address used. The problem is that in general;
  - A corporation won't let you do things at the GitHub Organisation level (resonably so)
