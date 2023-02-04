@@ -1,6 +1,6 @@
 ---
 categories: ephemeral github kubernetes k8s container docker azure AKS
-date: "2023-02-04-01:30:00Z"
+date: "2023-02-04-00:00:00Z"
 title: Creating Ephemeral Github Action Runners In A Kubernetes Cluster
 draft: false
 ---
