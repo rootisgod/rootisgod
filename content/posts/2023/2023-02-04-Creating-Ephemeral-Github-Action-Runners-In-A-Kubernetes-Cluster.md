@@ -58,6 +58,10 @@ Run that with `kubectl apply -f k8s-runner.yaml`, and voila!
 
 We should now have an agent in our Github repo! Check Settings --> Actions --> Runners. Amend the replica value to a higher number if you need more than one. 
 
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2023/Creating-Ephemeral-Github-Action-Runners-In-A-Kubernetes-Cluster/github-runner-created.png"><img src="/assets/images/2023/Creating-Ephemeral-Github-Action-Runners-In-A-Kubernetes-Cluster/github-runner-created.png"></a>
+{{< /rawhtml >}}
+
 Then, create a GitHub Action on your repo like this. The important part is the `runs-on: self-hosted` part. This will run a GitHub action, from your runner, on a container image, which is just basic Ubuntu in this example. The dream come true. 
 
 ```yaml
