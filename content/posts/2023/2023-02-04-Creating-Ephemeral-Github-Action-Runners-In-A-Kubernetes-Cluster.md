@@ -5,15 +5,15 @@ title: Creating Ephemeral Github Action Runners In A Kubernetes Cluster
 draft: false
 ---
 
-I recently had a challenge at work where developers required the ability to deploy an Azure environment, and run GitHub Action tests against it. The problem with that is, because we are in a corporate environment, we really really like to know the IP address traffic is coming from, and whitelist that as required. The GitHub Action runners hosted by GitHub fail this requirement because we would have massive whitelist and anyone running a GitHub access could potentially access our infrastructure. No good.
+I recently had a challenge at work where developers required the ability to deploy an Azure environment, and run GitHub Action tests against it. The problem with that is, because we are in a corporate environment, we really really like to know the IP address the traffic is coming from so we can whitelist it. The GitHub Action runners hosted by GitHub fail this requirement because we would need a massive whitelist, and anyone running a GitHub access could potentially access our infrastructure. No good.
 
-The solution is to use a 'self-hosted' runner. That is essentially where you have your own machine, install a GitHub Runner Agent on it, and whitelist your known 'good' IP. But, the problem with this is;
-- A corporation won't let you do things at the GitHub Organisation level (resonably so)
-- A GitHub runner can't be shared across repositories unless you add it at the organistaion level
+The solution is to use a 'self-hosted' runner. That is essentially where you have your own machine, you install a GitHub Runner Agent on it, and whitelist its 'good' IP. But, the problem with this is;
+- A GitHub runner is attached to a specific repository. But, you can create a 'Shared' runner if you have Organisational Level admin access organisation level
+- A corporation won't let you do things at the GitHub Organisation level (reasonably so). Using a 'Shared' runner is beyond most at a large organisation (and it would probably be massively oversubscribed with jobs)
 
-So, you would have to create github runner for every repository you want to have a self-hosted runner on. Fine probably for a personal project, but, we all know that orgs create far more repos than you would think possible. So, creating and managing a runner per repo is exceedingly painful and inefficient if you make a VM for each repository you want a runner on.
+So, we really need to create a github runner for every repository we need GitHub Actions on. This is porbably fine for a personal project or account, but, we all know that orgs create far more repos than you would think possible. So, creating and managing a runner per repo is exceedingly painful and inefficient if we need to create and register a VM for each repository.
 
-We could improve that by using docker to create many runners on one VM . Problem solved! Yet, we then need a script or process to manage that. We need to make a Dockerfile/script, find the repo, name the runner, add it, recreate it every so often to 'refresh' it and clear out it's disk when many runs have completed etc etc... It's an improvement, but it still seems like a lot of overhead. But, what if we could go a level above an Os and Docker, and use a Kubernetes cluster (which can run docker containers!) to do almost all of this for us?
+We could improve that by using docker to create many runners on one VM. Problem solved! Yet, we then need a script or process to manage that. We need to make a Dockerfile/script, find the repo, name the runner, add it, recreate it every so often to 'refresh' it and clear out it's disk when many runs have completed etc etc... It's an improvement, but it still seems like a lot of overhead. But, what if we could go a level above an Os and Docker, and use a Kubernetes cluster (which can run docker containers!) to do almost all of this for us?
 
 ## K8S GitHub Runners
 
