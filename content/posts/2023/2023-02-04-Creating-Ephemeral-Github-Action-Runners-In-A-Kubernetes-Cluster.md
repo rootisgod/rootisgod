@@ -5,9 +5,9 @@ title: Creating Ephemeral Github Action Runners In A Kubernetes Cluster
 draft: false
 ---
 
-I recently had a challenge at work where developers required the ability to deploy an Azure environment, and run GitHub Action tests against it. The problem with that is, because we are in a corporate environment, we really really like to know the IP address the traffic is coming from so we can whitelist it. The GitHub Action runners hosted by GitHub fail this requirement because we would need a massive whitelist, and anyone running a GitHub access could potentially access our infrastructure. No good.
+I recently had a challenge at work where developers required the ability to deploy an Azure environment, and run GitHub Action tests against it. The problem with that is, because we are in a corporate environment, we really really like to know the IP address the traffic is coming from so we can whitelist it. The GitHub Action runners hosted by GitHub fail this requirement because we would need a massive whitelist, and anyone running a GitHub Action could potentially access our infrastructure. No good.
 
-The solution is to use a 'self-hosted' runner. That is essentially where you have your own machine, you install a GitHub Runner Agent on it, and whitelist its 'good' IP. But, the problem with this is;
+The solution is to use a 'self-hosted' runner. That is essentially where you have your own machine, you install a GitHub Runner Agent on it, and whitelist only its IP. But, the problem with this is;
 - A GitHub runner is attached to a specific repository. But, you can create a 'Shared' runner if you have Organisational Level admin access organisation level
 - A corporation won't let you do things at the GitHub Organisation level (reasonably so). Using a 'Shared' runner is beyond most at a large organisation (and it would probably be massively oversubscribed with jobs)
 
@@ -17,21 +17,25 @@ We could improve that by using docker to create many runners on one VM. Problem 
 
 ## K8S GitHub Runners
 
-The solution is a project called Github Actions Runner Controller: https://github.com/actions/actions-runner-controller
+The solution is a project called the Actions Runner Controller: https://github.com/actions/actions-runner-controller
 
-We can use a couple of helm charts to install the solution on our cluster and then we can create a simple YAML definition to create and attach a Github Runner to our Github repositories on demand.
+We can use a couple of helm charts to install the solution on our cluster and use a simple YAML definition to create and attach a Github Runner to our Github repositories on demand.
 
 ### PreReqs
 
-I have tested the following on an Azure AKS cluster. Create one in anticipation, it can be low spec with a single node with 2 CPUs and 4GB RAM. Sset your context to use it and then run these commands. Change the versions if there is a new one available, but this example works as of February 2023.
+I have tested the following on an Azure AKS cluster. Create one in anticipation, it can be low spec with a single node with a spec of 2 CPUs and 4GB RAM. Set your kubectl context to use it and then run these commands. Change the versions if there is a new one available, but this example works as of February 2023.
 
-```yaml
+#### Cert Manager
+
+```bash
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
 helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.11.0 --set installCRDs=true
 ```
 
-Afterwards, we should have the ability to create a GitHub Runner in the cluster. The prereq for this is that you have a GitHub account and a PAT to pass to the controller so it can act on your behalf:  https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+#### Actions Runner Controller
+
+Now, we can install the GitHub Action Runner in the cluster. The prereq for this is that you have a GitHub account and a PAT to pass to the controller so it can act on your behalf:  https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
 
 Once we have those place, run this command and put in your PAT
 
