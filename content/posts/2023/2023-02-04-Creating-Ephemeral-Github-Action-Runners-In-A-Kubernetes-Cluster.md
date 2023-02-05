@@ -5,17 +5,17 @@ title: Creating Ephemeral Github Action Runners In A Kubernetes Cluster
 draft: false
 ---
 
-I recently had a challenge at work where I had to give developers the ability to deploy a functioning Azure environment, but also allow them to access the environment from GitHub Actions to run tests aginst it. The problem with that is, because we are in a corporate environment, we really really really like to know the IP address traffic is coming from, and whitelist that as required. The GitHub Action runners hosted by GitHub fail this requirement because we would have massive whitelist and anyone running a GitHub access could potentially access our infrastructure. No good.
+I recently had a challenge at work where developers required the ability to deploy an Azure environment, and run GitHub Action tests against it. The problem with that is, because we are in a corporate environment, we really really like to know the IP address traffic is coming from, and whitelist that as required. The GitHub Action runners hosted by GitHub fail this requirement because we would have massive whitelist and anyone running a GitHub access could potentially access our infrastructure. No good.
 
 The solution is to use a 'self-hosted' runner. That is essentially where you have your own machine, install a GitHub Runner Agent on it, and whitelist your known 'good' IP. But, the problem with this is;
- - A corporation won't let you do things at the GitHub Organisation level (resonably so)
- - A GitHub runner can't be shared across repositories unless you add it at the organistaion level
+- A corporation won't let you do things at the GitHub Organisation level (resonably so)
+- A GitHub runner can't be shared across repositories unless you add it at the organistaion level
 
 So, you would have to create github runner for every repository you want to have a self-hosted runner on. Fine probably for a personal project, but, we all know that orgs create far more repos than you would think possible. So, creating and managing a runner per repo is exceedingly painful and inefficient if you make a VM for each repository you want a runner on.
 
 We could improve that by using docker to create many runners on one VM . Problem solved! Yet, we then need a script or process to manage that. We need to make a Dockerfile/script, find the repo, name the runner, add it, recreate it every so often to 'refresh' it and clear out it's disk when many runs have completed etc etc... It's an improvement, but it still seems like a lot of overhead. But, what if we could go a level above an Os and Docker, and use a Kubernetes cluster (which can run docker containers!) to do almost all of this for us?
 
-## K8S GitHub Runners 
+## K8S GitHub Runners
 
 The solution is a project called Github Actions Runner Controller: https://github.com/actions/actions-runner-controller
 
@@ -56,13 +56,13 @@ spec:
 
 Run that with `kubectl apply -f k8s-runner.yaml`, and voila!
 
-We should now have an agent in our Github repo! Check Settings --> Actions --> Runners. Amend the replica value to a higher number if you need more than one. 
+We should now have an agent in our Github repo! Check Settings --> Actions --> Runners. Amend the replica value to a higher number if you need more than one.
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2023/Creating-Ephemeral-Github-Action-Runners-In-A-Kubernetes-Cluster/github-runner-created.png"><img src="/assets/images/2023/Creating-Ephemeral-Github-Action-Runners-In-A-Kubernetes-Cluster/github-runner-created.png"></a>
 {{< /rawhtml >}}
 
-Then, create a GitHub Action on your repo like this. The important part is the `runs-on: self-hosted` part. This will run a GitHub action, from your runner, on a container image, which is just basic Ubuntu in this example. The dream come true. 
+Then, create a GitHub Action on your repo like this. The important part is the `runs-on: self-hosted` part. This will run a GitHub action, from your runner, on a container image, which is just basic Ubuntu in this example. The dream come true.
 
 ```yaml
 name: Test-Job
@@ -81,3 +81,37 @@ jobs:
 ```
 
 Each job run is an ephemeral agent. It will remove and create a new one on each run. Perfect!
+
+## Octopus Deploy
+
+To make this a more automated system, simply add your Kubernetes Cluster to Octopus Deploy and then target it with Runbook scripts like these. The create script will take a variable for the repository name and the delete agent runbook will remove it. Now anyone in your team can make an agent when required.
+
+Screenshots to follow (once I get to work...)
+
+### Create (Deploy RAW Kubernetest YAML)
+
+```yaml
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: GitHubK8SRunner
+spec:
+  replicas: 1
+  template:
+    spec:
+      repository: #{RepositoryName}
+```
+
+### Delete (Run a Kubernetes Script)
+
+```yaml
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: GitHubK8SRunner
+spec:
+  replicas: 1
+  template:
+    spec:
+      repository: #{RepositoryName}
+```
