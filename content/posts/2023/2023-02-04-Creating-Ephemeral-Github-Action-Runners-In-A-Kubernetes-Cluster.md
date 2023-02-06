@@ -88,11 +88,11 @@ Each job run is an ephemeral agent. It will remove and create a new one on each 
 
 ## Octopus Deploy
 
-To make this a more automated system, simply add your Kubernetes Cluster to Octopus Deploy and then target it with Runbook scripts like these. The create script will take a variable for the repository name and the delete agent runbook will remove it. Now anyone in your team can make an agent when required.
+To make this a more automated system, simply add your Kubernetes Cluster to Octopus Deploy and then target it with Runbook scripts like these. First create a variable called 'RepositoryName' that is set to promp for a value in an Octopus project, we will use that as our input. The create script will take a variable for the repository name and the delete agent runbook will remove it. Now anyone in your team can make an agent when required.
 
-Screenshots to follow (once I get to work...)
 
-### Create (Deploy RAW Kubernetest YAML)
+
+### Create a Runner (Deploy RAW Kubernetes YAML)
 
 ```yaml
 apiVersion: actions.summerwind.dev/v1alpha1
@@ -106,16 +106,22 @@ spec:
       repository: #{RepositoryName}
 ```
 
-### Delete (Run a Kubernetes Script)
+### Delete (Run a Kubectl CLI Script)
 
-```yaml
+Choose to run a bash script like this.
+
+```bash
+cat << EOF > deployment.yaml
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
-  name: GitHubK8SRunner
+  name: ctops-env0-self-hosted-agent-github-runner
 spec:
   replicas: 1
   template:
     spec:
-      repository: #{RepositoryName}
+      repository: #{Repository Name}
+EOF
+
+kubectl delete -f deployment.yaml
 ```
