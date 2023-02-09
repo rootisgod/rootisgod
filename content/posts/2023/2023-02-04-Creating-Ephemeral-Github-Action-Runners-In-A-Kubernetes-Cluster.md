@@ -11,7 +11,7 @@ The solution is to use a 'self-hosted' runner. That is essentially where you hav
 - A GitHub runner is attached to a specific repository. But, you can create a 'Shared' runner if you have Organisational Level admin access organisation level
 - A corporation won't let you do things at the GitHub Organisation level (reasonably so). Using a 'Shared' runner is beyond most at a large organisation (and it would probably be massively oversubscribed with jobs)
 
-So, we really need to create a github runner for every repository we need GitHub Actions on. This is porbably fine for a personal project or account, but, we all know that orgs create far more repos than you would think possible. So, creating and managing a runner per repo is exceedingly painful and inefficient if we need to create and register a VM for each repository.
+So, we really need to create a github runner for every repository we need GitHub Actions on. This is probably fine for a personal project or account, but, we all know that orgs create far more repos than you would think possible. So, creating and managing a runner per repo is exceedingly painful and inefficient if we need to create and register a VM for each repository.
 
 We could improve that by using docker to create many runners on one VM. Problem solved! Yet, we then need a script or process to manage that. We need to make a Dockerfile/script, find the repo, name the runner, add it, recreate it every so often to 'refresh' it and clear out it's disk when many runs have completed etc etc... It's an improvement, but it still seems like a lot of overhead. But, what if we could go a level above an Os and Docker, and use a Kubernetes cluster (which can run docker containers!) to do almost all of this for us?
 
@@ -44,7 +44,7 @@ helm repo add actions-runner-controller https://actions-runner-controller.github
 helm upgrade --install --namespace actions-runner-system --create-namespace --set=authSecret.create=true --set=authSecret.github_token="REPLACE_YOUR_TOKEN_HERE" --wait actions-runner-controller actions-runner-controller/actions-runner-controller
 ```
 
-We can then create a github runner for a specific repo by creating a file called something like 'k8s-runner.yaml' and applying it. Amend the 'repository' value to your own.
+We can then create a github runner for a specific repo by creating a file called something like ```k8s-runner.yaml``` and applying it. Amend the 'repository' value to your own.
 
 ```yaml
 apiVersion: actions.summerwind.dev/v1alpha1
@@ -58,7 +58,7 @@ spec:
       repository: iaingblack/GithubRunner
 ```
 
-Run that with `kubectl apply -f k8s-runner.yaml`, and voila!
+Run that with ```kubectl apply -f k8s-runner.yaml```, and voila!
 
 We should now have an agent in our Github repo! Check Settings --> Actions --> Runners. Amend the replica value to a higher number if you need more than one.
 
@@ -66,7 +66,7 @@ We should now have an agent in our Github repo! Check Settings --> Actions --> R
 <a data-fancybox="gallery" href="/assets/images/2023/Creating-Ephemeral-Github-Action-Runners-In-A-Kubernetes-Cluster/github-runner-created.png"><img src="/assets/images/2023/Creating-Ephemeral-Github-Action-Runners-In-A-Kubernetes-Cluster/github-runner-created.png"></a>
 {{< /rawhtml >}}
 
-Then, create a GitHub Action on your repo like this. The important part is the `runs-on: self-hosted` part. This will run a GitHub action, from your runner, on a container image, which is just basic Ubuntu in this example. The dream come true.
+Then, create a GitHub Action on your repo like this. The important part is the ```runs-on: self-hosted``` part. This will run a GitHub action, from your runner, on a container image, which is just basic Ubuntu in this example. The dream come true.
 
 ```yaml
 name: Test-Job
