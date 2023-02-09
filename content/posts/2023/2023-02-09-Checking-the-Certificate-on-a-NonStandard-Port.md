@@ -1,19 +1,17 @@
 ---
-categories: linux tls certificates
+categories: linux tls certificates openssl
 date: "2023-02-09T08:00:00Z"
 title: Checking the Certificate on a Non-Standard Port
 draft: false
 ---
 
-Ever need to check the certificate used on a non-HTTPS port and verify it is correct? No? It doesn't happen all that often, but it can be a little bit of a stumper as to how you would do it when you can't use a web browser. But, you can use this command on a linux machine and give it a test.
-
-This example is to test a web page (this site!), but its something simple we can use that exists already.
+Ever need to check the certificate used on a non-HTTPS port and verify it is correct? No? It doesn't happen all that often, but it can be a little bit of a stumper as to how you would do it when you can't use a web browser. But, you can use this openssl command from a linux machine.
 
 ```bash
 openssl s_client -connect www.rootisgod.com:443
 ```
 
-But simply change the port to whatever service you are hosting, for example 5671 for a rabbitmq instance woth a cert ofr example. It will reply with the same type of result. We can now verify the service is listening with the certificate we expect
+This is for this website, but we can change the port to whatever service you are hosting, for example 5671 for a rabbitmq instance with a cert setup. It will reply with the same type of result. We can now verify the service is listening with the certificate we expect, cool! I had to do this to verify that a service was really using it, and this proved it, very handy.
 
 ```bash
 openssl s_client -connect rabbitmq.myinstance.com:5671
