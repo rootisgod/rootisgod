@@ -19,7 +19,7 @@ But simply change the port to whatever service you are hosting, for example 5671
 openssl s_client -connect rabbitmq.myinstance.com:5671
 ```
 
-### Example Output of Command for www.rootisgod.com
+### Example Output for www.rootisgod.com
 ```
 CONNECTED(00000003)
 depth=2 C = US, O = DigiCert Inc, OU = www.digicert.com, CN = DigiCert Global Root CA
