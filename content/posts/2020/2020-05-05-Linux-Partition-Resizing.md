@@ -59,7 +59,7 @@ Notice above the partition we want to resize is actually /dev/sda2 so choose tha
 <a data-fancybox="gallery" href="/assets/images/2020/linux-partition-resizing/04.png"><img src="/assets/images/2020/linux-partition-resizing/04.png"></a>
 {{< /rawhtml >}}
 
-It should realise there is now 16GB available so it will fin that in for us. Hit enter and accept that.
+It should realise there is now 16GB available so it will fill that in for us. Hit enter and accept that.
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2020/linux-partition-resizing/05.png"><img src="/assets/images/2020/linux-partition-resizing/05.png"></a>
@@ -71,7 +71,7 @@ It will say the partition has been resized. Choose to write the change, type yes
 <a data-fancybox="gallery" href="/assets/images/2020/linux-partition-resizing/06.png"><img src="/assets/images/2020/linux-partition-resizing/06.png"></a>
 {{< /rawhtml >}}
 
-Now, all we have done is increase the size of the partition but the filesystem doesn’t know it can use this yet (output from a df -h.
+Now, all we have done is increase the size of the partition but the filesystem doesn’t know it can use this yet (output from a ```df -h```).
 
 ```sh
 iain@smallvm:~$ df -h
@@ -103,7 +103,7 @@ Filesystem Size Used Avail Use% Mounted on
 ...
 ```
 
-# ADDENDUM
+# ADDENDUM FOR EXT4
 
 If you have another EXT4 disk mounted that you need to resize, do this.
 
@@ -129,3 +129,53 @@ Then, if you increase the space, this will expand it on the OS
 | Check with e2fsck \(required before resize2fs resize\) | e2fsck \-f /dev/sdb1 |
 | Resize                                                 | resize2fs /dev/sdb1  |
 | Remount or reboot                                      | mount /dev/sdb1 /u01 |
+
+# ADDENDUM FOR XFS
+
+XFS can also be grown using the ```xfs_growfs``` command. First, increase the disk space on your VM/Cloud machine, in this case i've doubled it to 512GB.
+
+```bash
+# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs        3.9G     0  3.9G   0% /dev
+tmpfs           3.9G     0  3.9G   0% /dev/shm
+tmpfs           3.9G  9.1M  3.9G   1% /run
+tmpfs           3.9G     0  3.9G   0% /sys/fs/cgroup
+/dev/sda2       256G  250G  6.1G  98% /
+/dev/sda1       497M   89M  409M  18% /boot
+/dev/sdb1        16G   45M   15G   1% /mnt/resource
+```
+Install the util
+
+```bash
+yum install cloud-utils-growpart -y
+```
+
+Then run this command (I choose the / path as that is the disk I expanded, the -d is for data)
+```bash
+xfs_growfs -d /
+
+meta-data=/dev/sda2              isize=512    agcount=35, agsize=1934016 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0 spinodes=0
+data     =                       bsize=4096   blocks=66980603, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal               bsize=4096   blocks=3777, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+data blocks changed from 66980603 to 134089467
+```
+
+We now have a larger partition
+```bash
+# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs        3.9G     0  3.9G   0% /dev
+tmpfs           3.9G     0  3.9G   0% /dev/shm
+tmpfs           3.9G  9.1M  3.9G   1% /run
+tmpfs           3.9G     0  3.9G   0% /sys/fs/cgroup
+/dev/sda2       512G  250G  263G  49% /
+/dev/sda1       497M   89M  409M  18% /boot
+/dev/sdb1        16G   45M   15G   1% /mnt/resource
+```
