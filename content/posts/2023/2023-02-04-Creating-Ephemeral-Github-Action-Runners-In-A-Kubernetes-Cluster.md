@@ -115,7 +115,7 @@ cat << EOF > deployment.yaml
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
-  name: ctops-env0-self-hosted-agent-github-runner
+  name: GitHubK8SRunner
 spec:
   replicas: 1
   template:
