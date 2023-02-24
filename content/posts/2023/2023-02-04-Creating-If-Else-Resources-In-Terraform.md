@@ -30,6 +30,7 @@ locals {
   calculated_dev_value_used_in_many_places = lower(format("calculated-value-%s", var.my_dev_value))
 }
 
+# RESOURCES
 resource "local_file" "dev_ord_prod_var_value" {
   # if 'my_specific_prod_value' is blank, then fill in the dev value, if it is prod, put in the prod value
   content  = "${var.my_specific_prod_value}" == "" ? "${local.calculated_dev_value_used_in_many_places}" : "${var.my_specific_prod_value}"
