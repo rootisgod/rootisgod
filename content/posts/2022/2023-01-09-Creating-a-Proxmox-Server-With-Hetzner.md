@@ -13,3 +13,89 @@ But, one provider seems to have very keen prices. In fact, it is so cheap that y
 
 This is practically begging for Proxmox to be installed on it. But, you cant get your own ISOs into their system. Instead, we can go from Debian and install proxmox from there. So, i'll document that process.
 
+Create a new network bridge.
+
+```jsx
+nano /etc/network/interfaces
+
+### ORIGINAL
+source /etc/network/interfaces.d/*
+
+auto lo
+iface lo inet loopback
+
+iface lo inet6 loopback
+
+auto enp0s31f6
+iface enp0s31f6 inet static
+        address 176.9.23.147/27
+        gateway 176.9.23.129
+        up route add -net 176.9.23.128 netmask 255.255.255.224 gw 176.9.23.129 dev enp0s31f6
+# route 176.9.23.128/27 via 176.9.23.129
+
+iface enp0s31f6 inet6 static
+        address 2a01:4f8:150:21a1::2/64
+        gateway fe80::1
+
+### ADD THIS PART FOR A NEW BRIDGE
+auto vmbr99
+iface vmbr99 inet static
+        address 10.10.10.1/24
+        bridge-ports none
+        bridge-stp off
+        bridge-fd 0
+
+    post-up   echo 1 > /proc/sys/net/ipv4/ip_forward
+    post-up   iptables -t nat -A POSTROUTING -s '10.10.10.0/24' -o enp0s31f6 -j MASQUERADE
+    post-down iptables -t nat -D POSTROUTING -s '10.10.10.0/24' -o enp0s31f6 -j MASQUERADE
+    post-up   iptables -t raw -I PREROUTING -i fwbr+ -j CT --zone 1  
+    post-down iptables -t raw -D PREROUTING -i fwbr+ -j CT --zone 1
+```
+
+Then create a new Container with Ubuntu 22.04
+
+```
+apt update && apt upgrade -y
+apt install isc-dhcp-server -y
+```
+
+Then
+
+`nano /etc/dhcp/dhcpd.conf`
+
+And
+
+```
+option domain-name "rootisgod.com";
+option domain-name-servers 8.8.8.8;
+subnet 10.10.10.0 netmask 255.255.255.0 {
+  range 10.10.10.10 10.10.10.99;
+  option routers 176.9.23.147;
+}
+```
+
+And restart service
+
+`systemctl enable isc-dhcp-server`
+
+`systemctl restart isc-dhcp-server`
+
+Samba Setup
+
+apt install samba
+
+`sudo chmod 755 -R /var/shares/`
+
+nano /etc/samba/smb.conf
+
+[4TB]
+comment = 4TB
+create mask = 0777
+directory mask = 0777
+guest ok = Yes
+path = /mnt/md0/Samba
+read only = No
+
+systemctl restart smbd.service
+
+For samba share access on root from a VM, add the credential to the Windows Credentials folder or else you think you are having a firewall issue, but it is just rejecting you initially.
