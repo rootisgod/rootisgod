@@ -45,7 +45,7 @@ Then choose Debian 11 and choose to reset the machine. Note the new password to 
 
 To start the install of Debian, ssh into the machine using the previous login password you should have initially received via email, and reboot the machine. Use your server IP obviously.
 
-```
+```bash
 ssh root@65.21.xyz.xyz
 
 reboot
@@ -57,7 +57,7 @@ Then, in 5-10 minutes login with the new password once the setup has completed. 
 
 Once logged into the system, follow the guide below to install Proxmox, it is pretty straightforward. A couple tips though, I can't quite remember if I added the host entry (/etc/hosts) or if Hetzner did it automatically for me. Mines has this as an example in case you are missing it.
 
-```
+```bash
 65.21.123.123 Debian-bullseye-latest-amd64-base
 ```
 
@@ -78,7 +78,7 @@ This means we need to create a local network for the VMs to live in, and a DHCP 
 
 Create a network bridge by editing ```/etc/network/interfaces```. Make it look something like this to add a new ```10.10.10.0/24``` subnet for our VMs called ```vmbr99```
 
-```
+```bash
 source /etc/network/interfaces.d/*
 
 auto lo
@@ -138,18 +138,20 @@ Then create a new Container with our Ubuntu 22.04 template. Choose 'Create CT' a
 
 Once created, login to the container and install a DHCP server package. 
 
-```
+```bash
 apt update && apt upgrade -y
 apt install isc-dhcp-server -y
 ```
 
 Then we setup the DHCP config
 
-```nano /etc/dhcp/dhcpd.conf```
+```bash
+nano /etc/dhcp/dhcpd.conf
+```
 
 And then put in the info below for a range of 10.10.10.10 - 10.10.10.199 (or whatever you want)
 
-```
+```bash
 option domain-name-servers 8.8.8.8;
 subnet 10.10.10.0 netmask 255.255.255.0 {
   range 10.10.10.10 10.10.10.199;
@@ -160,12 +162,13 @@ max-lease-time 7200;
 ddns-update-style none;
 ```
 
-And enable and restart the service.
+And enable and restart the DHCP service.
 
-```
+```bash
 systemctl enable isc-dhcp-server
 systemctl restart isc-dhcp-server
 ```
+
 Now, when you create a VM or container, simple choose to attach it to the vmbr99 network and use DHCP.
 
 #### Hetzner Firewall and DNS
