@@ -88,17 +88,16 @@ iface lo inet6 loopback
 
 auto eno1
 iface eno1 inet static
-        address 65.21.230.115/26
-        gateway 65.21.230.65
-        up route add -net 65.21.230.64 netmask 255.255.255.192 gw 65.21.230.65 dev eno1
-# route 65.21.230.64/26 via 65.21.230.65
+        address 65.21.xyz.xyz/26
+        gateway 65.21.xyz.xyz
+        up route add -net 65.21.xyz.xyz netmask 255.255.255.192 gw 65.21.xyz.xyz dev eno1
 
 iface eno1 inet6 static
-        address 2a01:4f9:6a:1d19::2/64
+        address 2a01:xyz.xyz/64
         gateway fe80::1
 
 ### ADD THIS PART BELOW FOR OUR NEW BRIDGE. NOTE THE en01 REFERENCE BELOW
-### MAKE THIS MATCH YOUR INTERFACE NAME AS IT MAY BE DIFFERENT
+### MAKE THIS MATCH YOUR INTERFACE NAME ABOVE AS IT MAY BE DIFFERENT
 
 auto vmbr99
 iface vmbr99 inet static
@@ -114,7 +113,7 @@ iface vmbr99 inet static
     post-down iptables -t raw -D PREROUTING -i fwbr+ -j CT --zone 1
 ```
 
-Then reboot the server. The bridge should appear afterwards.
+Then reboot the server. The bridge should appear afterward.
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/vmbr99.png"><img src="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/vmbr99.png"></a>
