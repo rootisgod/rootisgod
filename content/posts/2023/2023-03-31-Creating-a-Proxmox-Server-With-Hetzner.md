@@ -5,11 +5,11 @@ title: Creating a Cheap but Powerful Proxmox Server with Hetzner
 draft: false
 ---
 
-Do you want a powerful server to run Proxmox on but don't want to pay insane Azure prices ($170!!!) for a 4 CPU 16GB RAM machine? Keep reading. 
+Do you want a powerful server to run Proxmox on but don't want to pay insane Azure prices for a 4 CPU 16GB RAM machine ($170!!!)? Keep reading. 
 
 # Hetzner Dedicated Servers
 
-I'm not sure how many people have heard of them, but a company called Hetzner will sell you a dedicated server for silly money. I can get a i7-8700 12 core CPU, 128GB RAM (yes 128GB!) and 2 x 1TB SSD disks in RAID 1. For... 50 euros a month. Bargain. Granted it's not the latest CPU, but its still very punchy. An equivalent machine to build is probably $1,000, and that doesnt consider the electricity you would spend to run it. So there is real value here if you want that kind of power. 
+I'm not sure how many people have heard of them, but a company called Hetzner will sell you a dedicated server for silly money. I can get a i7-8700 12 core CPU, 128GB RAM (yes 128GB!) and 2 x 1TB SSD disks in RAID 1. For... 50 euros a month. Bargain. Granted it's not the latest CPU, but its still very punchy. An equivalent machine to build is probably $1,000, and that doesn't consider the electricity you would spend to run it, or the noise it would create. So there is real value here if you want that kind of power. 
 
 ## Hetzner Server Setup 
 
@@ -19,7 +19,7 @@ Let's talk through how to purchase one and setup Proxmox on it.
 
 So, create an account and go here: https://www.hetzner.com/sb 
 
-Then have a look at the machines available. What you see is machines starting from $38 euros a month with generally an i7-6700 CPU and 32GB RAM.
+Then have a look at the machines available. What you see are machines starting from $38 euros a month with generally an i7-4700 CPU and 32GB RAM.
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/cheap-server.png"><img src="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/cheap-server.png"></a>
@@ -31,22 +31,22 @@ These are pretty respectable already compared to prices you would pay in Azure/A
 <a data-fancybox="gallery" href="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/cheap-server-128gb-ram.png"><img src="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/cheap-server-128gb-ram.png"></a>
 {{< /rawhtml >}}
 
-So, order that (just accept the terms, very simple) and then wait for it to process. You should then have a machine and it's public IP address shown to you. We want to first reset it and install Debian Linux, so click the Server and go to the 'Linux' tab
+So, order that (just accept the terms, very simple) and then wait for it to process. You should then have a machine and the public IP address shown to you. We want to first reset it and install Debian Linux, so click the Server and go to the 'Linux' tab
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/ordered-server.png"><img src="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/ordered-server.png"></a>
 {{< /rawhtml >}}
 
-Then choose Debian 11 and choose to reset the machine. Note the new password to use post-reboot is displayed.
+Then choose Debian 11 and choose to reset the machine. Note the new password to use post-reboot is displayed, and also emailed when the process is complete.
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/ordered-server.png"><img src="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/ordered-server.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/reset-server.png"><img src="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/reset-server.png"></a>
 {{< /rawhtml >}}
 
-To start the reinstall, ssh into the machine using the previous login password you should have initially received via email, and reboot the machine. Use your server IP obviously.
+To start the install of Debian, ssh into the machine using the previous login password you should have initially received via email, and reboot the machine. Use your server IP obviously.
 
 ```
-ssh root@65.21.123.123
+ssh root@65.21.xyz.xyz
 
 reboot
 ```
@@ -55,19 +55,19 @@ Then, in 5-10 minutes login with the new password once the setup has completed. 
 
 ### Install Proxmox
 
-Once logged into the Debian install, follow the guide below to install Proxmox, it is pretty straightforward. A couple tips though, I can't quite remember if I added the host entry (/etc/hosts) or if Hetzner did it automatically for me. Mines has this as an example in case you are missing it.
+Once logged into the system, follow the guide below to install Proxmox, it is pretty straightforward. A couple tips though, I can't quite remember if I added the host entry (/etc/hosts) or if Hetzner did it automatically for me. Mines has this as an example in case you are missing it.
 
 ```
 65.21.123.123 Debian-bullseye-latest-amd64-base
 ```
 
-Also, DONT create the network bridge as it suggests, stop once you have access to the Web UI at https://your-ip:8006. The login crednetials are root and the root password. Feel free to change it to something else that is easier to type for login.
+Also, DONT create the network bridge as it suggests, stop once you have access to the Web UI at https://your-ip:8006. The login credentials are root and the root password. Feel free to change it to something else that is easier to type for login.
 
 https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_11_Bullseye
 
 ### Networking and DCHP Setup
 
-Once we have Proxmox installed we are kind of done, and it will work just as expected. We have lots of CPU and RAM, and a nice big 1TB software RAID storage location to hosts VMs and ISOs. But, there are a few issues we need to solve due to the nature of the setup that you dont get when you run Proxmox from home. The current problems are
+Once we have Proxmox installed we are kind of done, and it will work just as expected. We have lots of CPU and RAM, and a nice big 1TB software RAID storage location to hosts VMs and ISOs. But, there are a few issues we need to solve due to the nature of the setup that you don't get when you run Proxmox from home. The current problems are
  - We have a public IP on the machine
  - We dont have a DHCP server
  - We dont have a local network for the VMs
@@ -176,4 +176,9 @@ Now, one oddity of Hetzner is that the firewall rules are a bit bizarre. We need
 <a data-fancybox="gallery" href="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/firewall.png"><img src="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/firewall.png"></a>
 {{< /rawhtml >}}
 
-And that is us, enjoy!
+And that is us, enjoy your server. Here are some uses for it
+
+ - Install Nginx Reverse Proxy Manager on it and host lots of things
+ - Install Tailscale on the Debian host and access it from anywhere
+ - Install Docker on it and use it as a remote Docker Host
+ - Install a chunky Windows VM and install tailscale on that, then RDP from wherever to it
