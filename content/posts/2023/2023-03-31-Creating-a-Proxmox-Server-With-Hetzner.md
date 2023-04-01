@@ -1,5 +1,5 @@
 ---
-categories: proxmox virtualization hetzner server cheap
+categories: proxmox virtualization hetzner server cheap azure
 date: "2023-03-31T08:00:00Z"
 title: Creating a Cheap but Powerful Proxmox Server with Hetzner
 draft: true
