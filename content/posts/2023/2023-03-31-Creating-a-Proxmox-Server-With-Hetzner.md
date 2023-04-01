@@ -96,7 +96,7 @@ iface eno1 inet6 static
         address 2a01:xyz.xyz/64
         gateway fe80::1
 
-### ADD THIS PART BELOW FOR OUR NEW BRIDGE. NOTE THE en01 REFERENCE BELOW
+### ADD THIS PART BELOW FOR OUR NEW BRIDGE. NOTE THE eno1 REFERENCE BELOW
 ### MAKE THIS MATCH YOUR INTERFACE NAME ABOVE AS IT MAY BE DIFFERENT
 
 auto vmbr99
@@ -121,7 +121,7 @@ Then reboot the server. The bridge should appear afterward.
 
 #### DCHP Setup
 
-Now, lets make a DHCP server using an LXC Container in Proxmox to run a simple DHCP server. 
+Now, lets make a DHCP server using an LXC Container in Proxmox. 
 
 We need to download the container template for Ubuntu 22.04 first like so (i made a new storage thing for mine, but choose 'local' in your setup)
 
@@ -184,3 +184,7 @@ And that is us, enjoy your server. Here are some uses for it
  - Install Tailscale on the Debian host and access it from anywhere
  - Install Docker on it and use it as a remote Docker Host
  - Install a chunky Windows VM and install tailscale on that, then RDP from wherever to it
+
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/summary.png"><img src="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/summary.png"></a>
+{{< /rawhtml >}}
