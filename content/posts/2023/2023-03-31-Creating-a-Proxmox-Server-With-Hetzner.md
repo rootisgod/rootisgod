@@ -2,7 +2,7 @@
 categories: proxmox virtualization hetzner server cheap azure
 date: "2023-03-31T08:00:00Z"
 title: Creating a Cheap but Powerful Proxmox Server with Hetzner
-draft: true
+draft: false
 ---
 
 Do you want a powerful server to run Proxmox on but don't want to pay insane Azure prices ($170!!!) for a 4 CPU 16GB RAM machine? Keep reading. 
