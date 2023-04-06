@@ -180,7 +180,7 @@ Now, one oddity of Hetzner is that the firewall rules are a bit bizarre. We need
 
 And that is us, enjoy your server. Here are some uses for it
 
- - Install Nginx Reverse Proxy Manager on it and host lots of things
+ - Install Nginx Reverse Proxy Manager on it and host lots of things - https://community.hetzner.com/tutorials/installing-nginx-proxy-manager
  - Install Tailscale on the Debian host and access it from anywhere
  - Install Docker on it and use it as a remote Docker Host
  - Install a chunky Windows VM and install tailscale on that, then RDP from wherever to it
