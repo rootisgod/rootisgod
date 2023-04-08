@@ -65,6 +65,34 @@ Also, DONT create the network bridge as it suggests, stop once you have access t
 
 https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_11_Bullseye
 
+
+### Setup the Community Proxmox Apt Sources
+
+If you dont have a Proxmox subscrption, be sure to change the apt sources list so we can receive the non enterprise updates. If you dont you will get this kind of error when you try and update the system
+
+```bash
+root@proxmox:~# apt update
+Hit:1 http://security.debian.org bullseye-security InRelease
+Hit:2 http://ftp.uk.debian.org/debian bullseye InRelease       
+Hit:3 http://ftp.uk.debian.org/debian bullseye-updates InRelease
+Err:4 https://enterprise.proxmox.com/debian/pve bullseye InRelease
+  401  Unauthorized [IP: xx.xx.xx.xx 443]
+Reading package lists... Done
+E: Failed to fetch https://enterprise.proxmox.com/debian/pve/dists/bullseye/InRelease  401  Unauthorized [IP: 51.91.38.34 443]
+```
+
+So, add this line to ```/etc/apt/sources.list```
+
+```bash
+deb http://download.proxmox.com/debian/pve bullseye pve-no-subscription
+```
+
+And remove this (just comment it out from ```nano /etc/apt/sources.list.d/pve-enterprise.list```)
+
+```bash
+#deb https://enterprise.proxmox.com/debian/pve bullseye pve-enterprise
+```
+
 ### Networking and DCHP Setup
 
 Once we have Proxmox installed we are kind of done, and it will work just as expected. We have lots of CPU and RAM, and a nice big 1TB software RAID storage location to hosts VMs and ISOs. But, there are a few issues we need to solve due to the nature of the setup that you don't get when you run Proxmox from home. The current problems are
