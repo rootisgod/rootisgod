@@ -87,7 +87,7 @@ So, add this line to ```/etc/apt/sources.list```
 deb http://download.proxmox.com/debian/pve bullseye pve-no-subscription
 ```
 
-And remove this (just comment it out from ```nano /etc/apt/sources.list.d/pve-enterprise.list```)
+And remove this (just comment it out from ```/etc/apt/sources.list.d/pve-enterprise.list```)
 
 ```bash
 #deb https://enterprise.proxmox.com/debian/pve bullseye pve-enterprise
