@@ -99,6 +99,7 @@ package_update: true
 package_upgrade: true  
 packages:
   - nano
+  - net-tools
 runcmd:
  - snap install docker
  - snap install microk8s --classic
