@@ -90,7 +90,7 @@ sudo ip route add 10.86.127.0/24 via 192.168.1.10 (IP of your multipass server)
 
 ### Cloudinit
 
-You can keep 'templates' for machines using cloudinit. Call this file ```docker.yaml```
+You can create 'templates' for machines using cloudinit. Want a machine to use for Kubernetes CKAD learning? Call this file ```ckad.yaml```
 
 ```yaml
 users:  
@@ -101,13 +101,14 @@ packages:
   - nano
 runcmd:
  - snap install docker
+ - snap install microk8s
  - snap install kubectl
 ```
   
-Create a VM like so
+Create the VM like so
 
 ```bash
-multipass launch --name docker --cpus 2 --mem 8G --disk 64G --cloud-initd docker.yaml
+multipass launch --name ckad --cpus 2 --mem 8G --disk 64G --cloud-init ckad.yaml
 ```
 When you login the machine will be pre-configured. See here for LOTS more options - https://cloudinit.readthedocs.io/en/latest/reference/examples.html
 
@@ -117,6 +118,4 @@ Yeah, docker can probably do this, but it's not as easy to remember all the fanc
 
 ### Multipass Docs
 
-There is way more. Multipass can also launch a cloud-init script on boot, so it is even more of a Linode/DigitalOcean replacement.
-
-https://multipass.run/docs/working-with-instances
+There is way more - https://multipass.run/docs/working-with-instances
