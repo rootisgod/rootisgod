@@ -101,7 +101,7 @@ packages:
   - nano
 runcmd:
  - snap install docker
- - snap install microk8s
+ - snap install microk8s --classic
  - snap install kubectl
 ```
   
