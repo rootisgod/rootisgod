@@ -92,7 +92,7 @@ sudo ip route add 10.86.127.0/24 via 192.168.1.10 (IP of your multipass server)
 
 You can keep 'templates' for machines using cloudinit. Call this file ```docker.yaml```
 
-'''yaml
+```yaml
 users:  
   - default  
 package_update: true  
@@ -102,7 +102,7 @@ packages:
 runcmd:
  - snap install docker
  - snap install kubectl
-'''
+```
   
 Create a VM like so
 
