@@ -102,7 +102,7 @@ packages:
 runcmd:
  - snap install docker
  - snap install microk8s --classic
- - snap install kubectl
+ - snap install kubectl --classic
 ```
   
 Create the VM like so
