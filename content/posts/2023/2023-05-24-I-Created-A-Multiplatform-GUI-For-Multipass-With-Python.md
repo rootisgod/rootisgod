@@ -1,6 +1,6 @@
 ---
 categories: multipass multimanage python gui pysimplegui linux windows mac cloudinit
-date: "2023-05-24T018:00:00Z"
+date: "2023-05-24T008:00:00Z"
 title: I Created a Multiplatform GUI for Multipass in Python Called Multimanage
 draft: false
 ---
