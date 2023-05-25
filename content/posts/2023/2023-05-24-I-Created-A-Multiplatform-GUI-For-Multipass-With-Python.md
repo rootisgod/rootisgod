@@ -7,9 +7,7 @@ draft: false
 
 # Multimanage
 
-{{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2023/I-Created-A-Multiplatform-GUI-For-Multipass-With-Python/MultiManage-Logo.ico"><img src="/assets/images/2023/I-Created-A-Multiplatform-GUI-For-Multipass-With-Python/MultiManage-Logo.ico" style="vertical-align:middle;margin:0px 0px" width=50px></a>
-{{< /rawhtml >}}
+<img style="float: left;" src="/assets/images/2023/I-Created-A-Multiplatform-GUI-For-Multipass-With-Python/MultiManage-Logo.ico" width=150px>
 
 I've posted before about Multipass [https://www.rootisgod.com/2022/Using-Multipass-Like-a-Personal-Cloud-Service/](https://www.rootisgod.com/2022/Using-Multipass-Like-a-Personal-Cloud-Service/) and always felt it was a great way to get a cloud style Linux instance up and running quickly. I was also looking to try and learn a bit of Python. So, after a couple months of hacking away at a program that works for Mac, Windows and Linux (massively helped by [PySimpleGUI](https://www.pysimplegui.org/)) I think it is probably ready to see if anyone else could make use of it.
 
