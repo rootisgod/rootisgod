@@ -1,11 +1,11 @@
 ---
 categories: multipass multimanage python gui pysimplegui linux windows mac cloudinit
 date: "2023-05-24T08:00:00Z"
-title: I Created a Multiplatform GUI for Multipass in Python Called Multimanage
+title: I Created a Multiplatform GUI for Multipass in Python - It's Called MultiManage
 draft: false
 ---
 
-# Multimanage
+# MultiManage
 
 <img style="float: left;" src="/assets/images/2023/I-Created-A-Multiplatform-GUI-For-Multipass-With-Python/MultiManage-Logo.ico" width=150px>
 
