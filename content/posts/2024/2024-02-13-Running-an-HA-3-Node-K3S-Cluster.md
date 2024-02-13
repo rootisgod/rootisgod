@@ -7,13 +7,13 @@ draft: false
 
 Have some kubernetes experience and want to know how to create a 3 node K3S cluster at home? Read on...
 
-# Motivaition
+# Motivation
 
 I recently decided to run a kubernetes cluster at home using real hardware as part of study for the CKA exam. So I bought 3 miniPCs that have 4 CPUs, 16GB RAM and 500GB NVMe. Overkill? Maybe. But, I really wanted to do it on real hardware and 'care' about the machines and the applications. Doing that in a VM just doesn't have that same skin the in game feel. So, here are some instructions on how to set it up. It's not difficult, but thought worth sharing as it's a bit of a tough google.
 
 # Setup and K3S Installation
 
-Get 3 'machines' (VMs are fine for testing
+Get 3 'machines' (VMs are fine for trying it out)
  
 - Install Ubuntu 22.04 on each one, k8s1, k8s2 and k8s3. Ensure they have network connectivity and can resolve each other's names.
 - Install k3s as control and workers (info below, mostly from https://docs.k3s.io/datastore/ha-embedded)
@@ -57,7 +57,6 @@ NAME                           READY   STATUS        RESTARTS      AGE     IP   
 nginx-deploy-d845cc945-9rk7b   1/1     Terminating   1 (8m ago)    10m     10.42.1.3   k8s2
 nginx-deploy-d845cc945-r86f8   1/1     Running       0             11s     10.42.2.4   k8s3
 ```
-Excellent. an HA cluster.
 
 Excellent! an HA cluster.
 
