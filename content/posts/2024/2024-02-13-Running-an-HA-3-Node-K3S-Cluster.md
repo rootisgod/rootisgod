@@ -59,4 +59,8 @@ nginx-deploy-d845cc945-r86f8   1/1     Running       0             11s     10.42
 ```
 Excellent. an HA cluster.
 
-Setting up MetalLB or an external Loadbalancer is not covered here, but you now have a 3 node k3s cluster that is fault tolerant. Enjoy!
+Excellent! an HA cluster.
+
+# More
+
+Setting up MetalLB or an external Loadbalancer is not covered here. To go further I recommend this video: https://www.youtube.com/watch?v=UoOcLXfa8EU&t=1006s
