@@ -34,7 +34,7 @@ Also, this is 99% from this guy, massive props, I didnt realise it was this simp
       shell: /tmp/create-ubuntu-2404-template.sh
 ```
 
-This is the script we run to create the VM template in proxmox. Place it in a ```./scripts``` folder. It will setup a machine template and create a template we can use to create VMs.
+This is the script we run to create the VM template in proxmox. Place it in a ```./scripts``` folder. It will setup a machine template and create a template we can use to create VMs. Tweak anything below as you see fit. In particular, the place to pickup the SSH authorised key for access.
 
 ```bash
 #! /bin/bash
@@ -79,14 +79,6 @@ qm template $VMID
 # Deployment
 
 Run it like this. Make a hosts file (say you have 3 proxmox machines that all need a template)
-
-```yaml
-192.168.1.100
-192.168.1.101
-192.168.1.102
-```
-
-Then a hosts file (call it hosts)
 
 ```yaml
 192.168.1.100 ansible_ssh_user=root ansible_ssh_private_key_file=~/.ssh/ssh
