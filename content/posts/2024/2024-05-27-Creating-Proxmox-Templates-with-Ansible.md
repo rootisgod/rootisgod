@@ -9,9 +9,9 @@ Given VMWare seems to have imploded, the new hotness is Proxmox. And it really i
 
 # Creating a Template
 
-This is what we need to create in Ansible. As a note, because Ansible clusters need unique IDs for machines, we can add a unique value to the VMID if we just increment it for each host.
+This is what we need to create in Ansible. As a note, because Proxmox clusters need unique IDs for machines across hosts, we can add a unique value to the VMID if we just increment it for each host.
 
-Also, this is 99% from this guy, massive props, I didnt realise it was this simple: https://github.com/UntouchedWagons/Ubuntu-CloudInit-Docs
+Also, this is 99% from this guy, massive props, I didnt realise it was this easily scriptable: https://github.com/UntouchedWagons/Ubuntu-CloudInit-Docs
 
 
 ```yaml
@@ -34,7 +34,7 @@ Also, this is 99% from this guy, massive props, I didnt realise it was this simp
       shell: /tmp/create-ubuntu-2404-template.sh
 ```
 
-This is the script we run to create the VM template in proxmox. Place it in a ```./scripts``` folder. It will setup a machine template and create a template we can use to create VMs. Tweak anything below as you see fit. In particular, the place to pickup the SSH authorised key for access.
+This is the script we run to create the VM template in proxmox. Place it in a folder and file called ```./scripts/create-ubuntu-2404-template.sh.j2```. It will setup a machine template and create a template we can use to create VMs. Tweak anything below as you see fit. In particular, the place to pickup the SSH authorised key for access.
 
 ```bash
 #! /bin/bash
