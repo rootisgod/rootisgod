@@ -5,11 +5,17 @@ title: Running Windows VMs in Kubernetes with Kubevirt
 draft: true
 ---
 
-This will be a long one. But, it is well worth a try. We will create a QCOW2 image in packer. Then upload it to a MicroK8S cluster and install kubevirt. Once done, we can create VMs on demand in Kubernetes.
+This will be a long one.
 
-Why? Well, imagine you want to run multiple old school services, that not containerizable. We can use this to host the VMs and benefit from all the Kubernetes ecosystem. Imagine you have a windows service with a SQL Server backend, you can create a new VM per client. If we get a process to set this up, adding a new client to the system is as easy as applying a YAML file. Interesting...
+But, it is well worth a try. The basic goal is running a Windows VM inside of a Kubernetes cluster. We will do this by;
+ - Creating a QCOW2 Windows image with packer and virtualbox
+ - Installing KIND and installing Kubevirt
+ - Deploying the VM using a Data Volume and a PVC claim 
+ 
+Once done, we can create VMs on demand in Kubernetes.
 
-So, in this use case, we have a piece of software and we need to run one VM per client. We want to use Kubernetes as our hypervisor to host a real windows install.
+Why? Well, imagine you want to run multiple old school services, that not containerizable. We can use this to host the VMs and benefit from all the Kubernetes ecosystem. Imagine you have a windows service with a SQL Server backend, you can create a new VM per client. If we get a process to set this up, adding a new client to the system is as easy as deploying a pod and managing it declaratively.
+
 
 ## Creating a VM Image
 
@@ -20,7 +26,7 @@ Note: For this guide, we are using Windows as the base OS to show the steps. It 
 
 ### Installing Packer and Virtualbox
 
-The easiest way to install Virtualbox and Packer we can use chocolatey (or install both manually if you know what you are doing).
+The easiest way to install Virtualbox and Packer we can use chocolatey (or install both programs manually if you know what you are doing). You can install it with these instructions - https://chocolatey.org/install
 
 ```powershell
 choco install virtualbox packer -y
@@ -28,12 +34,12 @@ choco install virtualbox packer -y
 
 ### Windows ISO
 
-We also need a Windows Server 2022 ISO. Grab it from here: https://www.microsoft.com/en-gb/evalcenter/download-windows-server-2022
+We also need a Windows Server 2022 ISO. You can grab an evaluation licence ISO from here: https://www.microsoft.com/en-gb/evalcenter/download-windows-server-2022. I have placed it into a folder on my computer called ```D:\ISOs\windows_server_2022.iso```. Update the location in the code below, ```iso_url```, with wherever yours is located.
 
 
 ### Packer
 
-We need the following plugins 
+Now we can think about deploying it with packer. But, first we need to install the following packer plugins like so.
 
 ```bash
 packer plugins install github.com/hashicorp/vagrant
@@ -94,17 +100,36 @@ build {
 }
 ```
 
-And a few files in a couple of folders
+And we need a few files in a couple of folders to take care of an unattended install an some post boot actions.
 
 #### Scripts
 
-A ```sysprep.bat``` file to shutdown the machine and 'randomise' the VM on boot. If you dont want this, just leave in the shutdown command.
+The most important file is the ```enable-winrm.ps1``` file. The answer file (below) references this and will run it once windows is installed. It sets up winrm so that Packer can send commands to it once the OS is installed.
+
+```powershell
+Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
+Enable-PSRemoting -Force
+winrm quickconfig -q
+winrm quickconfig -transport:http
+winrm set winrm/config '@{MaxTimeoutms="1800000"}'
+winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="800"}'
+winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+winrm set winrm/config/service/auth '@{Basic="true"}'
+winrm set winrm/config/client/auth '@{Basic="true"}'
+winrm set winrm/config/listener?Address=*+Transport=HTTP '@{Port="5985"}'
+netsh advfirewall firewall set rule group="Windows Remote Administration" new enable=yes
+netsh advfirewall firewall set rule name="Windows Remote Management (HTTP-In)" new enable=yes action=allow remoteip=any
+Set-Service winrm -startuptype "auto"
+Restart-Service winrm
+```
+
+We also need a ```sysprep.bat``` file in a scripts folder to shutdown the machine and 'randomise' the VM on boot. If you dont want this, just leave in the shutdown command. Packer runs this script when the VM is deployed, configured, and ready to shut down.
 ```bat
 c:\windows\system32\sysprep\sysprep.exe /generalize /mode:vm /oobe 
 shutdown /s
 ```
 
-A ```customise.ps1``` script to setup some small settings, and install chocolatey and virtio drivers.
+And we also need a ```customise.ps1``` script to configure some small settings, and install chocolatey and virtio drivers. Add/amend as you require.
 ```powershell
 # Set some Quality of Life Settings
 c:\Windows\System32\reg.exe ADD HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\ /v HideFileExt /t REG_DWORD /d 0 /f
@@ -119,19 +144,20 @@ netsh advfirewall firewall set rule group="remote desktop" new enable=yes
 # Install Chocolatey
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-# Chocolatey Seems to cause a non-zero exit code and breaks the build...
+# Chocolatey Seems to cause a non-zero exit, cause a 500MB download, exits with a non-zero code and breaks the build... Lets install ourselves
 $url  = 'https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win-guest-tools.exe'
 $dest = 'c:\virtio-win-guest-tools.exe'
 Invoke-WebRequest -Uri $url -OutFile $dest
 c:\virtio-win-guest-tools.exe -s
-
 ```
 
 #### Files
 
+And we need an answer file for Windows to skip the install questions. Importantly, this also references and runs the ```enable-winrm.ps1``` script.
+
 ```Autounattend.xml```
 
-```xmls
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
     <settings pass="windowsPE">
@@ -291,61 +317,42 @@ c:\virtio-win-guest-tools.exe -s
 </unattend>
 ```
 
+And finally, one to do windows updates.
+
+```windows-updates.ps1```
+
+```powershell
+$ProgressPreference='SilentlyContinue'
+Get-WUInstall -WindowsUpdate -AcceptAll -UpdateType Software -IgnoreReboot
+```
+
+Okay, thats a lot. But you should effectively have this folder structure
+
+```
+windows.pkr.hcl
+Scripts\enable-winrm.ps1
+Scripts\sysprep.bat
+Scripts\customise.ps1
+Scripts\windows-updates.ps1
+Files\Autounattend.xml
+```
+
 
 ## KIND
 
-## Setup Kubevirt
+We will use KIND to run the VM as it is supported by the Kubevirt project and can run on Windows using Docker Desktop and WSL2.
 
-https://gist.github.com/usrbinkat/c8b56fb703328147c796bc4356b029b5
+### Installation and WSL2
 
-virt-host-validate qemu
+We need WSL2 on Windows. Follow these instructions: https://kind.sigs.k8s.io/docs/user/using-wsl2/
 
-We use KIND (microk8s may have an issue)
-
-https://kubevirt.io/quickstart_kind/
-
-```bash
-[ $(uname -m) = x86_64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.23.0/kind-linux-amd64
-chmod +x ./kind
-sudo mv ./kind /usr/local/bin/kind
-kind create cluster --name kubevirt
-kubectl cluster-info --context kind-kubevirt
-```
-
-Install kubevirt (https://kubevirt.io/quickstart_kind/)
+And then, it could be as simple as this though to install KIND, but your mileage may vary. See these instructions if the below fails: https://kind.sigs.k8s.io/docs/user/quick-start
 
 ```powershell
-#  https://storage.googleapis.com/kubevirt-prow/release/kubevirt/kubevirt/stable.txt
-$VERSION='v1.2.2'
-export VERSION=$(curl -s https://storage.googleapis.com/kubevirt-prow/release/kubevirt/kubevirt/stable.txt)
-kubectl create -f https://github.com/kubevirt/kubevirt/releases/download/$($VERSION)/kubevirt-cr.yaml
+choco install kind
 ```
 
-Check it
-
-```bash
-kubectl get kubevirt.kubevirt.io/kubevirt -n kubevirt -o=jsonpath="{.status.phase}"
-kubectl get all -n kubevirt
-```
-
-
-Then install virtctl
-
-```powershell
-https://github.com/kubevirt/kubevirt/releases
-mv virtctl-v1.2.2-windows-amd64.exe c:\windows\system32\virtctl.exe
-```
-
-```bash
-VERSION=$(kubectl get kubevirt.kubevirt.io/kubevirt -n kubevirt -o=jsonpath="{.status.observedKubeVirtVersion}")
-ARCH=$(uname -s | tr A-Z a-z)-$(uname -m | sed 's/x86_64/amd64/') || windows-amd64.exe
-echo ${ARCH}
-curl -L -o virtctl https://github.com/kubevirt/kubevirt/releases/download/${VERSION}/virtctl-${VERSION}-${ARCH}
-chmod +x virtctl
-sudo install virtctl /usr/local/bin
-```
-
-Windows
+There is also a tweak in WSL2 we need to perform. The default allocated memory likely will not be enough, so stop WSL and create/amend the ```.wslconfig``` file to something like the below
 
 ```powershell
 # turn off all wsl instances such as docker-desktop
@@ -359,11 +366,74 @@ memory=8GB   # Limits VM memory in WSL 2 up to 8GB
 processors=4 # Makes the WSL 2 VM use two virtual processors
 ```
 
-Restart Docker Desktop
+Then restart Docker desktop from its GUI.
+
+We are getting there!
+
+### Setup Kubevirt
+
+We should have the required basic tools installed and can now create a KIND cluster to host our VMs. 
+
+There is a quickstart guide here: https://kubevirt.io/quickstart_kind/
+
+But this is what we will do. 
 
 
-Setup a CDI
-https://kubevirt.io/labs/kubernetes/lab2
+```powershell
+kind create cluster --name kubevirt
+choco install kubectl -y
+kubectl cluster-info --context kind-kubevirt
+```
+
+We should get our cluster info
+
+```
+Kubernetes control plane is running at https://127.0.0.1:58905
+CoreDNS is running at https://127.0.0.1:58905/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+```
+
+And now we can install Kubevirt into the cluster. There is a guide here: https://kubevirt.io/quickstart_kind/
+
+These are the command I used.
+
+```powershell
+#  https://storage.googleapis.com/kubevirt-prow/release/kubevirt/kubevirt/stable.txt
+$VERSION='v1.2.2'
+export VERSION=$(curl -s https://storage.googleapis.com/kubevirt-prow/release/kubevirt/kubevirt/stable.txt)
+kubectl create -f https://github.com/kubevirt/kubevirt/releases/download/$($VERSION)/kubevirt-cr.yaml
+```
+
+Check it works
+
+```bash
+kubectl get kubevirt.kubevirt.io/kubevirt -n kubevirt -o=jsonpath="{.status.phase}"
+kubectl get all -n kubevirt
+```
+
+We should get a bunch of Kubevirt resources
+
+```
+NAME                                   READY   STATUS    RESTARTS        AGE
+pod/virt-api-75859b7b7-dn4sd           1/1     Running   5 (4d11h ago)   7d18h
+pod/virt-controller-6855b4df79-4m7rn   1/1     Running   5 (4d11h ago)   7d18h
+pod/virt-controller-6855b4df79-tzk5v   1/1     Running   5 (4d11h ago)   7d18h
+...
+```
+
+### Setup Virtctl
+
+Then install we install Virtctl to control VMs. Grab the latest version here and move it insto a system32 folder so it can be seen in our terminal.
+
+```powershell
+wget https://github.com/kubevirt/kubevirt/releases/download/v1.2.2/virtctl-v1.2.2-windows-amd64.exe
+mv virtctl-v1.2.2-windows-amd64.exe c:\windows\system32\virtctl.exe
+```
+
+
+### Setup a CDI
+
+We also need a CDI (Containerized Data Importer) operator. 
 
 export VERSION=$(basename $(curl -s -w %{redirect_url} https://github.com/kubevirt/containerized-data-importer/releases/latest))
 $VERSION='v1.59.0'
