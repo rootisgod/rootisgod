@@ -438,46 +438,108 @@ mv virtctl-v1.2.2-windows-amd64.exe c:\windows\system32\virtctl.exe
 
 ### Setup a CDI
 
-We also need a CDI (Containerized Data Importer) operator. This is the mechanism that we use to 
+We also need a CDI (Containerized Data Importer) operator. This is the mechanism that we use to setup our VM disk images for Kubevirt to create our VMs. We can install that to our cluster like so.
 
-export VERSION=$(basename $(curl -s -w %{redirect_url} https://github.com/kubevirt/containerized-data-importer/releases/latest))
-$VERSION='v1.59.0'
-kubectl create -f https://github.com/kubevirt/containerized-data-importer/releases/download/$VERSION/cdi-operator.yaml
-kubectl create -f https://github.com/kubevirt/containerized-data-importer/releases/download/$VERSION/cdi-cr.yaml
+```powershell
+kubectl create -f https://github.com/kubevirt/containerized-data-importer/releases/download/v1.59.0/cdi-operator.yaml
+kubectl create -f https://github.com/kubevirt/containerized-data-importer/releases/download/v1.59.0/cdi-cr.yaml
+```
 
+Then, wait a minute or so and we should have some pods running.
+
+```powershell
 kubectl get cdi cdi -n cdi
 kubectl get pods -n cdi
+```
 
+Now, we can install and manage vms with Kubernetes.
 
-Now, we can install and manage vms
-https://techviewleo.com/how-to-install-kvm-on-linux-mint/?utm_content=cmp-true
-https://kubevirt.io/2020/KubeVirt-VM-Image-Usage-Patterns.html
+But wait... We need a place to host the file, and a web server is easiest. Lets avoid the messiness of python and using a go binary. This isnt production ready, but fine for our needs.
 
-https://github.com/kubevirt/containerized-data-importer
-CDI only supports certain combinations of source and contentType as indicated below:
-  http → kubevirt, archive
-  registry → kubevirt
-  pvc → Not applicable - content is cloned
-  upload → kubevirt
-  imageio → kubevirt
-  vddk → kubevirt
+https://github.com/m3ng9i/ran/releases/download/v0.1.6/ran_windows_amd64.exe.zip
 
+```powershell
+.\ran.exe -r D:\QCOW\ -l true
+```
+
+Then, we can reference it like this: http://102.168.1.108:8080/windows-2022.qcow2
+
+Replace the IP with your host machine. Because we are running the service inside Kubernetes, we need the 'outside' IP so it can find the image to download.
 
 ```yml
-cat <<EOF > dv_windows2022.yml
 apiVersion: cdi.kubevirt.io/v1beta1
 kind: DataVolume
 metadata:
-  name: "win2022"
+  name: "kubevirt-win2022"
+  labels:
+    # insert any desired labels to identify your claim
+    app: win2022
 spec:
   storage:
+    accessModes:
+      - ReadWriteOnce
     resources:
       requests:
-        storage: 20Gi
+        storage: 52Gi
   source:
     http:
-      url: "http://localhost/QCOW/QCOW/windows-2022.qcow2"
-EOF
+      url: "http://192.168.1.108/QCOW/windows-2022.qcow2"
+```
+
+```yml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: win2022
+  labels:
+    # insert any desired labels to identify your claim
+    app: win2022
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      # The amount of the volume's storage to request
+      storage: 64Gi
+```
+
+```yml
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  creationTimestamp: 2018-07-04T15:03:08Z
+  generation: 1
+  labels:
+    kubevirt.io/os: windows
+  name: win2022-vm
+spec:
+  running: true
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        kubevirt.io/domain: win2022-vm
+    spec:
+      domain:
+        cpu:
+          cores: 2
+        resources:
+          requests:
+            memory: 4096M
+        firmware:
+          uuid: 5d307ca9-b3ef-428c-8861-06e72d69f223
+        devices:
+          disks:
+          - disk:
+              bus: sata
+            name: disk0
+        machine:
+          type: q35
+      volumes:
+      - name: disk0
+        persistentVolumeClaim:
+          claimName: kubevirt-win2022
 ```
 
 
