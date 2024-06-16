@@ -5,6 +5,11 @@ title: Running Windows VMs in Kubernetes with Kubevirt
 draft: true
 ---
 
+
+<a data-fancybox="gallery" href="/assets/images/2024/Kubevirt/Kubevirt-small.png"><img src="/assets/images/2024/Kubevirt/Kubevirt-small.png"></a>
+{{< /rawhtml >}}
+
+
 This will be a long one.
 
 But, it is well worth a try. The basic goal is running a Windows VM inside of a Kubernetes cluster. We will do this by;
@@ -433,7 +438,7 @@ mv virtctl-v1.2.2-windows-amd64.exe c:\windows\system32\virtctl.exe
 
 ### Setup a CDI
 
-We also need a CDI (Containerized Data Importer) operator. 
+We also need a CDI (Containerized Data Importer) operator. This is the mechanism that we use to 
 
 export VERSION=$(basename $(curl -s -w %{redirect_url} https://github.com/kubevirt/containerized-data-importer/releases/latest))
 $VERSION='v1.59.0'
