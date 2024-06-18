@@ -392,10 +392,9 @@ kubectl cluster-info --context kind-kubevirt
 
 We should get our cluster info
 
-```
+```bash
 Kubernetes control plane is running at https://127.0.0.1:58905
 CoreDNS is running at https://127.0.0.1:58905/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-
 ```
 
 And now we can install Kubevirt into the cluster. There is a guide here: https://kubevirt.io/quickstart_kind/
@@ -404,6 +403,7 @@ These are the command I used.
 
 ```powershell
 #  https://storage.googleapis.com/kubevirt-prow/release/kubevirt/kubevirt/stable.txt
+kubectl create -f https://github.com/kubevirt/kubevirt/releases/download/${VERSION}/kubevirt-operator.yaml
 $VERSION='v1.2.2'
 export VERSION=$(curl -s https://storage.googleapis.com/kubevirt-prow/release/kubevirt/kubevirt/stable.txt)
 kubectl create -f https://github.com/kubevirt/kubevirt/releases/download/$($VERSION)/kubevirt-cr.yaml
@@ -454,12 +454,12 @@ kubectl get pods -n cdi
 
 Now, we can install and manage vms with Kubernetes.
 
-But wait... We need a place to host the file, and a web server is easiest. Lets avoid the messiness of python and using a go binary. This isnt production ready, but fine for our needs.
+But wait... We need a place to host the file, and a web server is easiest. Lets avoid the messiness of python and using a go binary. This isnt production ready, but fine for our needs. The -g switch turns off logging, and the -l means show logs.
 
 https://github.com/m3ng9i/ran/releases/download/v0.1.6/ran_windows_amd64.exe.zip
 
 ```powershell
-.\ran.exe -r D:\QCOW\ -l true
+.\ran.exe -r D:\QCOW\ -l -g-false
 ```
 
 Then, we can reference it like this: http://102.168.1.108:8080/windows-2022.qcow2
@@ -616,7 +616,7 @@ There are a couple more, to see what is available (easy to forget) simply run ``
 ```
 task: Available tasks for this project:
 * build-and-run:
-* build-image:$env:USERPROFILE
+* build-image
 * create-vm:
 * delete-vm:
 * platforms:
@@ -628,3 +628,9 @@ task: Available tasks for this project:
 ```
 
 A very nice simplification, and something I am definitely going to use more of in future.
+
+## Other Resources
+
+I'm not jealousy guarding anything. These all helped
+
+- https://charlottemach.com/2020/11/03/windows-kubevirt-k3s.html
