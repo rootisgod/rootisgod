@@ -22,9 +22,16 @@ Once done, we can create VMs on demand in Kubernetes.
 Why? Well, imagine you want to run multiple old school services, that not containerizable. We can use this to host the VMs and benefit from all the Kubernetes ecosystem. Imagine you have a windows service with a SQL Server backend, you can create a new VM per client. If we get a process to set this up, adding a new client to the system is as easy as deploying a pod and managing it declaratively.
 
 
+## Required Files
+
+I've put all the files into a github repo and linked to them. Where useful i'll share a snippet. But it may be best to pull the zip/repo from github and follow along as the code would make this blog post very large and unwieldy.
+
+[https://github.com/rootisgod/Kubevirt-Cluster](https://github.com/rootisgod/Kubevirt-Cluster)
+
+
 ## Creating a VM Image
 
-To get to the stage of running a Windows machine in Kubernetes, we need a VM image. And for that, we need Virtualbox to create a VM, and Packer to make the image from it.
+To get to the stage of running a Windows machine in Kubernetes, we need a VM image. And for that, we need Virtualbox to create a VM, and Packer to make the image from it. And later qemu-img program to convert the VM file.
 
 Note: For this guide, we are using Windows as the base OS to show the steps. It doesnt change things too much if using Linux, but worth noting.
 
@@ -34,7 +41,7 @@ Note: For this guide, we are using Windows as the base OS to show the steps. It 
 The easiest way to install Virtualbox and Packer we can use chocolatey (or install both programs manually if you know what you are doing). You can install it with these instructions - https://chocolatey.org/install
 
 ```powershell
-choco install virtualbox packer -y
+choco install virtualbox packer qemu-img -y
 ```
 
 ### Windows ISO
@@ -44,7 +51,7 @@ We also need a Windows Server 2022 ISO. You can grab an evaluation licence ISO f
 
 ### Packer
 
-Now we can think about deploying it with packer. But, first we need to install the following packer plugins like so.
+Now we can think about deploying it with packer. But, first we need to install the following packer plugins so it can talk to Virtualbox, like so.
 
 ```bash
 packer plugins install github.com/hashicorp/vagrant
@@ -53,7 +60,9 @@ packer plugins install github.com/hashicorp/virtualbox
 
 #### Packer Windows 2022 Template
 
-This is the template we need to run. Save it as a file like ```windows.pkr.hcl```.
+We can now create a VM with a packer template. The template is responsible for the full lifecycle of the image we create. It will create a VM in Virtualbox, install Windows via an answerfile, and then connect to it over WinrRM to configure it and then shut it down. Once this happens it will output it as an image we can use later. So we need to give it quite a lot of information and scripts to make that happen.
+
+This is the template we need to run. It has teh VM spec and our build options. It should be pretty simple to understand. Tweak the values if you wish. Save it as a file called ```windows.pkr.hcl```. It is also [here](https://github.com/rootisgod/Kubevirt-Cluster/blob/main/windows.pkr.hcl)
 
 ```hcl
 packer {
@@ -72,20 +81,21 @@ packer {
 source "virtualbox-iso" "windows" {
   vm_name              = "win2022"
   communicator         = "winrm"
-  floppy_files         = ["files/Autounattend.xml", "scripts/enable-winrm.ps1", "scripts/sysprep.bat"]
+  floppy_files         = ["files/Autounattend.xml", "scripts/enable-winrm.ps1", "scripts/sysprep_and_shutdown.bat", "scripts/shutdown.bat"]
   guest_additions_mode = "attach"
-  guest_os_type        = "Windows2016_64"
+  guest_os_type        = "Windows2022_64"
   headless             = "false"
   iso_checksum         = "sha256:3e4fa6d8507b554856fc9ca6079cc402df11a8b79344871669f0251535255325"
   iso_url              = "d:/ISOs/windows_server_2022.iso"
   disk_size            = "24576"
   shutdown_timeout     = "15m"
-  vboxmanage           = [["modifyvm", "{{ .Name }}", "--memory", "4096"], ["modifyvm", "{{ .Name }}", "--vram", "48"], ["modifyvm", "{{ .Name }}", "--cpus", "4"]]
-  winrm_username       = "vagrant"
+  vboxmanage           = [["modifyvm", "{{ .Name }}", "--memory", "8192"], ["modifyvm", "{{ .Name }}", "--vram", "48"], ["modifyvm", "{{ .Name }}", "--cpus", "4"]]
   winrm_password       = "vagrant"
   winrm_timeout        = "12h"
-  keep_registered      = "true"            # Can be handy to manually inspect the VM post creation
-  shutdown_command     = "a:/sysprep.bat"
+  winrm_username       = "vagrant"
+  keep_registered      = "false"
+  # shutdown_command     = "a:/sysprep_and_shutdown.bat"
+  shutdown_command     = "a:/shutdown.bat"
 }
 
 build {
@@ -97,15 +107,15 @@ build {
     script            = "scripts/customise.ps1"
   }
 
-  provisioner "powershell" {
-    elevated_password = "vagrant"
-    elevated_user     = "vagrant"
-    script            = "scripts/windows-updates.ps1"
+  # Add other script you want to run here, like Windows Updates, software installs etc...
+
+  provisioner "windows-restart" {
+    restart_timeout = "15m"
   }
 }
 ```
 
-And we need a few files in a couple of folders to take care of an unattended install an some post boot actions.
+And we need a few files in a couple of folders to take care of an unattended install, and some post boot actions.
 
 #### Scripts
 
@@ -128,13 +138,20 @@ Set-Service winrm -startuptype "auto"
 Restart-Service winrm
 ```
 
-We also need a ```sysprep.bat``` file in a scripts folder to shutdown the machine and 'randomise' the VM on boot. If you dont want this, just leave in the shutdown command. Packer runs this script when the VM is deployed, configured, and ready to shut down.
+We also need a ```sysprep_and_shutdown.bat``` and ```shutdown.bat``` file in a scripts folder to shutdown simply, or sysprep it to 'randomise' the VM on boot (both are usfeul). Use the one you prefer in the packer template. But a simple shutdown might be preferable initially to avoid teh 'new user' login screen while testing.
+
+```sysprep_and_shutdown.bat```
 ```bat
 c:\windows\system32\sysprep\sysprep.exe /generalize /mode:vm /oobe 
 shutdown /s
 ```
 
-And we also need a ```customise.ps1``` script to configure some small settings, and install chocolatey and virtio drivers. Add/amend as you require.
+```shutdown.bat```
+```bat
+shutdown /s
+```
+
+And we also need a ```customise.ps1``` script to configure some small settings, and install chocolatey and virtio drivers. Add/amend as you require. Choco being pre-installed is useful as you can add anything post build very easily, or create another packer tempalte provisioner section to add more software in a simple way.
 ```powershell
 # Set some Quality of Life Settings
 c:\Windows\System32\reg.exe ADD HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\ /v HideFileExt /t REG_DWORD /d 0 /f
@@ -158,177 +175,21 @@ c:\virtio-win-guest-tools.exe -s
 
 #### Files
 
-And we need an answer file for Windows to skip the install questions. Importantly, this also references and runs the ```enable-winrm.ps1``` script.
+And we need an answer file for Windows to skip the install questions. Importantly, this also references and runs the ```enable-winrm.ps1``` script. It also make s auser called vagrant with password vagrant, and auto-logins the account.
+
+The file is very large, so i'm just showing the winrm script portion here so you know how the magic happens. Virtualbox mounts it to the A: and so windows can read it in and setup the remote access for us. 
+The full file is here [here](https://github.com/rootisgod/Kubevirt-Cluster/blob/main/files/Autounattend.xml)
 
 ```Autounattend.xml```
 
 ```xml
-<?xml version="1.0" encoding="utf-8"?>
-<unattend xmlns="urn:schemas-microsoft-com:unattend">
-    <settings pass="windowsPE">
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <SetupUILanguage>
-                <UILanguage>en-US</UILanguage>
-            </SetupUILanguage>
-            <InputLocale>en-US</InputLocale>
-            <SystemLocale>en-US</SystemLocale>
-            <UILanguage>en-US</UILanguage>
-            <UILanguageFallback>en-US</UILanguageFallback>
-            <UserLocale>en-US</UserLocale>
-        </component>
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <DiskConfiguration>
-                <Disk wcm:action="add">
-                    <CreatePartitions>
-                        <CreatePartition wcm:action="add">
-                            <Type>Primary</Type>
-                            <Order>1</Order>
-                            <Size>350</Size>
-                        </CreatePartition>
-                        <CreatePartition wcm:action="add">
-                            <Order>2</Order>
-                            <Type>Primary</Type>
-                            <Extend>true</Extend>
-                        </CreatePartition>
-                    </CreatePartitions>
-                    <ModifyPartitions>
-                        <ModifyPartition wcm:action="add">
-                            <Active>true</Active>
-                            <Format>NTFS</Format>
-                            <Label>boot</Label>
-                            <Order>1</Order>
-                            <PartitionID>1</PartitionID>
-                        </ModifyPartition>
-                        <ModifyPartition wcm:action="add">
-                            <Format>NTFS</Format>
-                            <Label>Windows 2022</Label>
-                            <Letter>C</Letter>
-                            <Order>2</Order>
-                            <PartitionID>2</PartitionID>
-                        </ModifyPartition>
-                    </ModifyPartitions>
-                    <DiskID>0</DiskID>
-                    <WillWipeDisk>true</WillWipeDisk>
-                </Disk>
-            </DiskConfiguration>
-            <ImageInstall>
-                <OSImage>
-                    <InstallFrom>
-                        <MetaData wcm:action="add">
-                            <Key>/IMAGE/NAME </Key>
-                            <Value>Windows Server 2022 SERVERDATACENTER</Value>
-                        </MetaData>
-                    </InstallFrom>
-                    <InstallTo>
-                        <DiskID>0</DiskID>
-                        <PartitionID>2</PartitionID>
-                    </InstallTo>
-                </OSImage>
-            </ImageInstall>
-            <UserData>
-                <!-- Product Key from http://technet.microsoft.com/en-us/library/jj612867.aspx -->
-                <ProductKey>
-                    <!-- Do not uncomment the Key element if you are using trial ISOs -->
-                    <!-- You must uncomment the Key element (and optionally insert your own key) if you are using retail or volume license ISOs -->
-                    <!--<Key>WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY</Key>-->
-                    <WillShowUI>OnError</WillShowUI>
-                </ProductKey>
-                <AcceptEula>true</AcceptEula>
-                <FullName>Vagrant</FullName>
-                <Organization>Vagrant</Organization>
-            </UserData>
-        </component>
-    </settings>
-    <settings pass="specialize">
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <OEMInformation>
-                <HelpCustomized>false</HelpCustomized>
-            </OEMInformation>
-            <ComputerName>vagrant-2022</ComputerName>
-            <TimeZone>Pacific Standard Time</TimeZone>
-            <RegisteredOwner/>
-        </component>
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-ServerManager-SvrMgrNc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <DoNotOpenServerManagerAtLogon>true</DoNotOpenServerManagerAtLogon>
-        </component>
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-IE-ESC" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <IEHardenAdmin>false</IEHardenAdmin>
-            <IEHardenUser>false</IEHardenUser>
-        </component>
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-OutOfBoxExperience" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <DoNotOpenInitialConfigurationTasksAtLogon>true</DoNotOpenInitialConfigurationTasksAtLogon>
-        </component>
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <SkipAutoActivation>true</SkipAutoActivation>
-        </component>
-    </settings>
-    <settings pass="oobeSystem">
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <AutoLogon>
-                <Password>
-                    <Value>vagrant</Value>
-                    <PlainText>true</PlainText>
-                </Password>
-                <Enabled>true</Enabled>
-                <Username>vagrant</Username>
-            </AutoLogon>
+...
             <FirstLogonCommands>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\enable-winrm.ps1</CommandLine>
                     <Order>1</Order>
                 </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd.exe /c wmic useraccount where "name='vagrant'" set PasswordExpires=FALSE</CommandLine>
-                    <Order>2</Order>
-                    <Description>Disable password expiration for vagrant user</Description>
-                </SynchronousCommand>
-            </FirstLogonCommands>
-            <OOBE>
-                <HideEULAPage>true</HideEULAPage>
-                <HideLocalAccountScreen>true</HideLocalAccountScreen>
-                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
-                <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
-                <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
-                <NetworkLocation>Home</NetworkLocation>
-                <ProtectYourPC>1</ProtectYourPC>
-            </OOBE>
-            <UserAccounts>
-                <AdministratorPassword>
-                    <Value>vagrant</Value>
-                    <PlainText>true</PlainText>
-                </AdministratorPassword>
-                <LocalAccounts>
-                    <LocalAccount wcm:action="add">
-                        <Password>
-                            <Value>vagrant</Value>
-                            <PlainText>true</PlainText>
-                        </Password>
-                        <Group>administrators</Group>
-                        <DisplayName>Vagrant</DisplayName>
-                        <Name>vagrant</Name>
-                        <Description>Vagrant User</Description>
-                    </LocalAccount>
-                </LocalAccounts>
-            </UserAccounts>
-            <RegisteredOwner/>
-        </component>
-    </settings>
-    <settings pass="offlineServicing">
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-LUA-Settings" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <EnableLUA>false</EnableLUA>
-        </component>
-    </settings>
-    <cpi:offlineImage xmlns:cpi="urn:schemas-microsoft-com:cpi" cpi:source="wim:c:/wim/install.wim#Windows Server 2012 R2 SERVERSTANDARD"/>
-</unattend>
-```
-
-And finally, one to do windows updates.
-
-```windows-updates.ps1```
-
-```powershell
-$ProgressPreference='SilentlyContinue'
-Get-WUInstall -WindowsUpdate -AcceptAll -UpdateType Software -IgnoreReboot
+...
 ```
 
 Okay, thats a lot. But you should effectively have this folder structure
@@ -336,16 +197,33 @@ Okay, thats a lot. But you should effectively have this folder structure
 ```
 windows.pkr.hcl
 Scripts\enable-winrm.ps1
-Scripts\sysprep.bat
+Scripts\sysprep_and_shutdown.bat
+Scripts\shutdown.bat
 Scripts\customise.ps1
-Scripts\windows-updates.ps1
 Files\Autounattend.xml
 ```
 
+### Building the Image
+
+We can now build it!
+
+Run this command
+
+```powershell
+packer build ./windows.pkr.hcl
+```
+
+It will whirr away and automatically create a Virtualbox VM, then show a console of the build, and then shut the VM down and export a VDI file in an output-windows folder.
+
+Then, we can convert the file into a format required for Kubevirt like so
+
+```powershell
+qemu-img convert -f vmdk -O qcow2  ./output-windows/win2022-disk001.vmdk D:/QCOW/windows-2022.qcow2
+```
 
 ## KIND
 
-We will use KIND to run the VM as it is supported by the Kubevirt project and can run on Windows using Docker Desktop and WSL2.
+We now have an image to run in Kubevirt, but first we need a Kubernetes cluster. We will use KIND to run the VM as it is supported by the Kubevirt project, and can run on Windows using Docker Desktop and WSL2.
 
 ### Installation and WSL2
 
@@ -354,10 +232,10 @@ We need WSL2 on Windows. Follow these instructions: https://kind.sigs.k8s.io/doc
 And then, it could be as simple as this though to install KIND, but your mileage may vary. See these instructions if the below fails: https://kind.sigs.k8s.io/docs/user/quick-start
 
 ```powershell
-choco install kind
+choco install kind -y
 ```
 
-There is also a tweak in WSL2 we need to perform. The default allocated memory likely will not be enough, so stop WSL and create/amend the ```.wslconfig``` file to something like the below
+There is also a tweak in WSL2 we need to perform. The default allocated memory for WSL2 for Docker will likely will not be enough, so stop WSL and create/amend your users ```.wslconfig``` file to something like the below
 
 ```powershell
 # turn off all wsl instances such as docker-desktop
@@ -368,7 +246,7 @@ notepad "$env:USERPROFILE/.wslconfig"
 ```file
 [wsl2]
 memory=8GB   # Limits VM memory in WSL 2 up to 8GB
-processors=4 # Makes the WSL 2 VM use two virtual processors
+processors=4 # Makes the WSL 2 VM use more virtual processors
 ```
 
 Then restart Docker desktop from its GUI.
@@ -377,15 +255,32 @@ We are getting there!
 
 ### Setup Kubevirt
 
-We should have the required basic tools installed and can now create a KIND cluster to host our VMs. 
+We should have the required basic tools installed and can now create a KIND cluster to host our VMs.
 
 There is a quickstart guide here: https://kubevirt.io/quickstart_kind/
 
 But this is what we will do. 
 
+Create a file called ```kind_config.yml``` to help us setupo something later.
+
+```yaml
+# https://stackoverflow.com/questions/62432961/how-to-use-nodeport-with-kind
+apiVersion: kind.x-k8s.io/v1alpha4
+kind: Cluster
+nodes:
+- role: control-plane
+  extraPortMappings:
+  - containerPort: 30000
+    hostPort: 30000
+    listenAddress: "0.0.0.0" # Optional, defaults to "0.0.0.0"
+    protocol: tcp # Optional, defaults to tcp
+```
+
+Then create our cluster like so
+
 
 ```powershell
-kind create cluster --name kubevirt
+kind create cluster --name kubevirt --config=kind_config.yml
 choco install kubectl -y
 kubectl cluster-info --context kind-kubevirt
 ```
@@ -399,14 +294,12 @@ CoreDNS is running at https://127.0.0.1:58905/api/v1/namespaces/kube-system/serv
 
 And now we can install Kubevirt into the cluster. There is a guide here: https://kubevirt.io/quickstart_kind/
 
-These are the command I used.
+These are the command I used, which have hardcoded the versions for simplicity
 
 ```powershell
 #  https://storage.googleapis.com/kubevirt-prow/release/kubevirt/kubevirt/stable.txt
-kubectl create -f https://github.com/kubevirt/kubevirt/releases/download/${VERSION}/kubevirt-operator.yaml
-$VERSION='v1.2.2'
-export VERSION=$(curl -s https://storage.googleapis.com/kubevirt-prow/release/kubevirt/kubevirt/stable.txt)
-kubectl create -f https://github.com/kubevirt/kubevirt/releases/download/$($VERSION)/kubevirt-cr.yaml
+kubectl create -f https://github.com/kubevirt/kubevirt/releases/download/v1.2.2/kubevirt-operator.yaml
+kubectl create -f https://github.com/kubevirt/kubevirt/releases/download/v1.2.2/kubevirt-cr.yaml
 ```
 
 Check it works
@@ -428,7 +321,7 @@ pod/virt-controller-6855b4df79-tzk5v   1/1     Running   5 (4d11h ago)   7d18h
 
 ### Setup Virtctl
 
-Then install we install Virtctl to control VMs. Grab the latest version here and move it insto a system32 folder so it can be seen in our terminal.
+Then install we install Virtctl to control Kubevirt VMs, much like kubectl. Grab the latest version here and move it insto a system32 folder so it can be seen in our terminal (it's not in Chocolatey...).
 
 ```powershell
 wget https://github.com/kubevirt/kubevirt/releases/download/v1.2.2/virtctl-v1.2.2-windows-amd64.exe
@@ -454,7 +347,7 @@ kubectl get pods -n cdi
 
 Now, we can install and manage vms with Kubernetes.
 
-But wait... We need a place to host the file, and a web server is easiest. Lets avoid the messiness of python and using a go binary. This isnt production ready, but fine for our needs. The -g switch turns off logging, and the -l means show logs.
+But wait... We need a place to host the file, and a web server is easiest. Lets avoid the messiness of python and use a go binary. This isn't production ready, but fine for our needs. Download the zip and extract it to your local folder (or C:\Windows\System32). The -g switch turns off logging, and the -l means show logs. The D:\QCOW path is where out qemu-convert image we made earlier should be.
 
 https://github.com/m3ng9i/ran/releases/download/v0.1.6/ran_windows_amd64.exe.zip
 
@@ -462,10 +355,11 @@ https://github.com/m3ng9i/ran/releases/download/v0.1.6/ran_windows_amd64.exe.zip
 .\ran.exe -r D:\QCOW\ -l -g-false
 ```
 
-Then, we can reference it like this: http://102.168.1.108:8080/windows-2022.qcow2
+Then, we can reference the image like this (use your IP obviously): http://192.168.1.108:8080/windows-2022.qcow2
 
-Replace the IP with your host machine. Because we are running the service inside Kubernetes, we need the 'outside' IP so it can find the image to download.
+We need the 'outside' IP so it can find the image to download from inside the KIND cluster.
 
+kubevirt_win2022_dv.yml
 ```yml
 apiVersion: cdi.kubevirt.io/v1beta1
 kind: DataVolume
@@ -485,7 +379,7 @@ spec:
     http:
       url: "http://192.168.1.108/QCOW/windows-2022.qcow2"
 ```
-
+kubevirt_win2022_pvc.yml
 ```yml
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -504,6 +398,7 @@ spec:
       storage: 64Gi
 ```
 
+kubevirt_win2022_vm.yml
 ```yml
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
@@ -542,7 +437,33 @@ spec:
           claimName: kubevirt-win2022
 ```
 
+kubevirt_win2022_svc.yml
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: win2022-vm-nodeport
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: nodeport
+    nodePort: 30000
+    port: 27017
+    protocol: TCP
+    targetPort: 3389
+  selector:
+    kubevirt.io/domain: win2022-vm
+  type: NodePort
+```
 
+Create these files with the names referenced below and run like this
+
+```powershell
+kubectl apply  -f kubevirt_win2022_pvc.yml
+kubectl apply  -f kubevirt_win2022_dv.yml
+kubectl apply  -f kubevirt_win2022_vm.yml
+kubectl apply  -f kubevirt_win2022_svc.yml
+```
 
 ## Taskfiles
 
@@ -616,21 +537,39 @@ There are a couple more, to see what is available (easy to forget) simply run ``
 ```
 task: Available tasks for this project:
 * build-and-run:
-* build-image
+* build-image:
+* config-kind-cluster:
+* create-and-config-kind-cluster:
+* create-kind-cluster:
+* create-svc:
 * create-vm:
+* delete-kind-cluster:
 * delete-vm:
-* platforms:
+* install-crds-kind-cluster:
+* nodeips-kind-cluster:
 * start-vm:
 * status-vm:
 * stop-vm:
-* test:
 * vnc-vm:
 ```
 
 A very nice simplification, and something I am definitely going to use more of in future.
 
+## Speed Run with Taskfile
+
+If you have Packer, VirtualBox, virtctl and kubectl installed, you can do more of a speedrun to recreate a cluster from scratch with the help of Taskfile. Youcan start from zero to full cluster like this. 
+
+```bash
+task delete-kind-cluster
+task create-and-config-kind-cluster  # Wait a minute for things to install. If anyone knows a simple command to wait for everything to go ready, let me know!
+task build-and-run-vm
+task vnc-vm
+```
+
+Amazing!
+
 ## Other Resources
 
 I'm not jealousy guarding anything. These all helped
 
-- https://charlottemach.com/2020/11/03/windows-kubevirt-k3s.html
+- https://charlottemach.com/2020/11/03/windows-kubevirt-k3s.html    
