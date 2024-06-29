@@ -1,5 +1,5 @@
 ---
-categories: proxmox packer k8s kubernetes windows kubevirt
+categories: packer k8s kubernetes windows kubevirt kind
 date: "2024-06-29T10:00:00Z"
 title: Running Windows VMs in Kubernetes with Kubevirt
 draft: true
@@ -531,7 +531,11 @@ And then we can see if it is alive! Run this command and you will, eventually, s
 virtctl vnc win2022-vm
 ```
 
-Also, apologies, you probably need to install ```vncviewer.exe``` to use teh vnc command. I believe I downloaded TightVNC (https://www.tightvnc.com/download/2.8.84/tightvnc-2.8.84-gpl-setup-64bit.msi), installed it, and then copied the file ```C:\Program Files\TightVNC\tvnviewer.exe``` to ```c:\windows'system32\vncviewer``` in order to get it to work. Note I changed ```tnviewer.exe``` to ```vncviewer.exe```.
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2024/Kubevirt-and-Windows/vnc-vm.png"><img src="/assets/images/2024/Kubevirt-and-Windows/vnc-vm.png"></a>
+{{< /rawhtml >}}
+
+Also, apologies, you probably need to install ```vncviewer.exe``` to use the vnc command. I believe I downloaded TightVNC (https://www.tightvnc.com/download/2.8.84/tightvnc-2.8.84-gpl-setup-64bit.msi), installed it, and then copied the file ```C:\Program Files\TightVNC\tvnviewer.exe``` to ```c:\windows'system32\vncviewer``` in order to get it to work. Note I changed ```tvnviewer.exe``` to ```vncviewer.exe```.
 
 ### RDP to the VM
 
