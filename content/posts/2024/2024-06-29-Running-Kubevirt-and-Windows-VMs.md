@@ -535,7 +535,7 @@ virtctl vnc win2022-vm
 <a data-fancybox="gallery" href="/assets/images/2024/Kubevirt-and-Windows/vnc-vm.png"><img src="/assets/images/2024/Kubevirt-and-Windows/vnc-vm.png"></a>
 {{< /rawhtml >}}
 
-Also, apologies, you probably need to install ```vncviewer.exe``` to use the vnc command. I believe I downloaded TightVNC (https://www.tightvnc.com/download/2.8.84/tightvnc-2.8.84-gpl-setup-64bit.msi), installed it, and then copied the file ```C:\Program Files\TightVNC\tvnviewer.exe``` to ```c:\windows'system32\vncviewer``` in order to get it to work. Note I changed ```tvnviewer.exe``` to ```vncviewer.exe```.
+Also, apologies, you probably need to install ```vncviewer.exe``` to use the vnc command. I believe I downloaded TightVNC (https://www.tightvnc.com/download/2.8.84/tightvnc-2.8.84-gpl-setup-64bit.msi), installed it, and then copied the file ```C:\Program Files\TightVNC\tvnviewer.exe``` to ```c:\windows\system32\vncviewer``` in order to get it to work. Note I changed ```tvnviewer.exe``` to ```vncviewer.exe```.
 
 ### RDP to the VM
 
@@ -635,7 +635,7 @@ task: Available tasks for this project:
 
 A very nice simplification, and something I am definitely going to use more of in future.
 
-Here is a screenshot creating a VM so you can it working.
+Here is a screenshot creating a VM so you can see how it works.
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2024/Kubevirt-and-Windows/create-vm.png"><img src="/assets/images/2024/Kubevirt-and-Windows/create-vm.png"></a>
