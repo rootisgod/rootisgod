@@ -539,11 +539,23 @@ Also, apologies, you probably need to install ```vncviewer.exe``` to use the vnc
 
 ### RDP to the VM
 
-To RDP into the machine, we can setup a service. However, this isnt quite working. I promise to come back and fill this bit in! But, the service below will create Nodeport and a forward, I just havent quite figured it out yet... This post may help, but I still cant quite get it to work: https://charlottemach.com/2020/11/03/windows-kubevirt-k3s.html
+To RDP into the machine, we can setup a service. Run this command.
 
 ```powershell
 kubectl apply  -f kubevirt_win2022_svc.yml
 ```
+
+What it will do is setup a Nodeport connection over port 30000. So, to RDP we just have to RDP to our machines localhost port and port 30000 (remember the bit at the start with our kind config file, that was us exposing that port).
+
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2024/Kubevirt-and-Windows/mstsc.png"><img src="/assets/images/2024/Kubevirt-and-Windows/mstsc.png"></a>
+{{< /rawhtml >}}
+
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2024/Kubevirt-and-Windows/rdp.png"><img src="/assets/images/2024/Kubevirt-and-Windows/rdp.png"></a>
+{{< /rawhtml >}}
+
+And if you are on an external machine, you can RDP to the Kubevirt Windows VM using the server ip and port 30000, awesome. 
 
 ## Taskfiles
 
