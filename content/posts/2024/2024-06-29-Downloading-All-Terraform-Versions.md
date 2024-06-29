@@ -1,6 +1,6 @@
 ---
 categories: terraform octopusdeploy iac opentofu
-date: "2024-06-29T11:30:00Z"
+date: "2024-06-29T00:00:00Z"
 title: Downloading All Terraform Versions
 draft: false
 ---
@@ -119,7 +119,7 @@ $releasedVersions = $releasedVersions | Where-Object { $_ -notmatch "^0\." }
 
 # Create Download Links
 foreach ($releasedVersion in $releasedVersions) {
-    if (Test-Path $outputDir\$releasedVersion\terraform.exe) {
+    if (Test-Path $outputDir\$releasedVersion\$terraformBinaryName) {
         Write-Output "Terraform $outputDir/$releasedVersion/$terraformBinaryName Exists"
     }
     else {
