@@ -7,25 +7,15 @@ draft: false
 
 I recently had a problem at work where I needed a quick way to get a different version of terraform for multiple projects I was on. Now, I know about [tfenv](https://github.com/tfutils/tfenv) but I would rather just have them all downloaded and ready to go from a path I knew the location of.
 
-Also, we are starting to use [Octopus Deploy](https://octopus.com) to do our Terraform deployment, but to override the Terraform version that is bundled with the worker image, you need to [specify the location](https://octopus.com/docs/deployments/terraform#special-variables) of a folder with the Terraform binary in it, so it can reach it. And so given I dont really know the versions required ahead of time, I need them all, and for Linux or Windows. And maybe for ARM later etc etc...
+Also, we are starting to use [Octopus Deploy](https://octopus.com) to do our Terraform deployments, but to override the Terraform version that is bundled with the worker image, you need to [specify the location](https://octopus.com/docs/deployments/terraform#special-variables) of a folder with the Terraform binary in it. And so given I dont really know the versions required ahead of time, I need them all, and for Linux or Windows. And maybe for ARM later etc etc...
 
 So, I decided to write a script that would do the hard part of downloading them all for me.
 
 # The Script
 
-The script is written in powershell to make it multi-platform, and our Octopus Server runs on windows so it made it an easier fit. For Ubuntu, a simple ```snap install powershell --classic``` is all you need to do.
+The script is written in powershell to make it multi-platform, and our Octopus Server runs on windows so it made it an easier fit. For Ubuntu, a simple ```snap install powershell --classic``` is all you need to do to get powershell installed.
 
-## Some hints
-
- - You specfy the OS, one of these: darwin_amd64, darwin_arm64, freebsd_386, freebsd_amd64, freebsd_arm,
-linux_386, linux_amd64, linux_arm, linux_arm64, openbsd_386, openbsd_amd64, solaris_amd64, windows_386, windows_amd64
- - You specify an OutputDir for where the files should end up. For Windows, you can specify a folder like '/TerraformBinaries' and it will resolve to the drive you are running the script from and become 'C:/TerraformBinaries'. Or pass a full path.
- - If the terraform file already exists it won't attempt to re-download it. You can rerun the script to get newer versions
- - If only downloads V1 versions of Terraform, and no RC, beta etc versions
- - Some versions arent available for certain OS's, the script will just error and carry on, dont worry about it
- - You could probably use the outout folder with a web server to serve the versions much like the Terraform wesbite, but they are unzipped and ready to go for you. This could also be useful if you have bad internet (like me).
-
-So, something like this will download all the versions for Windows 64 bit and place them in a folder called ```/root/terraform/linux_amd64```.
+Something like this will download all the versions for Linux 64 bit and place them in a folder called ```/root/terraform/linux_amd64```.
 
 ```powershell
 .\TerraformDownloader.ps1 -OS linux_amd64 -OutputDir '/root/terraform'
@@ -49,9 +39,20 @@ Unzipping Terraform 1.0.1...
 Run for each OS you need. Windows could be like this
 
 ```powershell
-```powershell
 .\TerraformDownloader.ps1 -OS windows_amd64 -OutputDir 'c:/terraform'
 ```
+
+
+## Some hints
+
+ - You specify the OS, one of these: darwin_amd64, darwin_arm64, freebsd_386, freebsd_amd64, freebsd_arm,
+linux_386, linux_amd64, linux_arm, linux_arm64, openbsd_386, openbsd_amd64, solaris_amd64, windows_386, windows_amd64
+ - You specify an OutputDir for where the files should end up. For Windows, you can specify a folder like '/TerraformBinaries' and it will resolve to the drive you are running the script from and become 'C:/TerraformBinaries'. Or pass a full path
+ - If the terraform file already exists it won't attempt to re-download it. You can re-run the script to get newer versions
+ - It only downloads V1 versions of Terraform, and no RC, beta etc versions
+ - Some versions arent available for certain OS's, the script will just error and carry on, dont worry about it
+ - You could probably use the outout folder with a web server to serve the versions much like the Terraform wesbite, but they are unzipped and ready to go for you. This could also be useful if you have bad internet (like me)
+
 
 ## Full Script
 
