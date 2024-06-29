@@ -2,7 +2,7 @@
 categories: packer k8s kubernetes windows kubevirt kind
 date: "2024-06-29T10:00:00Z"
 title: Running Windows VMs in Kubernetes with Kubevirt
-draft: true
+draft: false
 ---
 
 {{< rawhtml >}}
