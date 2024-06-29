@@ -35,7 +35,9 @@ Note: For this guide, we are using Windows as the base OS to show the steps. It 
 
 ### Installing Packer and Virtualbox
 
-The easiest way to install Virtualbox and Packer we can use chocolatey (or install both programs manually if you know what you are doing). You can install it with these instructions - https://chocolatey.org/install
+The easiest way to install Virtualbox and Packer is with chocolatey (or install both programs manually if you know what you are doing). You can install chocolatey with these instructions - https://chocolatey.org/install
+
+And to install the programs, run this.
 
 ```powershell
 choco install virtualbox packer qemu-img -y
@@ -537,7 +539,7 @@ Also, apologies, you probably need to install ```vncviewer.exe``` to use the vnc
 
 ### RDP to the VM
 
-To RDP into the machine, we can setup a service. However, this isnt quite working. I promise to come back and fill this bit in! But, the service below will create Nodeport and a forward, I just havent quite figured it out yet...
+To RDP into the machine, we can setup a service. However, this isnt quite working. I promise to come back and fill this bit in! But, the service below will create Nodeport and a forward, I just havent quite figured it out yet... This post may help, but I still cant quite get it to work: https://charlottemach.com/2020/11/03/windows-kubevirt-k3s.html
 
 ```powershell
 kubectl apply  -f kubevirt_win2022_svc.yml
@@ -654,3 +656,9 @@ Amazing!
 
 
 If you made it this far I salute you. It was a lot to do, but hopefully someone found it helpful!
+
+Here are some other blogs I found which might be helpful as well
+
+- https://charlottemach.com/2020/11/03/windows-kubevirt-k3s.html
+- https://kubevirt.io/2022/KubeVirt-installing_Microsoft_Windows_11_from_an_iso.html
+- https://dev.to/thenjdevopsguy/kubernetes-for-the-sysadmin-enter-kubevirt-5024?utm_source=pocket_shared
