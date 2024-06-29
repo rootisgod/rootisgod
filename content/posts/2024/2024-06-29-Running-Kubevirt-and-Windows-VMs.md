@@ -1,15 +1,11 @@
 ---
 categories: packer k8s kubernetes windows kubevirt kind
-date: "2024-06-29T10:00:00Z"
+date: "2024-06-29T00:00:00Z"
 title: Running Windows VMs in Kubernetes with Kubevirt
 draft: false
 ---
 
-{{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2024/Kubevirt-and-Windows/Kubevirt-small.png"><img src="/assets/images/2024/Kubevirt-and-Windows/Kubevirt-small.png"></a>
-{{< /rawhtml >}}
-
-We are going to run a Windows VM inside of Kuernetes. This will be a long one.
+We are going to run a Windows VM inside of Kubernetes. This will be a long one.
 
 We will do this by;
  - Creating a QCOW2 Windows image with packer and virtualbox
