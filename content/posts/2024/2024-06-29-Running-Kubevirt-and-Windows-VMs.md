@@ -21,9 +21,11 @@ Note: You probably need a pretty powerful machine to do this. I tried it on an A
 
 ## Required Files
 
-Because of the complexity of the full setup, i've put all the files into a github repo linked below. Where useful i'll share a snippet. But it may be best to pull the zip/repo from github and follow along as the code would make this blog post very large and unwieldy.
+Because of the complexity of the full setup, i've put all the files into a github repo, links below. Where useful i'll share a snippet. But it may be best to pull the zip/repo from github and follow along as the code would make this blog post very large and unwieldy.
 
-[https://github.com/rootisgod/Kubevirt-Cluster](https://github.com/rootisgod/Kubevirt-Cluster)
+[Repository - https://github.com/rootisgod/Kubevirt-Cluster](https://github.com/rootisgod/Kubevirt-Cluster)
+
+[Zip File - https://github.com/rootisgod/Kubevirt-Cluster/archive/refs/heads/main.zip](https://github.com/rootisgod/Kubevirt-Cluster/archive/refs/heads/main.zip)
 
 
 ## Creating a VM Image
