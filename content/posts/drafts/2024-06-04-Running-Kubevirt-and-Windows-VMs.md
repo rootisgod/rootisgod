@@ -352,7 +352,7 @@ But wait... We need a place to host the file, and a web server is easiest. Lets 
 https://github.com/m3ng9i/ran/releases/download/v0.1.6/ran_windows_amd64.exe.zip
 
 ```powershell
-.\ran.exe -r D:\QCOW\ -l -g-false
+.\ran.exe -r D:\QCOW\ -l -g false
 ```
 
 Then, we can reference the image like this (use your IP obviously): http://192.168.1.108:8080/windows-2022.qcow2
