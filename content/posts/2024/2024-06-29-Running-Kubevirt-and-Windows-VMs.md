@@ -16,10 +16,12 @@ Once done, we can create Windows VMs on demand in Kubernetes.
 
 Why? Well, imagine you want to run multiple old school services, that are not easily containerizable. Say an IIS website with a SQL Server and some weirdo services that dont work in a Windows container image. We can use this to host an instance per client on one large node pool instead of individual VMs, and benefit from the Kubernetes ecosystem. Or, create many Dev machines that can easily be created and deleted on demand. We can do this as if they were pods!
 
+Note: You probably need a pretty powerful machine to do this. I tried it on an Azure 4 CPU/16GB RAM machine and it kinda melted. A real desktop style machine with an NVME drive is highly recommended due to the strain in creating the image and deploying it into a KIND cluster.
+
 
 ## Required Files
 
-Because of the complecity, i've put all the files into a github repo and linked to them. Where useful i'll share a snippet. But it may be best to pull the zip/repo from github and follow along as the code would make this blog post very large and unwieldy.
+Because of the complexity of the full setup, i've put all the files into a github repo linked below. Where useful i'll share a snippet. But it may be best to pull the zip/repo from github and follow along as the code would make this blog post very large and unwieldy.
 
 [https://github.com/rootisgod/Kubevirt-Cluster](https://github.com/rootisgod/Kubevirt-Cluster)
 
