@@ -8,20 +8,21 @@ draft: false
 We are going to run a Windows VM inside of Kubernetes. This will be a long one.
 
 We will do this by;
- - Creating a QCOW2 Windows image with packer and virtualbox
- - Installing KIND, Kubevirt, and utilities
- - Deploying the VM using a Data Volume and a PVC claim
+
+- Creating a QCOW2 Windows image with Packer and VirtualBox
+- Installing KIND, Kubevirt, and utilities
+- Deploying the VM using a Data Volume and a PVC claim
 
 Once done, we can create Windows VMs on demand in Kubernetes.
 
-Why? Well, imagine you want to run multiple old school services, that are not easily containerizable. Say an IIS website with a SQL Server and some weirdo services that dont work in a Windows container image. We can use this to host an instance per client on one large node pool instead of individual VMs, and benefit from the Kubernetes ecosystem. Or, create many Dev machines that can easily be created and deleted on demand. We can do this as if they were pods!
+Why? Well, imagine you want to run multiple old-school services, that are not easily containerizable. Say an IIS website with a SQL Server and some weirdo services that don't work in a Windows container image. We can use this to host an instance per client on one large node pool instead of individual VMs and benefit from the Kubernetes ecosystem. Or, create many Dev machines that can easily be created and deleted on demand. We can do this as if they were pods!
 
-Note: You probably need a pretty powerful machine to do this. I tried it on an Azure 4 CPU/16GB RAM machine and it kinda melted. A real desktop style machine with an NVME drive is highly recommended due to the strain in creating the image and deploying it into a KIND cluster.
+Note: You probably need a pretty powerful machine to do this. I tried it on an Azure 4 CPU/16GB RAM machine and it kinda melted. A real desktop-style machine with an NVME drive is highly recommended due to the strain of creating the image and deploying it into a KIND cluster.
 
 
 ## Required Files
 
-Because of the complexity of the full setup, i've put all the files into a github repo, links below. Where useful i'll share a snippet. But it may be best to pull the zip/repo from github and follow along as the code would make this blog post very large and unwieldy.
+Because of the complexity of the full setup, I've put all the files into a GitHub repo, links below. Where useful I'll share a snippet. But it may be best to pull the zip/repo from Git Hub and follow along as the code would make this blog post very large and unwieldy.
 
 [Repository - https://github.com/rootisgod/Kubevirt-Cluster](https://github.com/rootisgod/Kubevirt-Cluster)
 
@@ -32,14 +33,13 @@ Because of the complexity of the full setup, i've put all the files into a githu
 
 To get to the stage of running a Windows machine in Kubernetes, we need a VM image. And for that, we need Virtualbox to create a VM, and Packer to make the image from it. And later qemu-img program to convert the VM file.
 
-Note: For this guide, we are using Windows as the base OS to show the steps. It doesnt change things too much if using Linux, but worth noting.
+Note: For this guide, we are using Windows as the base OS to show the steps. It doesn't change things too much if using Linux, but worth noting.
 
 
 ### Installing Packer and Virtualbox
 
-The easiest way to install Virtualbox and Packer is with chocolatey (or install both programs manually if you know what you are doing). You can install chocolatey with these instructions - https://chocolatey.org/install
-
-And to install the programs, run this.
+The easiest way to install Virtualbox and Packer is with Chocolatey (or install both programs manually if you know what you are doing). You can install Chocolatey with these instructions - https://chocolatey.org/install
+To install the programs, run this.
 
 ```powershell
 choco install virtualbox packer qemu-img -y
@@ -52,7 +52,7 @@ We also need a Windows Server 2022 ISO. You can grab an evaluation licence ISO f
 
 ### Packer
 
-Now we can think about deploying it with packer. But, first we need to install the following packer plugins so it can talk to Virtualbox, like so.
+Now we can think about deploying it with Packer. But, first, we need to install the following packer plugins so it can talk to Virtualbox, like so.
 
 ```bash
 packer plugins install github.com/hashicorp/vagrant
@@ -61,7 +61,7 @@ packer plugins install github.com/hashicorp/virtualbox
 
 #### Packer Windows 2022 Template
 
-We can now create a VM with a packer template. The template is responsible for the full lifecycle of the image we create. It will create a VM in Virtualbox, install Windows via an answerfile, and then connect to it over WinrRM to configure it and then shut it down. Once this happens it will output it as an image we can use later. So we need to give it quite a lot of information and scripts to make that happen.
+We can now create a VM with a packer template. The template is responsible for the full lifecycle of the image we create. It will create a VM in Virtualbox, install Windows via an answer file, and then connect to it over WinrRM to configure it and then shut it down. Once this happens it will output it as an image we can use later. So we need to give it quite a lot of information and scripts to make that happen.
 
 This is the template we need to run. It has teh VM spec and our build options. It should be pretty simple to understand. Tweak the values if you wish. Save it as a file called ```windows.pkr.hcl```. It is also [here](https://github.com/rootisgod/Kubevirt-Cluster/blob/main/windows.pkr.hcl)
 
@@ -116,11 +116,11 @@ build {
 }
 ```
 
-And we need a few files in a couple of folders to take care of an unattended install, and some post boot actions.
+And we need a few files in a couple of folders to take care of an unattended install, and some post-boot actions.
 
 #### Scripts
 
-The most important file is the ```enable-winrm.ps1``` file. The answer file (below) references this and will run it once windows is installed. It sets up winrm so that Packer can send commands to it once the OS is installed.
+The most important file is the ```enable-winrm.ps1``` file. The answer file (below) references this and will run it once Windows is installed. It sets up winrm so that Packer can send commands to it once the OS is installed.
 
 ```powershell
 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
@@ -139,7 +139,7 @@ Set-Service winrm -startuptype "auto"
 Restart-Service winrm
 ```
 
-We also need a ```sysprep_and_shutdown.bat``` and ```shutdown.bat``` file in a scripts folder to shutdown simply, or sysprep it to 'randomise' the VM on boot (both are usfeul). Use the one you prefer in the packer template. But a simple shutdown might be preferable initially to avoid teh 'new user' login screen while testing.
+We also need a ```sysprep_and_shutdown.bat``` and ```shutdown.bat``` file in a scripts folder to shutdown simply or Sysprep it to 'randomise' the VM on boot (both are useful). Use the one you prefer in the packer template. But a simple shutdown might be preferable initially to avoid the 'new user' login screen while testing.
 
 ```sysprep_and_shutdown.bat```
 ```bat
@@ -152,7 +152,7 @@ shutdown /s
 shutdown /s
 ```
 
-And we also need a ```customise.ps1``` script to configure some small settings, and install chocolatey and virtio drivers. Add/amend as you require. Choco being pre-installed is useful as you can add anything post build very easily, or create another packer tempalte provisioner section to add more software in a simple way.
+And we also need a ```customise.ps1``` script to configure some small settings, and install Chocolatey and virtio drivers. Add/amend as you require. Choco being pre-installed is useful as you can add anything post-build very easily, or create another packer template provisioner section to add more software in a simple way.
 ```powershell
 # Set some Quality of Life Settings
 c:\Windows\System32\reg.exe ADD HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\ /v HideFileExt /t REG_DWORD /d 0 /f
@@ -176,25 +176,13 @@ c:\virtio-win-guest-tools.exe -s
 
 #### Files
 
-And we need an answer file for Windows to skip the install questions. Importantly, this also references and runs the ```enable-winrm.ps1``` script. It also makes a user called vagrant with password vagrant, and auto-logins the account. Not entitrely secure, but you could remove this account later and tweak as required once you understand ita ll.
+And we need an answer file for Windows to skip the install questions. Importantly, this also references and runs the ```enable-winrm.ps1``` script. It also makes a user called vagrant with password vagrant and auto-logins the account. Not entirely secure, but you could remove this account later and tweak as required once you understand it all.
 
-The answer file file is very large, so i'm just showing the winrm script portion here so you know how the magic happens. Virtualbox mounts it to the A: and so windows can read it in and setup the remote access for us.
+The answer file is very large, so I'm just showing the winrm script portion here so you know how the magic happens. Virtualbox mounts it to the A: so Windows can read it in and set up the remote access for us.
 
 The full file is here [here](https://github.com/rootisgod/Kubevirt-Cluster/blob/main/files/Autounattend.xml)
 
-```Autounattend.xml```
-
-```xml
-...
-<FirstLogonCommands>
-    <SynchronousCommand wcm:action="add">
-        <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\enable-winrm.ps1</CommandLine>
-        <Order>1</Order>
-    </SynchronousCommand>
-...
-```
-
-Okay, thats a lot. But you should effectively have this folder structure
+```Autounattend.xml`Okay, that's a lot. But you should effectively have this folder structure
 
 ```
 windows.pkr.hcl
@@ -215,7 +203,7 @@ Run this command
 packer build ./windows.pkr.hcl
 ```
 
-It will whirr away and automatically create a Virtualbox VM, then show a console of the build, and then shut the VM down and export a VDI file in an output-windows folder. Just leave it alone and it will shutdown automatically.
+It will whirr away and automatically create a Virtualbox VM, then show a console of the build, and then shut the VM down and export a VDI file in an output-windows folder. Just leave it alone and it will shut down automatically.
 
 NOTE: If you get a checksum error, then the packer output should show what it got and what it expects, simply change the ```windows.pkr.hcl``` variable ```iso_checksum``` to what it should be.
 
@@ -242,16 +230,16 @@ We now have an image to run in Kubevirt, but first we need a Kubernetes cluster.
 
 ### Installation of WSL2 and Docker Desktop for KIND
 
-It could be as simple as this though to install KIND, but your mileage may vary. If you already have Docker Desktop (https://www.docker.com/products/docker-desktop/) and WSL2 (https://kind.sigs.k8s.io/docs/user/using-wsl2/) installed then i'd avoid it and install KIND manually. See these instructions if either of the below fails: https://kind.sigs.k8s.io/docs/user/quick-start
+It could be as simple as this though to install KIND, but your mileage may vary. If you already have Docker Desktop (https://www.docker.com/products/docker-desktop/) and WSL2 (https://kind.sigs.k8s.io/docs/user/using-wsl2/) installed then I'd avoid it and install KIND manually. See these instructions if either of the below fails: https://kind.sigs.k8s.io/docs/user/quick-start
 
-Manual way (find a better path folder if you dont want to dump it in System32)
+Manual way (find a better path folder if you don't want to dump it in System32)
 
 ```powershell
 curl.exe -Lo kind-windows-amd64.exe https://kind.sigs.k8s.io/dl/v0.23.0/kind-windows-amd64
 Move-Item .\kind-windows-amd64.exe c:\windows\system32\kind.exe
 ```
 
-If you dont have WSL2  and Docker Desktop already, you can try this. It will install KIND and the dependencies.
+If you don't have WSL2  and Docker Desktop already, you can try this. It will install KIND and the dependencies.
 
 ```powershell
 choco install kind -y
@@ -259,7 +247,7 @@ choco install kind -y
 
 ### WSL2 Tweak
 
-There is also a tweak in WSL2 we need to perform. The default allocated memory for WSL2 for Docker will likely will not be enough, so stop WSL and create/amend your users ```.wslconfig``` file to something like the below
+There is also a tweak in WSL2 we need to perform. The default allocated memory for WSL2 for Docker will likely not be enough, so stop WSL and create/amend your users ```.wslconfig``` file to something like the below
 
 ```powershell
 # turn off all wsl instances such as docker-desktop
@@ -285,7 +273,7 @@ There is a quickstart guide here: https://kubevirt.io/quickstart_kind/
 
 But this is what we will do. 
 
-Create a file called ```kind_config.yml```. It will help us a NodePort service later.
+Create a file called ```kind_config.yml```. It will help us with a NodePort service we create later.
 
 ```yaml
 # https://stackoverflow.com/questions/62432961/how-to-use-nodeport-with-kind
@@ -314,7 +302,7 @@ kind create cluster --name kubevirt --config=kind_config.yml
 kubectl cluster-info --context kind-kubevirt
 ```
 
-We should get our cluster info. Kind will automatically make this our Kubernetes context.
+We should get our cluster info. KIND will automatically make this our Kubernetes context.
 
 ```bash
 Kubernetes control plane is running at https://127.0.0.1:58905
@@ -323,7 +311,7 @@ CoreDNS is running at https://127.0.0.1:58905/api/v1/namespaces/kube-system/serv
 
 And now we can install Kubevirt into the cluster. Kubevirt is what allows our cluster to become a hypervisor. There is a guide here: https://kubevirt.io/quickstart_kind/
 
-These are the commands I used, which have hardcoded the versions for simplicity
+These are the commands I used, which have hard coded the versions for simplicity
 
 ```powershell
 #  https://storage.googleapis.com/kubevirt-prow/release/kubevirt/kubevirt/stable.txt
@@ -350,7 +338,7 @@ pod/virt-controller-6855b4df79-tzk5v   1/1     Running   5 (4d11h ago)   7d18h
 
 ### Setup Virtctl
 
-Then install we install Virtctl to control Kubevirt VMs, much like kubectl. Grab the latest version here and move it insto a system32 folder so it can be seen in our terminal (it's not in Chocolatey...).
+Then we install Virtctl to control Kubevirt VMs, much like kubectl. Grab the latest version here and move it into a system32 folder so it can be seen in our terminal (it's not in Chocolatey...).
 
 ```powershell
 curl.exe -Lo virtctl.exe https://github.com/kubevirt/kubevirt/releases/download/v1.2.2/virtctl-v1.2.2-windows-amd64.exe
@@ -360,7 +348,7 @@ mv virtctl.exe c:\windows\system32\virtctl.exe
 
 ### Setup a CDI
 
-We also need a CDI (Containerized Data Importer) operator. This is the mechanism that we use to setup our VM disk images for Kubevirt to create our VMs. We can install that to our cluster like so.
+We also need a CDI (Containerized Data Importer) operator. This is the mechanism that we use to set up our VM disk images for Kubevirt to create our VMs. We can install that to our cluster like so.
 
 ```powershell
 kubectl create -f https://github.com/kubevirt/containerized-data-importer/releases/download/v1.59.0/cdi-operator.yaml
@@ -374,11 +362,11 @@ kubectl get cdi cdi -n cdi
 kubectl get pods -n cdi
 ```
 
-Now, we can (almost) finally install and manage vms with Kubernetes.
+Now, we can (almost) finally install and manage VMs with Kubernetes.
 
-But wait... We need a place to host the QCOW2 file we created that Kubernetes can get to, and a web server is easiest (Perhaps there is a way to host it in the cluster, but i'm not sure).
+But wait... We need a place to host the QCOW2 file we created that Kubernetes can get to, and a web server is easiest (Perhaps there is a way to host it in the cluster, but I'm not sure).
 
-We can use a portable web server, but lets avoid the messiness of python and use a go binary. This isn't production ready, but fine for our needs. Download the zip and extract it to your local folder (or C:\Windows\System32). The -g switch turns off logging, and the -l means show logs. The D:\QCOW path is where out qemu-convert image we made earlier should be.
+We can use a portable web server, but let's avoid the messiness of Python and use a go binary. This isn't production-ready, but fine for our needs. Download the zip and extract it to your local folder (or C:\Windows\System32). The -g switch turns off logging, and the -l means show logs. The D:\QCOW path is where our qemu-convert image we made earlier should be.
 
 https://github.com/m3ng9i/ran/releases/download/v0.1.6/ran_windows_amd64.exe.zip
 
@@ -395,7 +383,7 @@ Then, we can reference the image like this (use your IP obviously): http://192.1
 <a data-fancybox="gallery" href="/assets/images/2024/Kubevirt-and-Windows/ran-site.png"><img src="/assets/images/2024/Kubevirt-and-Windows/ran-site.png"></a>
 {{< /rawhtml >}}
 
-The Kubevirt YAML files need to know where this web server is, and the LAN IP so it can find the image to download from inside the KIND cluster. Amend the ```kubevirt_win2022_dv.yml``` file to your own machines IP (or the machine hosting the site) like below, and create these files with the names referenced.
+The Kubevirt YAML files need to know where this web server is, and the LAN IP so it can find the image to download from inside the KIND cluster. Amend the ```kubevirt_win2022_dv.yml``` file to your machine IP (or the machine hosting the site) like below, and create these files with the names referenced.
 
 kubevirt_win2022_dv.yml
 ```yml
@@ -499,7 +487,7 @@ Then we can actually deploy a VM!
 
 ### Creating a VM
 
-Create the required Persitent Volume Claim and Data Volume.
+Create the required Persistent Volume Claim and Data Volume.
 
 ```powershell
 kubectl apply  -f kubevirt_win2022_pvc.yml
@@ -513,7 +501,7 @@ Then, create the VM
 kubectl apply  -f kubevirt_win2022_vm.yml
 ```
 
-We can check the status with this command. But, it will take a long time for the QCOW2 image to be shuffled into the Kubernetes cluster, so be patient, and keep an eye on your disk IO and CPU. It should be running 100% CPU while it is provisioning the VM data (passing a 10GB from a website, to a Docker container, into a Kubernetes Cluster is resource intensive).
+We can check the status with this command. But, it will take a long time for the QCOW2 image to be shuffled into the Kubernetes cluster, so be patient, and keep an eye on your disk IO and CPU. It should be running 100% CPU while it is provisioning the VM data (passing a 10GB image from a website to a Docker container, into a Kubernetes Cluster is resource intensive).
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2024/Kubevirt-and-Windows/performance.png"><img src="/assets/images/2024/Kubevirt-and-Windows/performance.png"></a>
@@ -541,13 +529,13 @@ Also, apologies, you probably need to install ```vncviewer.exe``` to use the vnc
 
 ### RDP to the VM
 
-To RDP into the machine, we can setup a service. Run this command.
+To RDP into the machine, we can set up a service. Run this command.
 
 ```powershell
 kubectl apply  -f kubevirt_win2022_svc.yml
 ```
 
-What it will do is setup a Nodeport connection over port 30000. So, to RDP we just have to RDP to our machines localhost port and port 30000 (remember the bit at the start with our kind config file, that was us exposing that port).
+What it will do is set up a Nodeport connection over port 30000. So, to RDP we just have to RDP to our machine's localhost port and port 30000 (remember the bit at the start with our kind config file, that was us exposing that port).
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2024/Kubevirt-and-Windows/mstsc.png"><img src="/assets/images/2024/Kubevirt-and-Windows/mstsc.png"></a>
@@ -561,7 +549,7 @@ And if you are on an external machine, you can RDP to the Kubevirt Windows VM us
 
 ## Taskfiles
 
-To try and tame the complexity of the many commands, I created a [Taskfile](https://taskfile.dev) to simplify things. Taskfile is like a modern implementation of make, and is availble for all OS's as a single binary file to install. This file is for Windows machines, but the tasks should be amendable for linux or mac if required. We can install Taskfile like this (or see here: https://taskfile.dev/installation).
+To try and tame the complexity of the many commands, I created a [Taskfile](https://taskfile.dev) to simplify things. Taskfile is like a modern implementation of Make and is available for all OS's as a single binary file to install. This file is for Windows machines, but the tasks should be amendable for Linux or Mac if required. We can install Taskfile like this (or see here: https://taskfile.dev/installation).
 
 ```powershell
 choco install go-task -y
@@ -647,9 +635,9 @@ task: Available tasks for this project:
 * vnc-vm:
 ```
 
-A very nice simplification, and something I am definitely going to use more of in future.
+A very nice simplification, and something I am going to use more of in the future.
 
-Here is a screenshot creating a VM so you can see how it works.
+Here is a screenshot of creating a VM so you can see how it works.
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2024/Kubevirt-and-Windows/create-vm.png"><img src="/assets/images/2024/Kubevirt-and-Windows/create-vm.png"></a>
@@ -657,7 +645,7 @@ Here is a screenshot creating a VM so you can see how it works.
 
 ## Speed Run with Taskfile
 
-If you have Packer, VirtualBox, virtctl and kubectl installed, you can do more of a speedrun to recreate a cluster from scratch with the help of Taskfile. Youcan start from zero to full cluster like this. 
+If you have Packer, VirtualBox, Virtctl, and Kubectl installed, you can do more of a speedrun to recreate a cluster from scratch with the help of Taskfile. You can start from zero to a full cluster like this.
 
 ```bash
 task delete-kind-cluster
@@ -669,7 +657,7 @@ task vnc-vm
 Amazing!
 
 
-If you made it this far I salute you. It was a lot to do, but hopefully someone found it helpful!
+If you made it this far I salute you. It was a lot to do, but hopefully, someone found it helpful!
 
 Here are some other blogs I found which might be helpful as well
 
