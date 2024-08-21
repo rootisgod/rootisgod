@@ -1,7 +1,7 @@
 ---
 categories: ephemeral github kubernetes k8s container docker azure AKS kind
 date: "2024-08-21T00:00:00Z"
-title: GitHub Kubernetes Action Runners - Revisited
+title: Self Hosted GitHub Kubernetes Action Runners - Revisited
 draft: false
 ---
 
@@ -11,18 +11,16 @@ I wrote a post here last year about GitHub Action Runners. It was a tutorial on 
 
 This video has the best in-depth knowledge of the whole thing: https://www.youtube.com/watch?v=_F5ocPrv6io
 
-But, it is VERY comprehensive. And, it doesn't really quickly get to the point for most usecases, which is host runners in a Kubernetes cluster, and have those runners able to run a container image.
+But, it is VERY comprehensive. And, it doesn't really quickly get to the point for most use-cases, which is to host runners in a Kubernetes cluster, and have those runners able to run a container image of our choosing.
 
-So, without further ado, here is how to do it with a [KIND cluster](https://kind.sigs.k8s.io). Hopefully once you get this working, you can then use hte other information to cater it for your needs. For example, min runners, max runners etc.. Check the video mentioned previously for more. Or this [URL https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/quickstart-for-actions-runner-controller](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/quickstart-for-actions-runner-controller)
-
-Values can also be set in this file and overridden with a ```-f values.yaml```: [https://raw.githubusercontent.com/actions/actions-runner-controller/master/charts/gha-runner-scale-set/values.yaml](https://raw.githubusercontent.com/actions/actions-runner-controller/master/charts/gha-runner-scale-set/values.yaml)
+So, without further ado, here is how to do it with a [KIND cluster](https://kind.sigs.k8s.io). Hopefully once you get this working, you can then use the other information to tweak it for your needs.
 
 
-### Creating a KIND cluster.
+### Creating a KIND Cluster
 
-Please see this: [https://www.rootisgod.com/2021/Cheap-and-Accessible-Kubernetes-Clusters-with-KIND/](https://www.rootisgod.com/2021/Cheap-and-Accessible-Kubernetes-Clusters-with-KIND/)
+You can use a 'real' cloud K8S clustter if you have one, but a simple way to start this is to just create a KIND K8S cluster on a VM. For a comprehensive guide please see this: [https://www.rootisgod.com/2021/Cheap-and-Accessible-Kubernetes-Clusters-with-KIND/](https://www.rootisgod.com/2021/Cheap-and-Accessible-Kubernetes-Clusters-with-KIND/)
 
-Or, the quick version here for Ubuntu 24.04
+Or, the quick version is here for Ubuntu 24.04.
 
 Install some utils
 ```yaml
@@ -31,7 +29,7 @@ snap install helm --classic
 snap install kubectl --classic
 ```
 
-Install Kind on a VM (ubuntu in this case)
+Install Kind on the VM
 ```bash
 [ $(uname -m) = x86_64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.24.0/kind-linux-amd64
 chmod +x ./kind
@@ -40,7 +38,7 @@ sudo mv ./kind /usr/local/bin/kind
 
 We need to create one with the external IP exposed (if you want to manage it from an external machine)
 
-So, create this file (replace IP with VM you are running KIND on) called github.yaml
+So, create this file (replace IP with VM you are running KIND on) called ```github.yaml```
 
 ```yaml
 kind: Cluster
@@ -52,17 +50,17 @@ networking:
   apiServerPort: 45001
 ```
 
-Create the cluster
+Create the cluster like so
 
 ```bash
 kind create cluster --name github --config github.yaml
 ```
 
-We should have our cluster and context set.
+We should now have our cluster created and our kubectl context set.
 
 ### Setup the ARC Components
 
-With a cluster in place, we can now setup GitHub runners on it. We need two things. Firstly, a single runner scale-set controller (we only need one for the whole cluster), and then runners scale sets.
+With a cluster in place, we can now setup GitHub runners on it. We need two things. Firstly, a single runner scale-set controller (we only need one for the whole cluster), and then as many runners scale sets as we require.
 
 
 #### Runner Scale Set Controller
@@ -77,18 +75,20 @@ helm install arc \
     oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
 ```
 
-Check our things are installed with ```helm list -A```
+Check our things are installed with ```helm list -A```. This looks good.
 
 ```bash
-  NAME            NAMESPACE       REVISION        UPDATED                                         STATUS          CHART                                   APP VERSION
-  arc             arc-systems     1               2024-08-20 09:37:06.339981633 +0200 CEST        deployed        gha-runner-scale-set-controller-0.9.3   0.9.3      
+  NAME            NAMESPACE     REVISION    STATUS      CHART                                   APP VERSION
+  arc             arc-systems   1           deployed    gha-runner-scale-set-controller-0.9.3   0.9.3      
 ```
+
+
 
 #### Runner Scale Set
 
 Then, we can create a runner scale set. We can have many of these, and each should have a unique name. But lets just create one for now.
 
-We need a couple of things first, our repo name/org and a Github Personal Access Token, with repo permissions. With those, we can set up a runner for our repo.
+We need a couple of things first, our repo name/org to add our runners to, and a [https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens](Github Personal Access Token), with repo permissions. With those, we can set up a runner for our repo.
 
 ```bash
 INSTALLATION_NAME="arc-runner-repo"
@@ -107,21 +107,21 @@ helm install "${INSTALLATION_NAME}" \
 
 Now, the interesting part here is the line ```--set containerMode.type="dind"``` which sets up the ability to run a docker container inside the KIND cluster. Without this it fails. 
 
-We should see it install with another helm list command
+We should see it install with another ```helm list -A``` command
 
 ```bash
-helm list -A
-
-  NAME            NAMESPACE       REVISION        UPDATED                                         STATUS          CHART                                   APP VERSION
-  arc             arc-systems     1               2024-08-20 09:37:06.339981633 +0200 CEST        deployed        gha-runner-scale-set-controller-0.9.3   0.9.3      
-  arc-runner-repo arc-runners     1               2024-08-21 17:40:53.367865196 +0200 CEST        deployed        gha-runner-scale-set-0.9.3              0.9.3
+  NAME            NAMESPACE     REVISION    STATUS      CHART                                   APP VERSION
+  arc             arc-systems   1           deployed    gha-runner-scale-set-controller-0.9.3   0.9.3      
+  arc-runner-repo arc-runners   1           deployed    gha-runner-scale-set-0.9.3              0.9.3
 ```
 
-Now check Github and your repo, we have a runner!
+Now check your Github repo, we have a runner!
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2024/ARC-Runners/runner-registered.png"><img src="/assets/images/2024/ARC-Runners/runner-registered.png"></a>
 {{< /rawhtml >}}
+
+### GitHub Actions Test
 
 Now, we need a Github action to test it works.
 
@@ -145,8 +145,6 @@ NOTE: The ```runs-on:``` must match the runner name we have setup for our repo. 
 
 Run it with a manual dispatch.
 
-dispatch-trigger.png
-
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2024/ARC-Runners/dispatch-trigger.png"><img src="/assets/images/2024/ARC-Runners/dispatch-trigger.png"></a>
 {{< /rawhtml >}}
@@ -161,6 +159,7 @@ It should work!
 
 There is more info here.It gets complicated quite quickly. But hopeully the above is useful as a minimum viable setup.
 
-
 QUICKSTART GUIDE - [https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/quickstart-for-actions-runner-controller](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/quickstart-for-actions-runner-controller)
+
+
 EXAMPLE VALUES   - [https://raw.githubusercontent.com/actions/actions-runner-controller/master/charts/gha-runner-scale-set/values.yaml](https://raw.githubusercontent.com/actions/actions-runner-controller/master/charts/gha-runner-scale-set/values.yaml)
