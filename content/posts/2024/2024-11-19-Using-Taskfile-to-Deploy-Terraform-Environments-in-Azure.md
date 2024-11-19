@@ -12,24 +12,24 @@ Ever deploy Azure environments with Terraform and get sick of having to remember
 
 Before you deploy infrastructure to Azure with Terraform and a Service Principal, and a blob backend, you have to setup quite a lot of export variables. Something like this;
 
-```
-export ARM_SUBSCRIPTION_ID=f514d26e-0ad9-4c48-b8cc-82971f0b6366
-export ARM_CLIENT_ID=5d71b290-dd17-4cdf-90c5-4bf60b5ff272
-export ARM_TENANT_ID=jui9681f-25c0-459c-95c2-d2e8607e1b71
+```bash
+export ARM_SUBSCRIPTION_ID=b2430365-30d6-4825-a19c-a3250fa7a2ea
+export ARM_CLIENT_ID=470a4b4a-1017-4708-b968-e66e376467a8
+export ARM_TENANT_ID=3623e59e-4084-4db8-b1c2-3c4ef454e21a
 export ARM_CLIENT_SECRET=Add_Secret_Here
 export ARM_ACCESS_KEY=Add_Key_Here
 ```
 
 And then when you deploy an environment,  you need to pass some variables regarding the backend. 
 
-```
-BACKEND_RG_NAME=Terraform
-BACKEND_SA_NAME=testingtfmstatefiles
-BACKEND_CONTAINER_NAME=statefiles
+```bash
+export BACKEND_RG_NAME=Terraform
+export BACKEND_SA_NAME=testingtfmstatefiles
+export BACKEND_CONTAINER_NAME=statefiles
 ```
 
 
-And then run some unholy combination of commands to get verything just right.
+And then run some unholy combination of commands to get everything just right.
 
 ```bash
  terraform init --backend-config="key=env1.state" --backend-config="resource_group_name=$BACKEND_RG_NAME" --backend-config="storage_account_name=$BACKEND_SA_NAME" --backend-config="container_name=$BACKEND_CONTAINER_NAME"
@@ -45,7 +45,7 @@ So, Taskfile and .env files to the rescue.
 Install it from here: https://taskfile.dev/installation/
 
 
-Then, create some files to represent two subscriptions, and two envs like this (yhese are made up, use your own existing setup!);
+Then, create some files to represent two Azure subscriptions (these are made up, use your own existing setup!);
 
 
 ```.env.subscriptionA```
@@ -73,7 +73,7 @@ BACKEND_SA_NAME=terraformstatefilesb
 BACKEND_CONTAINER_NAME=statefiles
 ```
 
-Then some environment files like;
+Then some environment files like this;
 
 ```env1.tfvars```
 ```hcl
@@ -90,7 +90,6 @@ And then a terraform file which will deploy a resource group
 ```main.tf```
 ```hcl
 terraform {
-  required_version = ">= 1"
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -168,7 +167,7 @@ task clean
 ```
 
 
-Then, if you get bored, just export the next storage key, and change the ENV and VARFILE you reference. 
+Then, if you want to move from Subscription A to Subscription B, just export the next storage key, and change the ENV and VARFILE you reference. 
 ```bash
 export ARM_ACCESS_KEY=Add_Key_Here
 task init    ENV=subscriptionB
