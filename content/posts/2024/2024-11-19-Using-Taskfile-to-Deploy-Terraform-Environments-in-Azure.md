@@ -18,22 +18,15 @@ export ARM_CLIENT_ID=470a4b4a-1017-4708-b968-e66e376467a8
 export ARM_TENANT_ID=3623e59e-4084-4db8-b1c2-3c4ef454e21a
 export ARM_CLIENT_SECRET=Add_Secret_Here
 export ARM_ACCESS_KEY=Add_Key_Here
-```
-
-And then when you deploy an environment,  you need to pass some variables regarding the backend. 
-
-```bash
 export BACKEND_RG_NAME=Terraform
 export BACKEND_SA_NAME=testingtfmstatefiles
 export BACKEND_CONTAINER_NAME=statefiles
 ```
 
-
-And then run some unholy combination of commands to get everything just right.
+And then run some unholy combination of commands to get everything just right, and pass the statefile name.
 
 ```bash
  terraform init --backend-config="key=env1.state" --backend-config="resource_group_name=$BACKEND_RG_NAME" --backend-config="storage_account_name=$BACKEND_SA_NAME" --backend-config="container_name=$BACKEND_CONTAINER_NAME"
-
 ```
 
 This all becomes a pain to manage, especailly if you have multiple azure subscriptions or environments to flip between.
@@ -42,11 +35,9 @@ So, Taskfile and .env files to the rescue.
 
 ## TaskFiles
 
-Install it from here: https://taskfile.dev/installation/
+Install Taskfile it from here: https://taskfile.dev/installation/
 
-
-Then, create some files to represent two Azure subscriptions (these are made up, use your own existing setup!);
-
+Then, create some ```.env``` files files to represent two Azure subscriptions (these are made up, use your own existing setup!). You can add these to Git as I dont think any of it should be sensitive.
 
 ```.env.subscriptionA```
 ```bash
@@ -73,7 +64,7 @@ BACKEND_SA_NAME=terraformstatefilesb
 BACKEND_CONTAINER_NAME=statefiles
 ```
 
-Then some environment files like this;
+Then create some Terraform ```tfvar``` files with our variable values, like this;
 
 ```env1.tfvars```
 ```hcl
@@ -85,7 +76,7 @@ rgName = "Test-RG-1"
 rgName = "Test-RG-2"
 ```
 
-And then a terraform file which will deploy a resource group
+And then a terraform file which will deploy a resource group and expect an Azure blob backend.
 
 ```main.tf```
 ```hcl
@@ -115,7 +106,7 @@ resource "azurerm_resource_group" "this" {
 }
 ```
 
-And, last but not least, our ```Taskfile.yaml```
+And, last but not least, our ```Taskfile.yaml``` which contains the tasks we can run
 ```yml
 version: '3'
 
@@ -131,7 +122,6 @@ tasks:
   init:
     dotenv: ['.env.{{.ENV}}']
     cmds:
-      - echo "LOADED - '.env.{{.ENV}}' and Subscription $ARM_SUBSCRIPTION_ID and File {{.VARFILE}} BERG $BACKEND_RG_NAME $BACKEND_SA_NAME $BACKEND_CONTAINER_NAME"
       - terraform init --backend-config="key={{.VARFILE}}.state" --backend-config="resource_group_name=$BACKEND_RG_NAME" --backend-config="storage_account_name=$BACKEND_SA_NAME" --backend-config="container_name=$BACKEND_CONTAINER_NAME"
   plan:
     dotenv: ['.env.{{.ENV}}']
@@ -149,16 +139,16 @@ tasks:
 
 ## Deployments!
 
-So what did that buy us? It bought us this. I can deploy the same code to my required azure subscription by just exporting the correct Service Principal key and Azure Storage Account key. I'm assuming you are using the same SP across subscriptions, and a storage account per subscription. Now you can just keep that a secret in 1Password or wherever and have Taskfile remember the boring bits in a git repo.
+So what did that buy us? It bought us simplicity. I can deploy the same code to my required azure subscription by just exporting the correct Service Principal key and Azure Storage Account key. Now you can just keep those two things as a secret in 1Password or wherever, and have Taskfile remember the boring bits in a git repo.
+
 
 ```bash
 export ARM_CLIENT_SECRET=Add_Secret_Here
+export ARM_ACCESS_KEY=Add_Key_Here
 ```
 
-And then run like this
-
+And run like this
 ```bash
-export ARM_ACCESS_KEY=Add_Key_Here
 task init    ENV=subscriptionA
 task plan    ENV=subscriptionA VARFILE=env1.tfvars
 task apply   ENV=subscriptionA VARFILE=env1.tfvars
@@ -167,9 +157,11 @@ task clean
 ```
 
 
-Then, if you want to move from Subscription A to Subscription B, just export the next storage key, and change the ENV and VARFILE you reference. 
+Then, if you want to change from Subscription A to Subscription B, just export the next SP secret and storage key, and change the ENV and VARFILE you reference.
 ```bash
+export ARM_CLIENT_SECRET=Add_Secret_Here
 export ARM_ACCESS_KEY=Add_Key_Here
+
 task init    ENV=subscriptionB
 task plan    ENV=subscriptionB VARFILE=env2.tfvars
 task apply   ENV=subscriptionB VARFILE=env2.tfvars
@@ -177,4 +169,4 @@ task destroy ENV=subscriptionB VARFILE=env2.tfvars
 task clean
 ```
 
-It's not much, but it can take the fiddlyness out of changing environments or subscriptions when testing Terraform deployments. Add any extra variables you need and go to town. No more trying to remember what you need to provide, the taskfile remembers the logic required.
+It's not much, but it can take the fiddlyness out of changing environments or subscriptions when testing Terraform deployments. Add any extra variables you need and go to town. No more trying to remember what you need to provide, the taskfile will remember the logic required, leaving you free to quickly test the code you require.
