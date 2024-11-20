@@ -5,12 +5,12 @@ title: Using Taskfile to Deploy Terraform Environments in Azure
 draft: false
 ---
 
-Ever deploy Azure environments with Terraform and get sick of having to remember all the various things you need to export to make it work? Especially if you have multiple subscriptions? Well, worry no more. We can use Taskfile to make things easier. It's like a make file we can use to create some logic.
+Ever deploy Azure environments with Terraform and get sick of having to remember all the various variables you need to export to make it work? Especially if you have multiple subscriptions? Well, worry no more. We can use Taskfile to make things easier. It's like a make file we can use to create some logic.
 
 
 ## The Basics
 
-Before you deploy infrastructure to Azure with Terraform and a Service Principal, and a blob backend, you have to setup quite a lot of export variables. Something like this;
+To deploy infrastructure to Azure with Terraform and a Service Principal, and a blob backend, you have to setup quite a lot of export variables. Something like this;
 
 ```bash
 export ARM_SUBSCRIPTION_ID=b2430365-30d6-4825-a19c-a3250fa7a2ea
@@ -35,7 +35,7 @@ So, Taskfile and .env files to the rescue.
 
 ## TaskFiles
 
-Install Taskfile it from here: https://taskfile.dev/installation/
+Install Taskfile from here: https://taskfile.dev/installation/
 
 Then, create some ```.env``` files files to represent two Azure subscriptions (these are made up, use your own existing setup!). You can add these to Git as I dont think any of it should be sensitive.
 
@@ -135,6 +135,17 @@ tasks:
     dotenv: ['.env.{{.ENV}}']
     cmds:
       - terraform destroy -var-file="{{.VARFILE}}"
+```
+
+Your files should look like this
+
+```bash
+.env.subscriptionA
+.env.subscriptionB
+env1.tfvars
+env2.tfvars
+main.tf
+Taskfile.yaml
 ```
 
 ## Deployments!
