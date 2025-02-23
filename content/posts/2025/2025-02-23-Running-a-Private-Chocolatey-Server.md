@@ -81,10 +81,13 @@ Create a 'Nuget Proxy' resource and put in these details.
 <a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-proxy.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-proxy.png"></a>
 {{< /rawhtml >}}
 
-Name: Chocolatey-Proxy
-Protocol Version: NuGet V2
-Proxy - Remote Storage: https://chocolatey.org/api/v2
-Storage - Blob Store: Chocolatey
+| **Field**                 | **Value**                         |
+|---------------------------|-----------------------------------|
+| **Name**                  | Chocolatey-Proxy                  |
+| **Protocol Version**      | NuGet V2                          |
+| **Proxy - Remote Storage**| [https://chocolatey.org/api/v2](https://chocolatey.org/api/v2) |
+| **Storage - Blob Store**  | Chocolatey                        |
+
 
 And hit save.
 
@@ -94,8 +97,11 @@ Then, create a 'Nuget Hosted' repo with these details
 <a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-hosted.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-hosted.png"></a>
 {{< /rawhtml >}}
 
-Name: Chocolatey-hosted
-Storage - Blob Store: Chocolatey
+| **Name**               | Chocolatey                          |
+|------------------------|-------------------------------------|
+| **Members**            | Chocolatey-Proxy, Chocolatey-hosted |
+| **Storage - Blob Store** | Chocolatey                        |
+
 
 
 And then, create a 'Nuget Group' with those two repos as members.
@@ -104,15 +110,18 @@ And then, create a 'Nuget Group' with those two repos as members.
 <a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-.png"></a>
 {{< /rawhtml >}}
 
-Name: Chocolatey
-Members: Chocolatey-Proxy and Chocolatey-hosted
-Storage - Blob Store: Chocolatey
+| **Field**              | **Value**                          |
+|------------------------|------------------------------------|
+| **Name**               | Chocolatey                         |
+| **Members**            | Chocolatey-Proxy, Chocolatey-hosted|
+| **Storage - Blob Store** | Chocolatey                      |
+
 
 ### Configuring Chocolatey
 
 Okay, thats the hard part over. Now, from our machine with chocolatey installed (same as the Nexus server in this example, but any chocolatey machine in the same network can be used) we tweak the sources it uses. I amd going to presume the IP address of the machine is 192.168.1.100, so change to suit your own network.
 
-```powershell
+```bash
 choco source remove -n=chocolatey
   Chocolatey v2.4.2
   Removed chocolatey
