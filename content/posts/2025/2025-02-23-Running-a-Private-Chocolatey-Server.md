@@ -5,7 +5,7 @@ title: Running a Private Chocolatey Server
 draft: false
 ---
 
-I currently have a need to manage software on many machines at once, and Chocolatey seems to be the ideal solution.  It's like YUM or APT but for Windows. The community makes Nuget packages and anyone can use these do add, remove, or update sofware. So, to install everyones favourite text editor you can run this
+I currently have a need to manage software on many machines at once, and Chocolatey seems to be the ideal solution.  It's like YUM or APT but on Windows. The community makes Nuget packages and anyone can use these do add, remove, or update sofware. So, to install everyones favourite text editor you can run this
 
 ```
 choco install notepadplusplus -y
@@ -19,7 +19,7 @@ choco upgrade notepadplusplus -y
 
 You will never see an upgrade prompt ever again when you load it!
 
-The issue is that Chocolatonly niggle is that if you use Chocolatey a lot you may hit it's reate limits. So, if I have 5 machines, and I run a command to update all my programs each night, for 3 or 4 different programs, its generates a lot of requests to Chocolatey, and from a single IP address, they will throttle you. Suddenly, you are locked out from updates. This is annoying for home use, but for a company you really dont want to be the person getting the IP blocked.
+The issue is that if you use Chocolatey a lot you may hit it's rate limits. So, if I have 5 machines, and I run a command to update all my programs each night, for 3 or 4 different programs, its generates a lot of requests to Chocolatey, and from a single IP address, they will throttle you. Suddenly, you are locked out from updates. This is annoying for home use, but for a company you really don't want to be the person getting the IP blocked.
 
 ## The Fix - A Private Chocolatey Server
 
@@ -27,7 +27,7 @@ The fix is to run your own Nuget caching server and tell your clients with Choco
 
 ### Installing and Configuring Nexus Repository Manager
 
-On a windows machine, install Choclatey like so
+On a windows machine, install Chocolatey like so
 
 ```powershell
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
@@ -137,7 +137,7 @@ If that works, you can now run this command to test things are working
 choco install notepadplusplus 7zip -y
 ```
 
-The packages should install, and they should also be relected in the Nexus repository. You have cached these from the main Chocolatey server and no longer hitting it. Further installs will hit your cached copy, and not invoke reate limits!
+The packages should install, and they should also be cached in the Nexus repository. You have cached these from the main Chocolatey server and will no longer hit it. Further installs will hit your cached copy, and not invoke rate limits!
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-packages.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-packages.png"></a>
