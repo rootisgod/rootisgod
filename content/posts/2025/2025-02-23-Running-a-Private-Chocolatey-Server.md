@@ -21,11 +21,11 @@ You will never see an upgrade prompt ever again when you load it!
 
 The issue is that Chocolatonly niggle is that if you use Chocolatey a lot you may hit it's reate limits. So, if I have 5 machines, and I run a command to update all my programs each night, for 3 or 4 different programs, its generates a lot of requests to Chocolatey, and from a single IP address, they will throttle you. Suddenly, you are locked out from updates. This is annoying for home use, but for a company you really dont want to be the person getting the IP blocked.
 
-## The Fix - A Private Choclatey Server
+## The Fix - A Private Chocolatey Server
 
 The fix is to run your own Nuget caching server and tell your clients with Chocolatey to go to that. It means that oyu reach out to Chocolatey one time for package details, and then that is cached on a local Nuget repository. Don't worry, this is nowhere near as difficult as it sounds!
 
-### Installing and Configruing Nexus Repository Manager
+### Installing and Configuring Nexus Repository Manager
 
 On a windows machine, install Choclatey like so
 
@@ -55,7 +55,9 @@ Then login and change the password.
 
 And choose to enable anonymous access
 
+{{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-access.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-access.png"></a>
+{{< /rawhtml >}}
 
 The, we want to create a folder for our packages
 
@@ -64,16 +66,20 @@ mkdir c:\Nexus\blobs
 ```
 
 And then we want to create a blob repository to hold the data. 
-
+{{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-create-blob-store.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-create-blob-store.png"></a>
+{{< /rawhtml >}}
 
+{{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-create-blob.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-create-blob.png"></a>
+{{< /rawhtml >}}
 
 Once we have that we can create our Chocolatey repos, one a proxy to Chocolatey itself, and another to connect to directly. Then we put them into a group so they act as one repo.
 
 Create a 'Nuget Proxy' resource and put in these details.
-
+{{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-proxy.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-proxy.png"></a>
+{{< /rawhtml >}}
 
 Name: Chocolatey-Proxy
 Protocol Version: NuGet V2
@@ -84,7 +90,9 @@ And hit save.
 
 Then, create a 'Nuget Hosted' repo with these details
 
+{{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-hosted.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-hosted.png"></a>
+{{< /rawhtml >}}
 
 Name: Chocolatey-hosted
 Storage - Blob Store: Chocolatey
@@ -92,7 +100,9 @@ Storage - Blob Store: Chocolatey
 
 And then, create a 'Nuget Group' with those two repos as members.
 
+{{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-.png"></a>
+{{< /rawhtml >}}
 
 Name: Chocolatey
 Members: Chocolatey-Proxy and Chocolatey-hosted
@@ -120,6 +130,8 @@ choco install notepadplusplus 7zip -y
 
 The packages should install, and they should also be relected in the Nexus repository. You have cached these from the main Chocolatey server and no longer hitting it. Further installs will hit your cached copy, and not invoke reate limits!
 
+{{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-packages.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-packages.png"></a>
+{{< /rawhtml >}}
 
 And, just for info, the installer files themselves are not proxied, just the metadata, so it will be very light on disk space usage. On new machines a small script can install chocolatey and tweak the repos used. Easy!
