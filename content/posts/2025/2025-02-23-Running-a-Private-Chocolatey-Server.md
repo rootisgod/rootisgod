@@ -81,7 +81,7 @@ Create a 'Nuget Proxy' resource and put in these details.
 <a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-proxy.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-proxy.png"></a>
 {{< /rawhtml >}}
 
-| **Field**                 | **Value**                         |
+| **Name**                 | **Value**                         |
 |---------------------------|-----------------------------------|
 | **Name**                  | Chocolatey-Proxy                  |
 | **Protocol Version**      | NuGet V2                          |
@@ -110,7 +110,7 @@ And then, create a 'Nuget Group' with those two repos as members.
 <a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-group.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-group.png"></a>
 {{< /rawhtml >}}
 
-| **Field**              | **Value**                          |
+| **Name**              | **Value**                          |
 |------------------------|------------------------------------|
 | **Name**               | Chocolatey                         |
 | **Members**            | Chocolatey-Proxy, Chocolatey-hosted|
@@ -143,4 +143,4 @@ The packages should install, and they should also be cached in the Nexus reposit
 <a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-packages.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-packages.png"></a>
 {{< /rawhtml >}}
 
-And, just for info, the installer files themselves are not proxied, just the metadata, so it will be very light on disk space usage. On new machines a small script can install chocolatey and tweak the repos used. Easy!
+And, just for info, the installer files themselves are not proxied, just the metadata, so it will be very light on disk space usage. On new machines a small script can install chocolatey and tweak the repos used. No more being blocked! Easy!
