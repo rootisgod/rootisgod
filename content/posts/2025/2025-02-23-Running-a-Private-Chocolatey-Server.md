@@ -107,7 +107,7 @@ Then, create a 'Nuget Hosted' repo with these details
 And then, create a 'Nuget Group' with those two repos as members.
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-group.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-group.png"></a>
 {{< /rawhtml >}}
 
 | **Field**              | **Value**                          |
