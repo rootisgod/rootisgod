@@ -97,9 +97,9 @@ Then, create a 'Nuget Hosted' repo with these details
 <a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-hosted.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-hosted.png"></a>
 {{< /rawhtml >}}
 
-| **Name**               | Chocolatey                          |
+| **Name**               | **Value**                          |
 |------------------------|-------------------------------------|
-| **Members**            | Chocolatey-Proxy, Chocolatey-hosted |
+| **Name**               | Chocolatey-hosted                   |
 | **Storage - Blob Store** | Chocolatey                        |
 
 
