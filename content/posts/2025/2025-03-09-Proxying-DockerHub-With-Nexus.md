@@ -11,3 +11,78 @@ The solution, is some kind of local proxy. So, taking inspiration from using Son
 
 
 
+Then in daemon.json
+
+```
+  "insecure-registries": [
+    "192.168.1.249:8082"
+  ],
+```
+
+
+```
+{
+  "registry-mirrors": ["http://192.168.1.249:8082"],
+}
+```
+
+So it looks like this
+
+
+```
+{
+  "insecure-registries": [
+    "192.168.1.249:8082"
+  ],
+  "registry-mirrors": ["http://192.168.1.249:8082"],
+  "builder": {
+    "gc": {
+      "defaultKeepStorage": "20GB",
+      "enabled": true
+    }
+  },
+  "experimental": false
+}
+```
+
+
+Run this to check
+
+```
+docker info --format '{{.RegistryConfig.Mirrors}}'
+```
+
+## KIND
+
+And then if you want to create a KIND cluster and also make use of this
+
+```yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  extraMounts:
+  - hostPath: ./daemon.json
+    containerPath: /etc/docker/daemon.json
+    readOnly: true
+- role: worker
+  extraMounts:
+  - hostPath: ./daemon.json
+    containerPath: /etc/docker/daemon.json
+    readOnly: true
+```
+
+And then create `daemon.json` in the same folder with this
+
+
+```json
+{
+  "registry-mirrors": ["http://192.168.1.249:8082"],
+  "insecure-registries": ["192.168.1.249:8082"]
+}
+```
+
+
+```
+kind create cluster --config kind-config.yaml
+```
