@@ -1,7 +1,7 @@
 ---
-categories: chocolatey windows nuget
-date: "2025-02-23T00:00:00Z"
-title: Running a Private Chocolatey Server
+categories: docker nuget sonatype mexus dockerhub
+date: "2025-03-09T00:00:00Z"
+title: Proxying DockerHub with Nexus
 draft: false
 ---
 
