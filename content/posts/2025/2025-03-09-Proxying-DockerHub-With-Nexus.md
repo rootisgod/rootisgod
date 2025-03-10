@@ -1,7 +1,7 @@
 ---
-categories: docker nuget sonatype mexus dockerhub
+categories: docker nuget sonatype mexus dockerhub cache
 date: "2025-03-09T00:00:00Z"
-title: Proxying DockerHub with Nexus
+title: Proxying and Caching DockerHub Images with Nexus
 draft: false
 ---
 
@@ -9,7 +9,16 @@ I have pretty bad internet, around 4MB/s, and also a Sky Glass TV. Guess what ha
 
 The solution, is some kind of local proxy. So, taking inspiration from using Sonatype Nexus to be a Chocolatey Nuget server, I thought I would try and do the same thing for Docker Images. There seems to be only one person discussing how to do this (https://www.youtube.com/watch?v=dpWxWr90MGI&t=20s). So, shout out to them, this is just my contribution to doing this as a blog post so more people might find it easily, and i'll just cover setting up Docker and Kubernetes to use the internal proxy.
 
+You want to install Sonatype Nexus, this is on Nexus
 
+```
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+choco install nexus-repository -y
+```
+
+Setup a blob store for Docker images
+
+Follow this: https://github.com/chrisbmatthews/lab-nexus-sever
 
 Then in daemon.json
 
