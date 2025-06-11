@@ -34,10 +34,3 @@ jobs:
                   DRAFTSTORAGEACCOUNTANDSASTOKEN: ${{ secrets.DRAFTSTORAGEACCOUNTANDSASTOKEN }}
               run: |
                   azcopy10 sync "./public/" "$DRAFTSTORAGEACCOUNTANDSASTOKEN" --delete-destination true
-
-            - name: Purge CDN Cache
-              env:
-                  DRAFTSPSECRET: ${{ secrets.DRAFTSPSECRET }}
-              run: |
-                  az login --service-principal --username "94e90015-fd6b-4d01-8dee-3e790dcdc5a0" --password "$DRAFTSPSECRET" --tenant "faa9681f-25c0-459c-95c2-d2e8607e1b72"
-                  az cdn endpoint purge --resource-group "draft.rootisgod.com" --name "draftrootisgod-cdn" --profile-name "draftrootisgod-cdn" --content-paths "/*"

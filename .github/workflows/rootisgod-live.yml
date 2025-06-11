@@ -37,12 +37,3 @@ jobs:
           LIVESTORAGEACCOUNTANDSASTOKEN: ${{ secrets.LIVESTORAGEACCOUNTANDSASTOKEN }}
         run: |
           azcopy10 sync "./public/" "$LIVESTORAGEACCOUNTANDSASTOKEN" --delete-destination true
-    
-      - name: Purge CDN Cache
-        env:
-          LIVESPSECRET: ${{ secrets.LIVESPSECRET }}
-        run: |
-          az login --service-principal --username "bda99ed3-1b04-4a7a-9b6c-ee3d371c5553" --password "$LIVESPSECRET" --tenant "faa9681f-25c0-459c-95c2-d2e8607e1b72"
-          az cdn endpoint purge --resource-group "www.rootisgod.com" --name "rootisgod" --profile-name "rootisgod-cdn" --content-paths "/*"
-
-        
