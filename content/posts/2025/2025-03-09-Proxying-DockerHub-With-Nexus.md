@@ -95,3 +95,30 @@ And then create `daemon.json` in the same folder with this
 ```
 kind create cluster --config kind-config.yaml
 ```
+
+
+
+Add this repos too to Nexus, and create a Docker hosted group which has this and dockerhub
+
+
+https://ghcr.io
+https://quay.io
+
+Can use this as a test image
+
+```
+docker pull ghcr.io/open-feature/flagd
+docker pull quay.io/prometheus/alertmanager
+```
+
+Doesn't seem to work... Need to test it with quay or ghcr themselves first and not in a group
+  https://stackoverflow.com/questions/51518456/private-proxy-registry-for-dockerhub-gcr-ecr-acr-and-quay-io
+
+  https://mtijhof.wordpress.com/2018/07/23/using-nexus-oss-as-a-proxy-cache-for-docker-images/
+
+In Sonatype Nexus,
+
+create a "docker (proxy)" repository.
+create a "docker (group)" repository.
+In the group, repository, add both the proxy and any hosted repos
+You should now be able to refer to the group repository URL, qualified with your image names and tags, to retrieve any image in any repository that the group can see. You will need to set-up individual proxies for each of GCR, Quay, etc. Also, your image build processes will need to push to the one of your hosted repositories, NOT to the group repository. You push to your hosted, and pull from your group.
