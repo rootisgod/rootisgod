@@ -11,18 +11,18 @@ Note: This will likely update over time
 
 # Kubernetes
 
-alias k=kubectl
-
 ## Env Setup
 
-| Command | Description |
-|---------|-------------|
-| `alias k=kubectl` | Create a shortcut for kubectl |
-| `export KUBE_EDITOR="nano"` | Set nano as the default editor for kubectl |
-| `export do="--dry-run=client -o yaml"` | Shortcut for dry-run output in YAML |
-| `export now="--grace-period 0 --force"` | Shortcut for immediate resource deletion |
-| `source <(kubectl completion bash)` | Enable bash completion for kubectl |
-| `complete -F __start_kubectl k` | Enable completion for the k alias |
+This sets up the terminal in a nicer way
+
+```bash
+alias k=kubectl
+export KUBE_EDITOR="nano"
+export do="--dry-run=client -o yaml"
+export now="--grace-period 0 --force"
+source <(kubectl completion bash)
+complete -F __start_kubectl k
+```
 
 ## Pods
 
@@ -38,7 +38,7 @@ alias k=kubectl
 
 ## Install via Snap (Ubuntu)
 
-```
+```bash
 sudo snap refresh
 sudo snap install docker
 sudo addgroup --system docker
@@ -48,7 +48,7 @@ sudo snap restart docker
 ```
 
 You will also need to disable and re-enable the docker snap if you added the group while it was running.
-```
+```bash
 sudo snap disable docker
 sudo snap enable  docker
 ```
@@ -75,7 +75,7 @@ sudo snap enable  docker
 ## Data Folder
 To change it on Linux do this
 
-```
+```bash
 systemctl stop docker
 mkdir -p /root/docker
 rsync -aqxP /var/lib/docker/* /root/docker
