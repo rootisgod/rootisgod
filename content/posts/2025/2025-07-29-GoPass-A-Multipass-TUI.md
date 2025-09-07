@@ -1,7 +1,7 @@
 ---
 categories:  multipass go tui vms mac windows linux
 date: "2025-09-07T14:00:00Z"
-title: GoPass - A Multiplatform Multipass TUI
+title: PassGo - A Multiplatform Multipass TUI
 draft: false
 ---
 
@@ -11,12 +11,12 @@ But it made me realise that generally, you don't really want a GUI because if yo
 
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2025/gopass/menu.png"><img src="/assets/images/2025/gopass/menu.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2025/passgo/menu.png"><img src="/assets/images/2025/passgo/menu.png"></a>
 {{< /rawhtml >}}
 
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2025/gopass/snapshots.png"><img src="/assets/images/2025/gopass/snapshots.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2025/passgo/snapshots.png"><img src="/assets/images/2025/passgo/snapshots.png"></a>
 {{< /rawhtml >}}
 
 
