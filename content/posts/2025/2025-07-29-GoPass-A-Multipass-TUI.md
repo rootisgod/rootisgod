@@ -5,9 +5,9 @@ title: GoPass - A Multiplatform Multipass TUI
 draft: false
 ---
 
-I admit to having a slight obsession with Multipass, and have written a few posts on it before. But, the thing that I think it is truly missing is a simple UI. I attempted a GUI (https://www.rootisgod.com/2023/MultiManage-A-Multiplatform-GUI-for-Multipass/)[https://www.rootisgod.com/2023/MultiManage-A-Multiplatform-GUI-for-Multipass/] in Python but the framework PySimpleGUI went closed sourced so it's now dead. So we have this now
+I admit to having a slight obsession with Multipass, and have written a few posts on it before. But, the thing that I think it is truly missing is a simple UI. I attempted a [GUI](https://www.rootisgod.com/2023/MultiManage-A-Multiplatform-GUI-for-Multipass) in Python but the framework PySimpleGUI went closed sourced so it's now dead. So we have this now
 
-
+[tfenv](https://github.com/tfutils/tfenv) 
 But it made me realise that generally, you don't really want a GUI because if you have a Linux server you may not have a desktop. And so, a TUI (Text User Interface) is a much better idea. So, I vibe coded one in Go.
 
 
