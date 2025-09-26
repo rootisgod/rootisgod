@@ -63,7 +63,7 @@ packer plugins install github.com/hashicorp/virtualbox
 
 We can now create a VM with a packer template. The template is responsible for the full lifecycle of the image we create. It will create a VM in Virtualbox, install Windows via an answer file, and then connect to it over WinrRM to configure it and then shut it down. Once this happens it will output it as an image we can use later. So we need to give it quite a lot of information and scripts to make that happen.
 
-This is the template we need to run. It has teh VM spec and our build options. It should be pretty simple to understand. Tweak the values if you wish. Save it as a file called ```windows.pkr.hcl```. It is also [here](https://github.com/rootisgod/Kubevirt-Cluster/blob/main/windows.pkr.hcl)
+This is the template we need to run. It has the VM spec and our build options. It should be pretty simple to understand. Tweak the values if you wish. Save it as a file called ```windows.pkr.hcl```. It is also [here](https://github.com/rootisgod/Kubevirt-Cluster/blob/main/windows.pkr.hcl)
 
 ```hcl
 packer {
@@ -180,9 +180,9 @@ And we need an answer file for Windows to skip the install questions. Importantl
 
 The answer file is very large, so I'm just showing the winrm script portion here so you know how the magic happens. Virtualbox mounts it to the A: so Windows can read it in and set up the remote access for us.
 
-The full file is here [here](https://github.com/rootisgod/Kubevirt-Cluster/blob/main/files/Autounattend.xml)
+The full file is here [Autounattend.xml](https://github.com/rootisgod/Kubevirt-Cluster/blob/main/files/Autounattend.xml)
 
-```Autounattend.xml`Okay, that's a lot. But you should effectively have this folder structure
+You should now have this folder structure for this to all work
 
 ```
 windows.pkr.hcl
@@ -205,7 +205,7 @@ packer build ./windows.pkr.hcl
 
 It will whirr away and automatically create a Virtualbox VM, then show a console of the build, and then shut the VM down and export a VDI file in an output-windows folder. Just leave it alone and it will shut down automatically.
 
-NOTE: If you get a checksum error, then the packer output should show what it got and what it expects, simply change the ```windows.pkr.hcl``` variable ```iso_checksum``` to what it should be.
+NOTE: If you get a checksum error, then the packer output should show what it got and what it expects, simply change the ```windows.pkr.hcl``` variable ```iso_checksum``` to what it expects.
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2024/Kubevirt-and-Windows/Windows-Virtualbox.png"><img src="/assets/images/2024/Kubevirt-and-Windows/Windows-Virtualbox.png"></a>
@@ -649,7 +649,7 @@ If you have Packer, VirtualBox, Virtctl, and Kubectl installed, you can do more 
 
 ```bash
 task delete-kind-cluster
-task create-and-config-kind-cluster  # Wait a minute for things to install. If anyone knows a simple command to wait for everything to go ready, let me know!
+task create-and-config-kind-cluster  # Wait a minute for things to install. If anyone knows a simple command to wait for everything to get ready, let me know!
 task build-and-run-vm
 task vnc-vm
 ```
