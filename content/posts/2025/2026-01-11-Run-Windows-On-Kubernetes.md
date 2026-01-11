@@ -86,7 +86,7 @@ I have bad internet, and the native way of doing this involves the Dockur contai
 microk8s enable registry:size=50Gi
 ```
 
-We have to make a small change on our docker daemon to allow it to use this insecure registry though, so do teh following
+We have to make a small change on our docker daemon to allow it to use this insecure registry though, so do the following
 
 ```bash
 sudo mkdir -p /etc/docker
@@ -257,13 +257,11 @@ Then get the External IP MetalLB assigned it
 
 ```bash
 microk8s kubectl get svc windows-lb -n dockur -w
-
-microk8s kubectl get svc windows-lb -n dockur -w
 NAME         TYPE           CLUSTER-IP       EXTERNAL-IP     PORT(S)                                        AGE
 windows-lb   LoadBalancer   10.152.183.209   192.168.1.190   8006:30963/TCP,3389:31752/TCP,3389:31752/UDP   12s
 ```
 
-Go to the http address, like `http://192.168.1.190:8006' and you should see a Windows VM automatically installing.
+Go to the http address, like `http://192.168.1.190:8006` and you should see a Windows VM automatically installing.
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2026/dockur-microk8s/dockur-windows-microk8s.png"><img src="/assets/images/2026/dockur-microk8s/dockur-windows-microk8s.png"></a>
