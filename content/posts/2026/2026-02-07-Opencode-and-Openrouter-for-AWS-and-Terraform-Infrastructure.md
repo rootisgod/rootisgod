@@ -1,6 +1,6 @@
 ---
 categories:  opencode openrouter terraform aws
-date: "2026-02-07T14:00:00Z"
+date: "2026-02-07T08:00:00Z"
 title: Opencode and Openrouter for AWS and Terraform Infrastructure
 draft: false
 ---
