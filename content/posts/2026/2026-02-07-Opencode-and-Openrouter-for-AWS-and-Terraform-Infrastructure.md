@@ -5,7 +5,7 @@ title: Opencode and Openrouter for AWS and Terraform Infrastructure
 draft: false
 ---
 
-If you havent been sleeping under a rock you will know that AI is all the rage. What you might not know is where we are now. Things have moved on from ChatGPT in a web browser...
+If you haven't been sleeping under a rock you will know that AI is all the rage. What you might not know is where we are now. Things have moved on from ChatGPT in a web browser...
 
 
 # The Overview
@@ -139,9 +139,9 @@ You use the `TAB` key to switch between them.
 
 The first step is to generate a plan of what we want the agent to do. So, lets give it very precise instructions. This is where local knowedge of the problem of the system you want will help immensely, give as much detail as you like. More time here will save time later so try and be very specific where you can. But, if you are slightly unsure then no worries, we can add to this later.
 
-```
+`
 I would like to use Terraform to create some AWS infrastructure in the us-east-1 region. It should comprise of a dedicated VPC, a Public subnet, a security group to allow SSH connections from a specified IP int eh variables file (assume 1.2.3.4 for now) and global access to port 80. You should create an EC2 instance of size t3.micro and have it start a webserver that will have a page displaying details of the instance. Use the latest production terraform version and the state file can be held locally for now. Create a plan and detail what you will do to accomplish this. Please also be ready to install any requirements like the correct terraform binary.
-```
+`
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2026/opencode-terraform-aws/prompt.png"><img src="/assets/images/2026/opencode-terraform-aws/prompt.png"></a>
