@@ -129,9 +129,9 @@ Okay, now we can ask OpenCode to do things. There are two modes, Plan and Build.
 
 #### Plan and Build Mode
 
-Plan mode is a **read-only** way to talk to the agent and ask it to do things.
+Plan mode is a **read-only** way to talk to the agent and ask it to think about things.
 
-Build mode is the OpenCode system is allowed to make changes to your system and generate files (see why we are in a container now?)
+Build mode is when you are happy for OpenCode to make changes to your system and generate files (see why we are in a container now?).
 
 You use the `TAB` key to switch between them.
 
@@ -139,9 +139,9 @@ You use the `TAB` key to switch between them.
 
 The first step is to generate a plan of what we want the agent to do. So, lets give it very precise instructions. This is where local knowedge of the problem of the system you want will help immensely, give as much detail as you like. More time here will save time later so try and be very specific where you can. But, if you are slightly unsure then no worries, we can add to this later.
 
-`
-I would like to use Terraform to create some AWS infrastructure in the us-east-1 region. It should comprise of a dedicated VPC, a Public subnet, a security group to allow SSH connections from a specified IP int eh variables file (assume 1.2.3.4 for now) and global access to port 80. You should create an EC2 instance of size t3.micro and have it start a webserver that will have a page displaying details of the instance. Use the latest production terraform version and the state file can be held locally for now. Create a plan and detail what you will do to accomplish this. Please also be ready to install any requirements like the correct terraform binary.
-`
+---
+`I would like to use Terraform to create some AWS infrastructure in the us-east-1 region. It should comprise of a dedicated VPC, a Public subnet, a security group to allow SSH connections from a specified IP int eh variables file (assume 1.2.3.4 for now) and global access to port 80. You should create an EC2 instance of size t3.micro and have it start a webserver that will have a page displaying details of the instance. Use the latest production terraform version and the state file can be held locally for now. Create a plan and detail what you will do to accomplish this. Please also be ready to install any requirements like the correct terraform binary.`
+---
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2026/opencode-terraform-aws/prompt.png"><img src="/assets/images/2026/opencode-terraform-aws/prompt.png"></a>
@@ -223,9 +223,9 @@ Once complete, we should have a whack of files. Feel free to open VSCode on your
 
 One thing we should do is ask the agent to create an AGENTS.md file and record what it has done and why. Next time we load opencode it can read this and understand the context much more quickly.
 
-```
-Please create an AGENTS.md file and insert any relevant information to allow another agent to understand this project and what you have done.
-```
+---
+`Please create an AGENTS.md file and insert any relevant information to allow another agent to understand this project and what you have done.`
+---
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2026/opencode-terraform-aws/agents-md.png"><img src="/assets/images/2026/opencode-terraform-aws/agents-md.png"></a>
