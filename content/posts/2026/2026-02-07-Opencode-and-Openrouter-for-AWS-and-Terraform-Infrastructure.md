@@ -10,7 +10,7 @@ If you haven't been sleeping under a rock you will know that AI is all the rage.
 
 # The Overview
 
-In this guide I will show you how to;
+In this guide I will show you how to:
  - Create an OpenRouter Account and get an API key. This gives us access to all frontier coding models
  - Get a Docker image running (important for reasons later)
  - Install OpenCode on the docker image
@@ -24,7 +24,7 @@ That sounds a lot, but I believe most IT Architects are sleeping on this, so I w
 
 ### Openrouter
 
-Go to https://openrouter.ai setup an account. I wont explain the details. And add $10 of Credit to your account.
+Go to https://openrouter.ai setup an account. I won't explain the details. And add $10 of Credit to your account.
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2026/opencode-terraform-aws/credits.png"><img src="/assets/images/2026/opencode-terraform-aws/credits.png"></a>
@@ -52,7 +52,7 @@ The way to interpret this is largely in the cost per input tokens. The current '
 
 ### Docker
 
-Now we need a docker container to host OpenCode software. The reason I recommend this is because inevitably it will install some tools and dependencies on our machine. Once you have a few plays around with this it will like cause some future headaches!
+Now we need a docker container to host OpenCode software. The reason I recommend this is because inevitably it will install some tools and dependencies on our machine. Once you have a few plays around with this it will likely cause some future headaches!
 
 So, ensure you have docker installed and create a folder on your local machine for your code (adjust for you OS, I like keeping my code here though)
 
@@ -63,7 +63,7 @@ docker run -d --name opencode-demo-terraform-aws -v ~/Code/Opencode-Demo/terrafo
 docker exec -it opencode-demo-terraform-aws bash
 ```
 
-Then 'unminimize' it to get some of teh general tools we need in an OS like curl and wget etc...
+Then 'unminimize' it to get some of the general tools we need in an OS like curl and wget etc...
 
 ```bash
 apt-get update
@@ -89,7 +89,7 @@ curl -fsSL https://opencode.ai/install | bash
 
 Or, grab it as a binary or from a package manager if you are more paranoid
 
-Then open it by typing `opencode` in our empty folder (the rereading of the bash source file is a quirk of docker I think)
+Then open it by typing `opencode` in our empty folder (the re-reading of the bash source file is a quirk of docker I think)
 
 ```bash
 cd /opencode
@@ -137,17 +137,17 @@ You use the `TAB` key to switch between them.
 
 #### Generating a Plan
 
-The first step is to generate a plan of what we want the agent to do. So, lets give it very precise instructions. This is where local knowedge of the problem of the system you want will help immensely, give as much detail as you like. More time here will save time later so try and be very specific where you can. But, if you are slightly unsure then no worries, we can add to this later.
+The first step is to generate a plan of what we want the agent to do. So, lets give it very precise instructions. This is where local knowledge of the problem of the system you want will help immensely, give as much detail as you like. More time here will save time later so try and be very specific where you can. But, if you are slightly unsure then no worries, we can add to this later.
 
 ---
-`I would like to use Terraform to create some AWS infrastructure in the us-east-1 region. It should comprise of a dedicated VPC, a Public subnet, a security group to allow SSH connections from a specified IP int eh variables file (assume 1.2.3.4 for now) and global access to port 80. You should create an EC2 instance of size t3.micro and have it start a webserver that will have a page displaying details of the instance. Use the latest production terraform version and the state file can be held locally for now. Create a plan and detail what you will do to accomplish this. Please also be ready to install any requirements like the correct terraform binary.`
+`I would like to use Terraform to create some AWS infrastructure in the us-east-1 region. It should comprise of a dedicated VPC, a Public subnet, a security group to allow SSH connections from a specified IP in the variables file (assume 1.2.3.4 for now) and global access to port 80. You should create an EC2 instance of size t3.micro and have it start a webserver that will have a page displaying details of the instance. Use the latest production terraform version and the state file can be held locally for now. Create a plan and detail what you will do to accomplish this. Please also be ready to install any requirements like the correct terraform binary.`
 ---
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2026/opencode-terraform-aws/prompt.png"><img src="/assets/images/2026/opencode-terraform-aws/prompt.png"></a>
 {{< /rawhtml >}}
 
-That should be plenty. Let ask it to plan this.
+That should be plenty. Let's ask it to plan this.
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2026/opencode-terraform-aws/plan.png"><img src="/assets/images/2026/opencode-terraform-aws/plan.png"></a>
@@ -234,13 +234,13 @@ One thing we should do is ask the agent to create an AGENTS.md file and record w
 ### Next Steps
 
 From here, the choice is almost infinite. You could do these things
- - Ask it to create a git repo and make a commit per change s you cant degrade what you have easily
+ - Ask it to create a git repo and make a commit per change so you can't degrade what you have easily
  - Ask it to implement TaskFile shortcuts to make running apply and destroy easier
  - Ask it to run tfsec or checkov and fix any bugs
  - Ask it to draw a network diagram of the design
  - Ask it to make a real website, package it as a docker container, create a registry in AWS, and then host it in a Fargate cluster. The crazy part is that it will manage it!
 
-And don't be afraid to take this over manually and use opencode as a coding buddy. It has really opened my eyes to what is possible. It may look like just what you get inn Cursor or VSCode but you can really dig much deeper and end up in rabbit holes you would never believe.
+And don't be afraid to take this over manually and use opencode as a coding buddy. It has really opened my eyes to what is possible. It may look like just what you get in Cursor or VSCode but you can really dig much deeper and end up in rabbit holes you would never believe.
 
 ### Caveats
 
