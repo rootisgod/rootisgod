@@ -70,9 +70,9 @@ microk8s stop; microk8s start
 
 #### MetalLB
 
-MetalLB is a way to let MicroK8S use an IP from your LAN and setup it's own kind of DHCP server to assign them. You can maybe skip this, but I found that port redirection to the Web Interface on port 8006 seems very sensitive. This helps make sure that each instance is accessible almost natively on your LAN.
+MetalLB is a way to let MicroK8S use an IP from your LAN and setup its own kind of DHCP server to assign them. You can maybe skip this, but I found that port redirection to the Web Interface on port 8006 seems very sensitive. This helps make sure that each instance is accessible almost natively on your LAN.
 
-Make sure to pick a range on your network that you know isn't assigned by your DHCP router (reduce it's scope if required). In my case it can just handing out 6 IPs near the end of my range.
+Make sure to pick a range on your network that you know isn't assigned by your DHCP router (reduce it's scope if required). In my case it can just hand out 6 IPs near the end of my range.
 
 ```bash
 microk8s enable metallb:192.168.1.190-192.168.1.195
@@ -130,7 +130,7 @@ We now have a Docker Image with the ISO we need baked right into it.
 
 ### MicroK8S Deployment
 
-And now we can create a YAML file called `deployment.yaml` for MicroK8S and apply it. This will create a namsepace, PVC, Service and a Deployment. It is tuned to deploy from our local registry and assume MetalLB is in place. You can see their reference one if you want a more basic deployment: https://raw.githubusercontent.com/dockur/windows/refs/heads/master/kubernetes.yml
+And now we can create a YAML file called `deployment.yaml` for MicroK8S and apply it. This will create a namespace, PVC, Service and a Deployment. It is tuned to deploy from our local registry and assume MetalLB is in place. You can see their reference one if you want a more basic deployment: https://raw.githubusercontent.com/dockur/windows/refs/heads/master/kubernetes.yml
 
 ```yaml
 ---
@@ -272,9 +272,9 @@ And that's it. Create more windows docker images and deployment YAML files as re
 ## MOAR
 
 Next steps could be;
-- Make a CICD piepline to create these on demand from custom `deployment.yaml` files
+- Make a CICD pipeline to create these on demand from custom `deployment.yaml` files
 - Look at adding an `install.bat` post install file to try get WinRM working on boot. Then you can do whatever you like post-boot with Ansible, or powershell etc...
 - Test it on a large cloud provider and have it autoscale up and down as required
 - Try and add extra disks via more PVC claims
 
-I may try these myself, as the solution is such a good way to get a quick VM for a variety of OS's. I may have some follow-up posts later...
+I may try these myself, as the solution is such a good way to get a quick VM for a variety of OSes. I may have some follow-up posts later...
