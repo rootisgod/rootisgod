@@ -20,7 +20,7 @@ $http = [System.Net.HttpListener]::new()
 $http.Prefixes.Add("http://localhost:$($listen_port)/")
 $http.Start()
 
-# INFINTE LOOP - Used to listen for requests
+# INFINITE LOOP - Used to listen for requests
 while ($http.IsListening) {
     # When a request is made in a web browser the GetContext() method will return a request object
     $context = $http.GetContext()
@@ -28,10 +28,10 @@ while ($http.IsListening) {
     if ($context.Request.HttpMethod -eq 'GET' -and $context.Request.RawUrl -eq '/metrics') {
         # the html/data you want to send to the browser
         [string]$html = Get-Content $metrics_file -Raw
-        #resposed to the request
-        $buffer = [System.Text.Encoding]::UTF8.GetBytes($html) # convert htmtl to bytes
+        #respond to the request
+        $buffer = [System.Text.Encoding]::UTF8.GetBytes($html) # convert html to bytes
         $context.Response.ContentLength64 = $buffer.Length
-        $context.Response.OutputStream.Write($buffer, 0, $buffer.Length) #stream to broswer
+        $context.Response.OutputStream.Write($buffer, 0, $buffer.Length) #stream to browser
         $context.Response.OutputStream.Close() # close the response
     }
 }

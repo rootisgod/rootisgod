@@ -7,7 +7,7 @@ draft: false
 
 [I have a post about microk8s](https://www.rootisgod.com/2021/A-Quick-Guide-to-MicroK8S-And-Learning-Kubernetes/) and how it is an amazing way to get a working Kubernetes cluster going very quickly. And that is still very true. However, it has a small problem i've only just realised, you can only have a single cluster running on a machine. So, if you want a few independent clusters running on one machine, I think you are out of luck.
 
-This is now a problem for me as my main use case for kubernetes is to test deployments using Octopus Deploy. Ideally, I should have multiple clusters so that I can simulate a 'real' pipeline of CI to PRD. In theory, I could use namespaces to seperate things out in a kind of artificial way (and still use microk8s), but i'd rather do it properly. 
+This is now a problem for me as my main use case for kubernetes is to test deployments using Octopus Deploy. Ideally, I should have multiple clusters so that I can simulate a 'real' pipeline of CI to PRD. In theory, I could use namespaces to separate things out in a kind of artificial way (and still use microk8s), but i'd rather do it properly. 
 
 The other issue is cost. Ideally we could use the cloud to create instances and test with those. But, the cloud is expensive. If we want a short lived cluster then fine, but sometimes you just kinda want some resources to be used when you want/need and not have to faff about. Even if using DigitalOcean or something, waiting a few minutes for a cluster can get very boring very quickly. If you are using AKS on Azure you can wait even longer, and pay even more... So, what can we do to get clusters quickly and easily?
 

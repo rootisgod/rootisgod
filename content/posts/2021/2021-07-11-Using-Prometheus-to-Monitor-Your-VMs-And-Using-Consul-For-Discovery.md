@@ -19,7 +19,7 @@ We will use an Ubuntu 20.04 server edition Linux VM as our host to get our stack
 
 Install a fresh Ubuntu 20.04 Server VM (2 CPUs, 8GB RAM and 64GB Disk will be more than plenty for testing) and don't install any pre-configured system snaps (even though prometheus is there already).
 
-Take a note of the machines IP address as you will need this later (run ```ip address``` at the terminal and look for adaptor ```etho``` or ```enp1s0```). My examples will use 192.168.1.18 but yours will almost certainly be different so replace it as we go.
+Take a note of the machines IP address as you will need this later (run ```ip address``` at the terminal and look for adapter ```eth0``` or ```enp1s0```). My examples will use 192.168.1.18 but yours will almost certainly be different so replace it as we go.
 
 ### Prometheus Install
 
@@ -155,7 +155,7 @@ By installing both at the same time we can get the metrics system installed and 
 
 #### Windows Exporter Install
 
-Install this MSI file from here - https://github.com/prometheus-community/windows_exporter/releases. I would create screenshots but it is honestly just a a Next, Next, Finsh. Once installed, check it is alive and started as a Windows Service called 'Windows Expoerter', and by checking via **http://your_machines_ip:9182/metrics** (ie http://192.168.1.252:9182/metrics). You will see something like this, which is simple data which is scraped by prometheus.
+Install this MSI file from here - https://github.com/prometheus-community/windows_exporter/releases. I would create screenshots but it is honestly just a Next, Next, Finish. Once installed, check it is alive and started as a Windows Service called 'Windows Exporter', and by checking via **http://your_machines_ip:9182/metrics** (ie http://192.168.1.252:9182/metrics). You will see something like this, which is simple data which is scraped by prometheus.
 
 {{< rawhtml >}}
 <a data-fancybox="gallery" href="/assets/images/2021/Using-Prometheus-to-Monitor-Your-VMs-And-Using-Consul-For-Discovery/010.png"><img src="/assets/images/2021/Using-Prometheus-to-Monitor-Your-VMs-And-Using-Consul-For-Discovery/010.png"></a>

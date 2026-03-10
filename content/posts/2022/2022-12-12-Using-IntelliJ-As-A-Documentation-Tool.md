@@ -45,7 +45,7 @@ To summarise, the benefits of the above are
 - One tool to do everything is always good, as maintaining a different toolset (ie Obsidian) across machines is the real pain
 - Use MKDocs to turn it into a Wiki type site
 - You can use git to amend your data without various plugins
-- You can swapout IntelliJ for VSCode or something very easily (markdown plugins are likely better there, just switch over, nothing can break!)
+- You can swap out IntelliJ for VSCode or something very easily (markdown plugins are likely better there, just switch over, nothing can break!)
 - You can fallback to Github itself if you want to just look at your Markdown files, or you can use it to do edits when you aren't on your 'real' machine
 - If an open source project does a rug pull or folds, you can still access everything you ever did. You cant paint yourself into a corner at all
 

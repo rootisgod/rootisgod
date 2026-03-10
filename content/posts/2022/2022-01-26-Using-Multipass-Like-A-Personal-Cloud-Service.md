@@ -80,7 +80,7 @@ multipass list
 
 Tada! The new system has a LAN IP of 192.168.1.35. It's gone native!
 
-(or like mentioned earler, use a route from your existing machine, but you'll get bored of remembering to do this very quickly...)
+(or like mentioned earlier, use a route from your existing machine, but you'll get bored of remembering to do this very quickly...)
 
 ```bash
 sudo ip route add 10.86.127.0/24 via 192.168.1.10 (IP of your multipass server)

@@ -10,7 +10,7 @@ REDUNDANT! - https://community.hetzner.com/tutorials/installing-nginx-proxy-mana
 
 In the previous post we set up a powerful Hetzner server for not much money. But, the tricky part I kind of neglected to mention was that because you run from a single IP it can be challenging to host multiple services on it. We will solve that problem in this post using [Nginx Proxy Manager](https://nginxproxymanager.com). This will let us host multiple web sites from a single IP. This guide will also work if you are at home and want one machine with an internal IP to host multiple things, but it is super handy externally where spinning up a new machine means spending more money.
 
-## Pre Requisites
+## Prerequisites
 
 You will need a DNS name that you control. We need to be able to create a DNS A record for each service we require, and it is that DNS name which informs Nginx Proxy Manager where to send the traffic. 
 

@@ -5,7 +5,7 @@ title: Running a Private Chocolatey Server
 draft: false
 ---
 
-I currently have a need to manage software on many machines at once, and Chocolatey seems to be the ideal solution.  It's like YUM or APT but on Windows. The community makes Nuget packages and anyone can use these do add, remove, or update sofware. So, to install everyones favourite text editor you can run this
+I currently have a need to manage software on many machines at once, and Chocolatey seems to be the ideal solution.  It's like YUM or APT but on Windows. The community makes Nuget packages and anyone can use these do add, remove, or update software. So, to install everyones favourite text editor you can run this
 
 ```
 choco install notepadplusplus -y
@@ -23,7 +23,7 @@ The issue is that if you use Chocolatey a lot you may hit it's rate limits. So, 
 
 ## The Fix - A Private Chocolatey Server
 
-The fix is to run your own Nuget caching server and tell your clients with Chocolatey to go to that. It means that oyu reach out to Chocolatey one time for package details, and then that is cached on a local Nuget repository. Don't worry, this is nowhere near as difficult as it sounds!
+The fix is to run your own Nuget caching server and tell your clients with Chocolatey to go to that. It means that you reach out to Chocolatey one time for package details, and then that is cached on a local Nuget repository. Don't worry, this is nowhere near as difficult as it sounds!
 
 ### Installing and Configuring Nexus Repository Manager
 
@@ -59,7 +59,7 @@ And choose to enable anonymous access
 <a data-fancybox="gallery" href="/assets/images/2025/choco-nexus/Choco-Nexus-access.png"><img src="/assets/images/2025/choco-nexus/Choco-Nexus-access.png"></a>
 {{< /rawhtml >}}
 
-The, we want to create a folder for our packages
+Then, we want to create a folder for our packages
 
 ```
 mkdir c:\Nexus\blobs

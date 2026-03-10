@@ -29,7 +29,7 @@ And then run some unholy combination of commands to get everything just right, a
  terraform init --backend-config="key=env1.state" --backend-config="resource_group_name=$BACKEND_RG_NAME" --backend-config="storage_account_name=$BACKEND_SA_NAME" --backend-config="container_name=$BACKEND_CONTAINER_NAME"
 ```
 
-This all becomes a pain to manage, especailly if you have multiple azure subscriptions or environments to flip between.
+This all becomes a pain to manage, especially if you have multiple azure subscriptions or environments to flip between.
 
 So, Taskfile and .env files to the rescue.
 

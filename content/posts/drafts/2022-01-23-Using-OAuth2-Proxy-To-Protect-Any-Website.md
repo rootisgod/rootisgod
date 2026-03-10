@@ -14,9 +14,9 @@ Let me start and say that Identity Providers and Authentication is not my strong
 The example setup will run locally using Docker and Docker Compose. Hopefully you can extrapolate this out to your own use case once you 'see' it working. We need to set a couple of host entries to fool our system with some redirects, but in a real solution you will have internal or external DNS names to use and that won't be required.
 
 ### Our IDP
-To keep it fairly simple, i'm going to use Keycloak as our 'remote' list of users that we need to login securely. In reality, our IDP of users can be anything that Oauth2-Proxy supports (Okta, Auth0, Google etc, se here: https://oauth2-proxy.github.io/oauth2-proxy/docs/configuration/oauth_provider) but this is teh simplest setup to demonstrate it working.
+To keep it fairly simple, i'm going to use Keycloak as our 'remote' list of users that we need to login securely. In reality, our IDP of users can be anything that Oauth2-Proxy supports (Okta, Auth0, Google etc, see here: https://oauth2-proxy.github.io/oauth2-proxy/docs/configuration/oauth_provider) but this is the simplest setup to demonstrate it working.
 
-### Login FLow
+### Login Flow
 The user will access our website URL, Oauth2-Proxy will authenticate the user and pass the request to Keycloak, and then allow access if successful.
 
 ```text
@@ -39,7 +39,7 @@ Add these entries to your local machine (Windows is ```c:\windows\system32\drive
 
 ## Docker Compose File
 
-This is the Docker compose file we will use. Copy teh text and name it ```docker-compose.yml``` It launches Keycloak, the Oauth2-Proxy and our website on the various required ports.
+This is the Docker compose file we will use. Copy the text and name it ```docker-compose.yml``` It launches Keycloak, the Oauth2-Proxy and our website on the various required ports.
 
 ```dockerfile
 version: "3.7"
@@ -131,7 +131,7 @@ The following instructions seem to be a happy path, so i've not tried to overthi
 - In the top left, click the dropdown arrow next to 'Master', and click 'Add a realm' and call it 'Website' (case is important)
 - Go to 'Users' -> 'Add User' and add 'testuser' AND a made up email address, then ENSURE 'Email Verified' is set to 'On'. Then in credentials ensure password is 'Password1' and not temporary.
 - Go to 'Clients' -> 'account' and set the dropdown 'Access Type' to 'Confidential'. This means users are required to authenticate to access this realm
-- In the Website realm, got co Client 'Account' -> 'Settings' and change 'Valid Redirect URIs' from '/realms/Website/account/*' to '*'
+- In the Website realm, go to Client 'Account' -> 'Settings' and change 'Valid Redirect URIs' from '/realms/Website/account/*' to '*'
 - Create a Mapper in 'Clients' -> 'Account' -> 'Mappers' -> 'Create'. Choose a name like 'my-app-audience' and choose Mapper Type of 'Audience'. Set 'Add to ID token' and  'Add to access token' to 'On'.
 - Test a login at http://docker-keycloak.docker.local:8080/auth/realms/Website/account/ and click 'Sign In'. Sign in with our 'testuser'. This should succeed
 - Note down the Client secret at 'Clients' -> 'account' -> 'Credentials'. Paste into the docker compose file OAUTH2-PROXY service and entry 'OAUTH2_PROXY_CLIENT_SECRET'.

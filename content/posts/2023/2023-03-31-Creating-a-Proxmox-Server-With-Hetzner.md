@@ -68,7 +68,7 @@ https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_11_Bullseye
 
 ### Setup the Community Proxmox Apt Sources
 
-If you dont have a Proxmox subscrption, be sure to change the apt sources list so we can receive the non enterprise updates. If you dont you will get this kind of error when you try and update the system
+If you dont have a Proxmox subscription, be sure to change the apt sources list so we can receive the non enterprise updates. If you dont you will get this kind of error when you try and update the system
 
 ```bash
 root@proxmox:~# apt update
@@ -93,7 +93,7 @@ And remove this (just comment it out from ```/etc/apt/sources.list.d/pve-enterpr
 #deb https://enterprise.proxmox.com/debian/pve bullseye pve-enterprise
 ```
 
-### Networking and DCHP Setup
+### Networking and DHCP Setup
 
 Once we have Proxmox installed we are kind of done, and it will work just as expected. We have lots of CPU and RAM, and a nice big 1TB software RAID storage location to hosts VMs and ISOs. But, there are a few issues we need to solve due to the nature of the setup that you don't get when you run Proxmox from home. The current problems are
  - We have a public IP on the machine
@@ -147,7 +147,7 @@ Then reboot the server. The bridge should appear afterward.
 <a data-fancybox="gallery" href="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/vmbr99.png"><img src="/assets/images/2023/Creating-a-Proxmox-Server-With-Hetzner/vmbr99.png"></a>
 {{< /rawhtml >}}
 
-#### DCHP Setup
+#### DHCP Setup
 
 Now, lets make a DHCP server using an LXC Container in Proxmox. 
 

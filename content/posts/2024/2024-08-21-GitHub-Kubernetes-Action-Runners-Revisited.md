@@ -18,7 +18,7 @@ So, without further ado, here is how to do it with a [KIND cluster](https://kind
 
 ### Creating a KIND Cluster
 
-You can use a 'real' cloud K8S clustter if you have one, but a simple way to start this is to just create a KIND K8S cluster on a VM. For a comprehensive guide please see this: [https://www.rootisgod.com/2021/Cheap-and-Accessible-Kubernetes-Clusters-with-KIND/](https://www.rootisgod.com/2021/Cheap-and-Accessible-Kubernetes-Clusters-with-KIND/)
+You can use a 'real' cloud K8S cluster if you have one, but a simple way to start this is to just create a KIND K8S cluster on a VM. For a comprehensive guide please see this: [https://www.rootisgod.com/2021/Cheap-and-Accessible-Kubernetes-Clusters-with-KIND/](https://www.rootisgod.com/2021/Cheap-and-Accessible-Kubernetes-Clusters-with-KIND/)
 
 Or, the quick version is here for Ubuntu 24.04.
 
@@ -141,7 +141,7 @@ jobs:
     - run: echo "🎉 This job uses runner scale set runners!"
 ```
 
-NOTE: The ```runs-on:``` must match the runner name we have setup for our repo. And, we have alos specified a debian container to run the job.
+NOTE: The ```runs-on:``` must match the runner name we have setup for our repo. And, we have also specified a debian container to run the job.
 
 Run it with a manual dispatch.
 
@@ -157,7 +157,7 @@ It should work!
 
 ## More
 
-There is more info here.It gets complicated quite quickly. But hopeully the above is useful as a minimum viable setup.
+There is more info here.It gets complicated quite quickly. But hopefully the above is useful as a minimum viable setup.
 
 QUICKSTART GUIDE - [https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/quickstart-for-actions-runner-controller](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/quickstart-for-actions-runner-controller)
 

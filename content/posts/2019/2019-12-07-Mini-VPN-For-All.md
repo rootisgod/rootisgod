@@ -6,7 +6,7 @@ title: Mini VPN For All!
 
 ## Overview
 
-Ever wanted to securely connect to another machine without needing to use a VPN? Now you can! Nebula is a pretty exciting little networking project which has been used internally at slack for over 2 years. It is a ‘global network overlay’ which means it can bring differrent machines on different networks together and present them on a virtual LAN/subnet so they can all see each other (more detail below). It is now open sourced and available on github – [https://github.com/slackhq/nebula](https://github.com/slackhq/nebula)
+Ever wanted to securely connect to another machine without needing to use a VPN? Now you can! Nebula is a pretty exciting little networking project which has been used internally at slack for over 2 years. It is a ‘global network overlay’ which means it can bring different machines on different networks together and present them on a virtual LAN/subnet so they can all see each other (more detail below). It is now open sourced and available on github – [https://github.com/slackhq/nebula](https://github.com/slackhq/nebula)
 
 I have to thank the Linux Unplugged podcast for mentioning it on their latest episode. I had no idea an ‘overlay network’ existed or why I would ever want to use one! But, it does seem quite handy so I will dig into it a little. Note, I am not an expert on any of this but I thought it worth post. Here is their podcast episode link so you can learn more about it – [https://linuxunplugged.com/329](https://linuxunplugged.com/329)
 
@@ -205,7 +205,7 @@ lighthouse:
       host: any
 ```
 
-And we should have a working config. Run as we did on Linux and there should be a succesful handshake to our lighthouse (last line).
+And we should have a working config. Run as we did on Linux and there should be a successful handshake to our lighthouse (last line).
 
 ```shell
 C:\Nebula>nebula.exe -config config.yaml
