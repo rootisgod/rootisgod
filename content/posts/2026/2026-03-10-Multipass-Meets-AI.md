@@ -2,7 +2,6 @@
 categories:   multipass vms mac windows linux ai llm opus chatgpt
 date: "2026-03-10T14:00:00Z"
 title: PassGo 2.0 - Multipass Meets AI
-draft: true
 ---
 
 The [multipass](https://canonical.com/multipass) obsession continues... Using Claude Code I have jazzed up the interface to use the Go BubbleTe library and introduced an AI mode. Just what everyone wanted, right. Right?
