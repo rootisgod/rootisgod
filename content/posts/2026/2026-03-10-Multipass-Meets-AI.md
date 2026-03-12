@@ -39,4 +39,10 @@ Then, press `?` and ask it to do something. It will do its best to obey. In this
 
 {{< asciinema src="/assets/images/2026/multipass-meets-ai/demo-llm.rec" >}}
 
+The website!
+
+{{< rawhtml >}}
+<a data-fancybox="gallery" href="/assets/images/2026/multipass-meets-ai/demo-multipass-web.png"><img src="/assets/images/2026/multipass-meets-ai/demo-multipass-web.png"></a>
+{{< /rawhtml >}}
+
 You can ask it to do more complicated things, like Install Docker, KIND, and set up a K8S cluster and give you the token. The MCP server can manage VMs, run scripts, transfer files and more. It should be pretty capable. Enjoy!
