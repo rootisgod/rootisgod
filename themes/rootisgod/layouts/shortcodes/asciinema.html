@@ -1,0 +1,49 @@
+{{- $src := .Get "src" | default (.Get 0) -}}
+{{- $id := printf "asciinema-%d" .Ordinal -}}
+<div id="{{ $id }}" class="asciinema-player-container"></div>
+<script>
+(function() {
+  var id = "{{ $id }}";
+  var src = "{{ $src }}";
+  function init() {
+    if (typeof AsciinemaPlayer !== 'undefined') {
+      AsciinemaPlayer.create(src, document.getElementById(id), { fit: "width" });
+      return;
+    }
+    setTimeout(init, 50);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function load() {
+      if (!document.querySelector('link[href*="asciinema-player"]')) {
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdn.jsdelivr.net/npm/asciinema-player@3.7.0/dist/bundle/asciinema-player.css';
+        document.head.appendChild(link);
+      }
+      if (!document.querySelector('script[src*="asciinema-player"]')) {
+        var script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/asciinema-player@3.7.0/dist/bundle/asciinema-player.min.js';
+        script.onload = init;
+        document.body.appendChild(script);
+      } else {
+        init();
+      }
+    });
+  } else {
+    if (!document.querySelector('link[href*="asciinema-player"]')) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://cdn.jsdelivr.net/npm/asciinema-player@3.7.0/dist/bundle/asciinema-player.css';
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[src*="asciinema-player"]')) {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/asciinema-player@3.7.0/dist/bundle/asciinema-player.min.js';
+      script.onload = init;
+      document.body.appendChild(script);
+    } else {
+      init();
+    }
+  }
+})();
+</script>
