@@ -23,7 +23,7 @@ Quick demo below
 
 And now you can use an LLM to ask it to do things! To enable this functionality I created a Multipass MCP server in Go, which is here: https://github.com/rootisgod/multipass-mcp
 
-If you don't have it installed, it will pull it from GitHub automatically and start it. Then press <SHIFT-L> to get the LLM setup page. Enter your [OpenRouter](https://openrouter.ai/models) details, API Key and model. Like so.
+If you don't have it installed, it will pull it from GitHub automatically and start it. Then press `SHIFT-L` to get the LLM setup page. Enter your [OpenRouter](https://openrouter.ai/models) details, API Key and model. Like so.
 
 ---
 ```
