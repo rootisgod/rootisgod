@@ -68,7 +68,7 @@ multipass-mcp: multipass-mcp  - ✓ Connected
 Then, we can simply ask Claude something like this
 
 ---
-`Using the multipass-mcp server, please create 3 multipass instances and then create a multinode microk8s cluster. Each instance can be a worker and a control plane.  Add the connection details to my kubeconfig as multipass-mcp-microk8s`
+Using the multipass-mcp server, please create 3 multipass instances and then create a multinode microk8s cluster. Each instance can be a worker and a control plane.  Add the connection details to my kubeconfig as multipass-mcp-microk8s
 ---
 
 Off it goes...
