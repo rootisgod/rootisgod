@@ -15,12 +15,47 @@ First, I'll assume you have Claude Code and Multipass installed and set up.
 
 Then, we need to install the MCP server, which is a Go binary (and very simple to install) and then hook it up to Claude Code. We also have a Skill which helps smooth Claude's usage of the MCP plugin. Here is a cheat sheet on installation.
 
-| Step | macOS | Linux | Windows |
-|------|-------|-------|---------|
-| Install MCP server ([Brew](https://brew.sh)) | `brew install rootisgod/tap/multipass-mcp` | `brew install rootisgod/tap/multipass-mcp` | `go install github.com/rootisgod/multipass-mcp@latest` |
-| Register with Claude | `claude mcp add multipass-mcp -- multipass-mcp` | `claude mcp add multipass-mcp -- multipass-mcp` | `claude mcp add multipass-mcp -- multipass-mcp` |
-| Install skill (optional) | `git clone https://github.com/rootisgod/multipass-mcp.git /tmp/multipass-mcp && cp -r /tmp/multipass-mcp/skill/multipass ~/.claude/skills/multipass && rm -rf /tmp/multipass-mcp` | Same as macOS | `git clone https://github.com/rootisgod/multipass-mcp.git %TEMP%\multipass-mcp && xcopy /E /I %TEMP%\multipass-mcp\skill\multipass %USERPROFILE%\.claude\skills\multipass && rmdir /S /Q %TEMP%\multipass-mcp` |
-| Verify | `claude mcp list` | `claude mcp list` | `claude mcp list` |
+{{< rawhtml >}}
+<table>
+<thead>
+<tr><th>Step</th><th>macOS</th><th>Linux</th><th>Windows</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>Install MCP server (<a href="https://brew.sh">Brew</a>)</td>
+<td><code>brew install rootisgod/tap/multipass-mcp</code></td>
+<td><code>brew install rootisgod/tap/multipass-mcp</code></td>
+<td><code>go install github.com/rootisgod/multipass-mcp@latest</code></td>
+</tr>
+<tr>
+<td>Register with Claude</td>
+<td><code>claude mcp add multipass-mcp -- multipass-mcp</code></td>
+<td><code>claude mcp add multipass-mcp -- multipass-mcp</code></td>
+<td><code>claude mcp add multipass-mcp -- multipass-mcp</code></td>
+</tr>
+<tr>
+<td>Install skill (optional)</td>
+<td>
+<code>git clone https://github.com/rootisgod/multipass-mcp.git /tmp/multipass-mcp</code><br>
+<code>cp -r /tmp/multipass-mcp/skill/multipass ~/.claude/skills/multipass</code><br>
+<code>rm -rf /tmp/multipass-mcp</code>
+</td>
+<td>Same as macOS</td>
+<td>
+<code>git clone https://github.com/rootisgod/multipass-mcp.git %TEMP%\multipass-mcp</code><br>
+<code>xcopy /E /I %TEMP%\multipass-mcp\skill\multipass %USERPROFILE%\.claude\skills\multipass</code><br>
+<code>rmdir /S /Q %TEMP%\multipass-mcp</code>
+</td>
+</tr>
+<tr>
+<td>Verify</td>
+<td><code>claude mcp list</code></td>
+<td><code>claude mcp list</code></td>
+<td><code>claude mcp list</code></td>
+</tr>
+</tbody>
+</table>
+{{< /rawhtml >}}
 
 The verify step should print out something like this
 
@@ -30,9 +65,7 @@ multipass-mcp: multipass-mcp  - ✓ Connected
 
 Then, we can simply ask Claude something like this
 
-```
-Using the multipass-mcp server, please create 3 multipass instances and then create a multinode microk8s cluster. Each instance can be a worker and a control plane.  Add the connection details to my kubeconfig as multipass-mcp-microk8s
-```
+`Using the multipass-mcp server, please create 3 multipass instances and then create a multinode microk8s cluster. Each instance can be a worker and a control plane.  Add the connection details to my kubeconfig as multipass-mcp-microk8s`
 
 Off it goes...
 
