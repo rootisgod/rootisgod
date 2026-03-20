@@ -231,7 +231,7 @@ If you want to override the SSH key in a run, you can do this as well
 task rebuild SSH_KEY=/path/to/your/key
 ```
 
-## Location of Multipass SSH Key
+## Location of Multipass SSH Keys
 
 This could be useful if you want to just use the native key. Copy to a more central location if you want to avoid using a dedicated Private Key. Just tweak the things above (no need to update the authorized keys!).
 
