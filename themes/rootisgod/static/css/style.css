@@ -9,7 +9,7 @@ body {
     line-height: 1.5em;
     font-size: 1.1em;
     color: #bbb;
-    max-width: 42rem;
+    max-width: 54rem; /* main column; still fluid below this width */
     padding: 2rem;
     margin: auto;
     background: #181818;
