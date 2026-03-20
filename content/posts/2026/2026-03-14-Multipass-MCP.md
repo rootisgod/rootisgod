@@ -37,49 +37,49 @@ Using the multipass-mcp server, please create 3 multipass instances and then cre
 Off it goes...
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2026/multipass-mcp/claude-code-prompt.png"><img src="//assets/images/2026/multipass-mcp/claude-code-prompt.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2026/multipass-mcp/claude-code-prompt.png"><img src="/assets/images/2026/multipass-mcp/claude-code-prompt.png"></a>
 {{< /rawhtml >}}
-
+/assets/images/2026/multipass-mcp/claude-code-prompt.png
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2026/multipass-mcp/passgo-cluster-creation.png"><img src="//assets/images/2026/multipass-mcp/passgo-cluster-creation.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2026/multipass-mcp/passgo-cluster-creation.png"><img src="/assets/images/2026/multipass-mcp/passgo-cluster-creation.png"></a>
 {{< /rawhtml >}}
 
 Then run it
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2026/multipass-mcp/"><img src="//assets/images/2026/multipass-mcp/"></a>
+<a data-fancybox="gallery" href="/assets/images/2026/multipass-mcp/"><img src="/assets/images/2026/multipass-mcp/"></a>
 {{< /rawhtml >}}
 
 
 And then it was visible in k9s!
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2026/multipass-mcp/k9s-nodes.png"><img src="//assets/images/2026/multipass-mcp/k9s-nodes.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2026/multipass-mcp/k9s-nodes.png"><img src="/assets/images/2026/multipass-mcp/k9s-nodes.png"></a>
 {{< /rawhtml >}}
 
 Sometimes it can be too helpful though. I asked it for a command to show a deployment across 3 nodes, and it just did it. Hmmm.... Now I feel redundant.
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2026/multipass-mcp/nginx-install.png"><img src="//assets/images/2026/multipass-mcp/nginx-install.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2026/multipass-mcp/nginx-install.png"><img src="/assets/images/2026/multipass-mcp/nginx-install.png"></a>
 {{< /rawhtml >}}
 
 But I had to tell it to make a MetalLB IP address so I can get to the page. Human in the loop still wins ;)
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2026/multipass-mcp/metallb-suggestion.png"><img src="//assets/images/2026/multipass-mcp/metallb-suggestion.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2026/multipass-mcp/metallb-suggestion.png"><img src="/assets/images/2026/multipass-mcp/metallb-suggestion.png"></a>
 {{< /rawhtml >}}
 
 And then make sure this is Load Balanced.
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2026/multipass-mcp/metallb-lb.png"><img src="//assets/images/2026/multipass-mcp/metallb-lb.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2026/multipass-mcp/metallb-lb.png"><img src="/assets/images/2026/multipass-mcp/metallb-lb.png"></a>
 {{< /rawhtml >}}
 
 Success!
 
 {{< rawhtml >}}
-<a data-fancybox="gallery" href="/assets/images/2026/multipass-mcp/nginx-metallb.png"><img src="//assets/images/2026/multipass-mcp/nginx-metallb.png"></a>
+<a data-fancybox="gallery" href="/assets/images/2026/multipass-mcp/nginx-metallb.png"><img src="/assets/images/2026/multipass-mcp/nginx-metallb.png"></a>
 {{< /rawhtml >}}
 
 
