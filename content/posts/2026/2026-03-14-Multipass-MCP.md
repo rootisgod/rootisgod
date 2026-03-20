@@ -18,7 +18,7 @@ First, I'll assume you have Claude Code and Multipass installed and set up.
 Then, we need to install the MCP server, which is a Go binary (and very simple to install) and then hook it up to Claude Code. We also have a Skill which helps smooth Claude's usage of the MCP plugin. Here is a cheat sheet on installation.
 
 {{< rawhtml >}}
-<table>
+<table class="install-cheat-sheet">
 <thead>
 <tr><th>Step</th><th>macOS</th><th>Linux</th><th>Windows</th></tr>
 </thead>

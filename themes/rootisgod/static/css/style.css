@@ -191,13 +191,36 @@ FIGURE,
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
-/*! Center markdown tables in posts; width caps keep wide tables inside the column */
+/*! Default markdown tables in posts */
 .post-content > table {
     margin-left: auto;
     margin-right: auto;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+}
+/*!
+ * Install cheat sheet (e.g. 2026 Multipass MCP post): class on <table> only.
+ * Fits the column; long <code> in cells wraps instead of widening the page.
+ */
+.post-content table.install-cheat-sheet {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    table-layout: fixed;
+}
+.post-content table.install-cheat-sheet th,
+.post-content table.install-cheat-sheet td {
+    min-width: 0;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+.post-content table.install-cheat-sheet td code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
 }
 /*! Fenced code blocks: wrap long lines instead of only horizontal scroll */
 .post-content pre {
