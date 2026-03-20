@@ -1,0 +1,11 @@
+{{- $h := .Get "height" | default "420" -}}
+<div class="multipass-logo-banner-iframe-wrap" style="max-width:1200px;margin:1.5rem auto;">
+  <iframe
+    src="{{ "/assets/images/2026/multipass-mcp/logo-banner.html" | relURL }}"
+    width="100%"
+    height="{{ $h }}"
+    style="border:none;border-radius:8px;display:block;width:100%;background:#0a0a0a;"
+    title="Multipass MCP banner"
+    loading="lazy"
+  ></iframe>
+</div>

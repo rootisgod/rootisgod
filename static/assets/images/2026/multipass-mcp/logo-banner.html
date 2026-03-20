@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multipass MCP Banner</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Outfit:wght@300;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #0a0a0a;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .banner {
+    width: 1200px;
+    height: 420px;
+    position: relative;
+    overflow: hidden;
+    background: #0c0e14;
+    border-radius: 8px;
+  }
+
+  /* Animated gradient mesh background */
+  .bg-mesh {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 600px 400px at 15% 50%, rgba(233, 89, 41, 0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 500px 350px at 85% 30%, rgba(119, 68, 219, 0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 400px 300px at 60% 80%, rgba(41, 182, 233, 0.08) 0%, transparent 70%);
+    animation: meshShift 8s ease-in-out infinite alternate;
+  }
+
+  @keyframes meshShift {
+    0% { opacity: 0.8; }
+    100% { opacity: 1; }
+  }
+
+  /* Grid pattern overlay */
+  .grid-pattern {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Floating VM node particles */
+  .node {
+    position: absolute;
+    border: 1px solid rgba(233, 89, 41, 0.25);
+    border-radius: 6px;
+    background: rgba(233, 89, 41, 0.04);
+    backdrop-filter: blur(2px);
+  }
+
+  .node-1 { width: 48px; height: 48px; top: 40px; left: 60px; animation: float 6s ease-in-out infinite; }
+  .node-2 { width: 36px; height: 36px; top: 280px; left: 140px; animation: float 7s ease-in-out infinite 1s; border-color: rgba(119, 68, 219, 0.25); background: rgba(119, 68, 219, 0.04); }
+  .node-3 { width: 28px; height: 28px; top: 100px; right: 100px; animation: float 5s ease-in-out infinite 0.5s; border-color: rgba(41, 182, 233, 0.25); background: rgba(41, 182, 233, 0.04); }
+  .node-4 { width: 40px; height: 40px; bottom: 60px; right: 200px; animation: float 8s ease-in-out infinite 2s; }
+  .node-5 { width: 24px; height: 24px; top: 200px; left: 320px; animation: float 6.5s ease-in-out infinite 3s; border-color: rgba(119, 68, 219, 0.2); background: rgba(119, 68, 219, 0.03); }
+  .node-6 { width: 32px; height: 32px; top: 60px; right: 320px; animation: float 7.5s ease-in-out infinite 1.5s; border-color: rgba(41, 182, 233, 0.2); background: rgba(41, 182, 233, 0.03); }
+
+  .node::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    background: currentColor;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(233, 89, 41, 0.5);
+  }
+  .node-2::after, .node-5::after { color: rgba(119, 68, 219, 0.5); }
+  .node-3::after, .node-6::after { color: rgba(41, 182, 233, 0.5); }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* Connection lines */
+  .connections {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .conn-line {
+    position: absolute;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(233, 89, 41, 0.12), transparent);
+    transform-origin: left center;
+  }
+
+  .conn-1 { width: 200px; top: 64px; left: 108px; transform: rotate(35deg); }
+  .conn-2 { width: 180px; top: 300px; left: 176px; transform: rotate(-20deg); }
+  .conn-3 { width: 250px; top: 120px; right: 0; left: auto; transform: rotate(15deg); background: linear-gradient(90deg, transparent, rgba(41, 182, 233, 0.1), transparent); }
+
+  /* Main content */
+  .content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    padding: 0 80px;
+  }
+
+  /* Multipass logo text */
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 6px 16px 6px 10px;
+    background: rgba(233, 89, 41, 0.08);
+    border: 1px solid rgba(233, 89, 41, 0.2);
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(233, 89, 41, 0.9);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    animation: fadeSlideUp 0.8s ease-out;
+  }
+
+  .badge-dot {
+    width: 7px;
+    height: 7px;
+    background: #e95929;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(233, 89, 41, 0.4); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(233, 89, 41, 0); }
+  }
+
+  .title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 6px;
+    animation: fadeSlideUp 0.8s ease-out 0.15s both;
+  }
+
+  .title-multi {
+    color: #ffffff;
+    letter-spacing: -0.03em;
+  }
+
+  .title-pass {
+    background: linear-gradient(135deg, #e95929, #f0843a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.03em;
+  }
+
+  .title-mcp {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 56px;
+    font-weight: 800;
+    color: rgba(255,255,255,0.15);
+    margin-left: 14px;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.02em;
+    margin-bottom: 28px;
+    animation: fadeSlideUp 0.8s ease-out 0.3s both;
+  }
+
+  .subtitle strong {
+    color: rgba(255,255,255,0.75);
+    font-weight: 500;
+  }
+
+  /* Feature pills */
+  .pills {
+    display: flex;
+    gap: 10px;
+    animation: fadeSlideUp 0.8s ease-out 0.45s both;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    border: 1px solid;
+  }
+
+  .pill-vm {
+    color: rgba(233, 89, 41, 0.8);
+    border-color: rgba(233, 89, 41, 0.15);
+    background: rgba(233, 89, 41, 0.05);
+  }
+
+  .pill-snap {
+    color: rgba(119, 68, 219, 0.8);
+    border-color: rgba(119, 68, 219, 0.15);
+    background: rgba(119, 68, 219, 0.05);
+  }
+
+  .pill-exec {
+    color: rgba(41, 182, 233, 0.8);
+    border-color: rgba(41, 182, 233, 0.15);
+    background: rgba(41, 182, 233, 0.05);
+  }
+
+  .pill-go {
+    color: rgba(0, 173, 136, 0.8);
+    border-color: rgba(0, 173, 136, 0.15);
+    background: rgba(0, 173, 136, 0.05);
+  }
+
+  .pill-icon {
+    font-size: 13px;
+    opacity: 0.7;
+  }
+
+  /* Corner terminal decoration */
+  .terminal-decor {
+    position: absolute;
+    bottom: 24px;
+    left: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.12);
+    line-height: 1.6;
+    animation: fadeIn 1s ease-out 0.6s both;
+  }
+
+  .terminal-decor .prompt {
+    color: rgba(233, 89, 41, 0.3);
+  }
+
+  /* GitHub corner */
+  .github-tag {
+    position: absolute;
+    bottom: 24px;
+    right: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    animation: fadeIn 1s ease-out 0.6s both;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .github-tag svg {
+    width: 14px;
+    height: 14px;
+    fill: rgba(255,255,255,0.2);
+  }
+
+  /* Version badge */
+  .version-tag {
+    position: absolute;
+    top: 24px;
+    right: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.15);
+    padding: 4px 10px;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 4px;
+    animation: fadeIn 1s ease-out 0.7s both;
+  }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Subtle scan line effect */
+  .scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+  }
+
+  /* Top edge glow */
+  .edge-glow {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(233, 89, 41, 0.3), transparent);
+  }
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <div class="bg-mesh"></div>
+  <div class="grid-pattern"></div>
+  <div class="scanlines"></div>
+  <div class="edge-glow"></div>
+
+  <div class="connections">
+    <div class="conn-line conn-1"></div>
+    <div class="conn-line conn-2"></div>
+    <div class="conn-line conn-3"></div>
+  </div>
+
+  <div class="node node-1"></div>
+  <div class="node node-2"></div>
+  <div class="node node-3"></div>
+  <div class="node node-4"></div>
+  <div class="node node-5"></div>
+  <div class="node node-6"></div>
+
+  <div class="content">
+    <div class="logo-badge">
+      <span class="badge-dot"></span>
+      MCP Server
+    </div>
+
+    <div class="title">
+      <span class="title-multi">Multi</span><span class="title-pass">pass</span><span class="title-mcp">MCP</span>
+    </div>
+
+    <div class="subtitle">
+      Manage <strong>Ubuntu VMs</strong> through AI assistants &mdash; launch, configure, snapshot &amp; more
+    </div>
+
+    <div class="pills">
+      <span class="pill pill-vm"><span class="pill-icon">▢</span> Launch VMs</span>
+      <span class="pill pill-snap"><span class="pill-icon">◈</span> Snapshots</span>
+      <span class="pill pill-exec"><span class="pill-icon">⟩</span> Exec Commands</span>
+      <span class="pill pill-go"><span class="pill-icon">⬡</span> Built in Go</span>
+    </div>
+  </div>
+
+  <div class="terminal-decor">
+    <span class="prompt">$</span> claude mcp add multipass-mcp<br>
+    <span class="prompt">></span> "Launch a VM with Docker installed"
+  </div>
+
+  <div class="github-tag">
+    <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    rootisgod/multipass-mcp
+  </div>
+
+  <div class="version-tag">v0.1.6</div>
+</div>
+
+</body>
+</html>
