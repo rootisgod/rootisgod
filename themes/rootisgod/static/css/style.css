@@ -199,6 +199,12 @@ FIGURE,
     max-width: 100%;
     box-sizing: border-box;
 }
+/*! Fenced code blocks: wrap long lines instead of only horizontal scroll */
+.post-content pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    overflow-x: visible;
+}
 .post-content h2 {
     font-size: 1.75rem;
 }
