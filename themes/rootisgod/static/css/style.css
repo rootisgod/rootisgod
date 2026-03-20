@@ -208,19 +208,31 @@ FIGURE,
     margin-right: auto;
     width: 100%;
     max-width: 100%;
+    min-width: 0;
     box-sizing: border-box;
     table-layout: fixed;
 }
+/* Safari: fixed-layout + min-width:0 on cells is flaky; explicit column share helps */
 .post-content table.install-cheat-sheet th,
 .post-content table.install-cheat-sheet td {
+    width: 25%;
     min-width: 0;
     vertical-align: top;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
     overflow-wrap: anywhere;
     word-break: break-word;
 }
 .post-content table.install-cheat-sheet td code {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
     overflow-wrap: anywhere;
+    word-break: break-word;
 }
 /*! Fenced code blocks: wrap long lines instead of only horizontal scroll */
 .post-content pre {
