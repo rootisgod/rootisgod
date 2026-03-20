@@ -38,14 +38,14 @@ Then, we need to install the MCP server, which is a Go binary (and very simple t
 <tr>
 <td>Install skill (optional)</td>
 <td>
-<code>git clone https://github.com/rootisgod/multipass-mcp.git /tmp/multipass-mcp</code><br>
-<code>cp -r /tmp/multipass-mcp/skill/multipass ~/.claude/skills/multipass</code><br>
+<code>git clone https://github.com/rootisgod/multipass-mcp.git /tmp/multipass-mcp</code><br> <br>
+<code>cp -r /tmp/multipass-mcp/skill/multipass ~/.claude/skills/multipass</code><br> <br>
 <code>rm -rf /tmp/multipass-mcp</code>
 </td>
 <td>Same as macOS</td>
 <td>
-<code>git clone https://github.com/rootisgod/multipass-mcp.git %TEMP%\multipass-mcp</code><br>
-<code>xcopy /E /I %TEMP%\multipass-mcp\skill\multipass %USERPROFILE%\.claude\skills\multipass</code><br>
+<code>git clone https://github.com/rootisgod/multipass-mcp.git %TEMP%\multipass-mcp</code><br> <br>
+<code>xcopy /E /I %TEMP%\multipass-mcp\skill\multipass %USERPROFILE%\.claude\skills\multipass</code><br> <br>
 <code>rmdir /S /Q %TEMP%\multipass-mcp</code>
 </td>
 </tr>
