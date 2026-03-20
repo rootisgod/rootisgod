@@ -11,7 +11,7 @@ Oh yeah.
 
 We have a fully-fledged MCP server for Multipass. Let me show you how it works in Claude Code. We will create a 3 node microk8s cluster from a paragraph. A PARAGRAPH!
 
-First, I'll assume you have Claude Code installed and set up, and the same for Multipass.
+First, I'll assume you have Claude Code and Multipass installed and set up.
 
 Then, we need to install the MCP server, which is a Go binary (and very simple to install) and then hook it up to Claude Code. We also have a Skill which helps smooth Claude's usage of the MCP plugin. Here is a cheat sheet on installation.
 
