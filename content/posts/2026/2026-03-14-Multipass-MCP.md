@@ -9,7 +9,9 @@ Oh yeah.
 
 {{< multipass-logo-banner >}}
 
-We have a fully-fledged MCP server for Multipass. Let me show you how it works in Claude Code. We will create a 3 node microk8s cluster from a paragraph. A PARAGRAPH!
+We now have a fully-fledged MCP server for Multipass available here: [https://github.com/rootisgod/multipass-mcp](https://github.com/rootisgod/multipass-mcp). 
+
+Let me show you how it works in Claude Code. We will create a 3 node microk8s cluster from a paragraph. A PARAGRAPH!
 
 First, I'll assume you have Claude Code and Multipass installed and set up.
 
