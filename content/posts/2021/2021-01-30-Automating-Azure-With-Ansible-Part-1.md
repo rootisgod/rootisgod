@@ -210,8 +210,6 @@ Note that this also maps the files from our work folder into this container and 
 
 We can now create an ansible playbook. A playbook is simply the steps we want ansible to carry out. We will create two 'roles' inside this, one to create the VM (infrastructure) and the other to connect to it and configure it (configuration).
 
-I do have a zip of the code [on GitHub here](https://github.com/iaingblack/Ansible-Azure-Infrastructure/tree/v1.0.0) but I would definitely encourage trying it out yourself first
-
 In our working folder, create the following folders and empty files.
 
 ```bash

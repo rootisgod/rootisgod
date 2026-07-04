@@ -36,12 +36,3 @@ Install git too
 ```
 apt install git
 ```
-
-Grab these two files
-
-https://github.com/iaingblack/octopus-deploy-k8s-cicd/tree/master/octopus-deploy-docker-compose
-
-Amend the .env file and add passwords. Make sure the DB password matches the connection string!
-
-
-Could be useful: https://octopus.com/blog/docker-compose

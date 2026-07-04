@@ -93,7 +93,7 @@ We need a couple of things first, our repo name/org to add our runners to, and a
 ```bash
 INSTALLATION_NAME="arc-runner-repo"
 NAMESPACE="arc-runners"
-GITHUB_CONFIG_URL="https://github.com/iaingblack/arc-runner-repo"
+GITHUB_CONFIG_URL="https://github.com/rootisgod/arc-runner-repo"
 GITHUB_PAT="ghp_your-secret-code-here"
 
 helm install "${INSTALLATION_NAME}" \

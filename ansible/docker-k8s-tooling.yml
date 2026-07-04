@@ -1,0 +1,310 @@
+---
+# Idempotent install: Docker CE, kubectl, kind, k9s, optional Helm + Kind test cluster.
+#
+# Tags (ansible-playbook ... --tags "docker,binaries"):
+#   apt            — cache, optional dist-upgrade, prerequisite packages
+#   sysctl         — br_netfilter + common Kubernetes networking sysctls
+#   docker         — repo, packages, service, docker group + connection reset
+#   binaries       — kubectl, kind, k9s, optional helm, optional bash completion
+#   helm           — Helm only (subset of binaries)
+#   kind-cluster   — create cluster + status (respects tooling_install_test_cluster)
+#
+# Common overrides (-e or group_vars):
+#   k8s_cluster_user, kind_cluster_name, tooling_install_test_cluster,
+#   tooling_install_helm, tooling_k8s_sysctl, tooling_apt_upgrade,
+#   tooling_install_kubectl_completion, tooling_docker_daemon_json (dict, optional)
+#
+# To refresh pinned binaries after bumping *_version vars: run once with -e tooling_force_download=true
+
+- name: Install Docker, Kind, K9s and kubectl
+  hosts: all
+  gather_facts: true
+  become: true
+
+  vars:
+    ansible_command_timeout: 600
+    kind_version: v0.31.0
+    k9s_version: v0.50.18
+    kubectl_version: v1.31.2
+    helm_version: v3.16.4
+    k8s_cluster_user: "{{ ansible_user }}"
+    kind_cluster_name: test-cluster
+    tooling_install_test_cluster: true
+    tooling_install_helm: true
+    tooling_k8s_sysctl: true
+    tooling_apt_upgrade: true
+    tooling_install_kubectl_completion: true
+    tooling_force_download: false
+    tooling_docker_daemon_json: {}
+    docker_apt_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else ('arm64' if ansible_architecture == 'aarch64' else ansible_architecture) }}"
+
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+    APT_LISTCHANGES_FRONTEND: none
+
+  tasks:
+    - name: APT refresh and prerequisites
+      tags: [apt]
+      block:
+        - name: Update apt cache (no full upgrade)
+          when: not (tooling_apt_upgrade | bool)
+          ansible.builtin.apt:
+            update_cache: true
+            cache_valid_time: 3600
+
+        - name: Update apt cache and upgrade packages
+          when: tooling_apt_upgrade | bool
+          ansible.builtin.apt:
+            update_cache: true
+            cache_valid_time: 3600
+            upgrade: dist
+          register: apt_upgrade
+          retries: 2
+          delay: 10
+          until: apt_upgrade is succeeded
+
+        - name: Install prerequisites
+          ansible.builtin.apt:
+            name:
+              - apt-transport-https
+              - ca-certificates
+              - curl
+              - gnupg
+              - lsb-release
+              - software-properties-common
+            state: present
+
+    - name: Kernel / sysctl tuning for Kubernetes-style networking
+      when: tooling_k8s_sysctl | bool
+      tags: [sysctl]
+      block:
+        - name: Load br_netfilter at boot
+          ansible.builtin.copy:
+            dest: /etc/modules-load.d/k8s.conf
+            mode: "0644"
+            content: |
+              br_netfilter
+
+        - name: Load br_netfilter now
+          ansible.builtin.command: modprobe br_netfilter
+          register: modprobe_br_netfilter
+          changed_when: false
+          failed_when: modprobe_br_netfilter.rc != 0
+
+        - name: Persist Kubernetes-friendly sysctls
+          ansible.builtin.copy:
+            dest: /etc/sysctl.d/99-kubernetes-cri.conf
+            mode: "0644"
+            content: |
+              net.bridge.bridge-nf-call-iptables  = 1
+              net.bridge.bridge-nf-call-ip6tables = 1
+              net.ipv4.ip_forward                 = 1
+          notify: Apply sysctl files
+
+    - name: Docker repository and packages
+      tags: [docker]
+      block:
+        - name: Ensure APT keyrings directory exists
+          ansible.builtin.file:
+            path: /etc/apt/keyrings
+            state: directory
+            mode: "0755"
+
+        - name: Install Docker GPG key for APT
+          ansible.builtin.get_url:
+            url: https://download.docker.com/linux/ubuntu/gpg
+            dest: /etc/apt/keyrings/docker.asc
+            mode: "0644"
+            timeout: 60
+            force: "{{ tooling_force_download }}"
+
+        - name: Remove legacy Docker APT entries (avoid duplicate URIs / Signed-By conflicts)
+          ansible.builtin.shell: |
+            set -euo pipefail
+            removed=false
+            for f in /etc/apt/sources.list.d/*; do
+              [ -f "$f" ] || continue
+              case "$(basename "$f")" in
+                docker.sources) continue ;;
+              esac
+              if grep -q 'download\.docker\.com/linux/ubuntu' "$f" 2>/dev/null; then
+                rm -f "$f"
+                printf '%s\n' "removed ${f}"
+                removed=true
+              fi
+            done
+            if [ "$removed" = false ]; then
+              printf '%s\n' "noop"
+            fi
+          args:
+            executable: /bin/bash
+          register: docker_legacy_sources
+          changed_when: docker_legacy_sources.stdout_lines | reject('equalto', 'noop') | list | length > 0
+
+        - name: Configure Docker APT repository (single deb822 source)
+          ansible.builtin.copy:
+            dest: /etc/apt/sources.list.d/docker.sources
+            mode: "0644"
+            content: |
+              Types: deb
+              URIs: https://download.docker.com/linux/ubuntu
+              Suites: {{ ansible_distribution_release }}
+              Components: stable
+              Signed-By: /etc/apt/keyrings/docker.asc
+              Architectures: {{ docker_apt_arch }}
+
+        - name: Install Docker packages
+          ansible.builtin.apt:
+            name:
+              - docker-ce
+              - docker-ce-cli
+              - containerd.io
+              - docker-buildx-plugin
+              - docker-compose-plugin
+            state: present
+            update_cache: true
+
+        - name: Ensure /etc/docker exists
+          ansible.builtin.file:
+            path: /etc/docker
+            state: directory
+            mode: "0755"
+
+        - name: Optional Docker daemon.json (replaces file if set; merge manually if you already customize it)
+          when: tooling_docker_daemon_json | length > 0
+          ansible.builtin.copy:
+            dest: /etc/docker/daemon.json
+            mode: "0644"
+            content: "{{ tooling_docker_daemon_json | to_nice_json }}\n"
+          notify: Restart Docker
+
+        - name: Ensure Docker service is running and enabled
+          ansible.builtin.systemd:
+            name: docker
+            state: started
+            enabled: true
+
+        - name: Add user to docker group
+          ansible.builtin.user:
+            name: "{{ k8s_cluster_user }}"
+            groups: docker
+            append: true
+
+        - name: Reconnect so docker group applies to SSH sessions
+          ansible.builtin.meta: reset_connection
+
+    - name: CLI binaries (kubectl, kind, k9s, helm)
+      tags: [binaries]
+      block:
+        - name: Install kubectl
+          ansible.builtin.get_url:
+            url: "https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/{{ docker_apt_arch }}/kubectl"
+            dest: /usr/local/bin/kubectl
+            mode: "0755"
+            timeout: 120
+            force: "{{ tooling_force_download }}"
+
+        - name: Install kubectl bash completion (system-wide)
+          when: tooling_install_kubectl_completion | bool
+          ansible.builtin.shell: |
+            set -euo pipefail
+            install -d -m 0755 /etc/bash_completion.d
+            /usr/local/bin/kubectl completion bash > /etc/bash_completion.d/kubectl
+            chmod 0644 /etc/bash_completion.d/kubectl
+          args:
+            executable: /bin/bash
+            creates: /etc/bash_completion.d/kubectl
+
+        - name: Install kind
+          ansible.builtin.get_url:
+            url: "https://kind.sigs.k8s.io/dl/{{ kind_version }}/kind-linux-{{ docker_apt_arch }}"
+            dest: /usr/local/bin/kind
+            mode: "0755"
+            timeout: 120
+            force: "{{ tooling_force_download }}"
+
+        - name: Download K9s archive
+          ansible.builtin.get_url:
+            url: "https://github.com/derailed/k9s/releases/download/{{ k9s_version }}/k9s_Linux_{{ docker_apt_arch }}.tar.gz"
+            dest: "/tmp/k9s-{{ k9s_version }}.tar.gz"
+            timeout: 120
+            force: "{{ tooling_force_download }}"
+
+        - name: Install K9s binary
+          ansible.builtin.unarchive:
+            src: "/tmp/k9s-{{ k9s_version }}.tar.gz"
+            dest: /usr/local/bin
+            remote_src: true
+            creates: /usr/local/bin/k9s
+
+        - name: Ensure K9s is executable
+          ansible.builtin.file:
+            path: /usr/local/bin/k9s
+            mode: "0755"
+            state: file
+
+        - name: Helm
+          when: tooling_install_helm | bool
+          tags: [helm]
+          block:
+            - name: Download Helm tarball
+              ansible.builtin.get_url:
+                url: "https://get.helm.sh/helm-{{ helm_version }}-linux-{{ docker_apt_arch }}.tar.gz"
+                dest: "/tmp/helm-{{ helm_version }}-linux-{{ docker_apt_arch }}.tar.gz"
+                timeout: 120
+                force: "{{ tooling_force_download }}"
+
+            - name: Install Helm binary
+              ansible.builtin.unarchive:
+                src: "/tmp/helm-{{ helm_version }}-linux-{{ docker_apt_arch }}.tar.gz"
+                dest: /usr/local/bin
+                remote_src: true
+                extra_opts:
+                  - --strip-components=1
+                include:
+                  - "linux-{{ docker_apt_arch }}/helm"
+                creates: /usr/local/bin/helm
+
+    - name: Kind cluster and status
+      when: tooling_install_test_cluster | bool
+      tags: [kind-cluster]
+      block:
+        - name: Create Kind cluster if missing
+          ansible.builtin.shell: |
+            set -euo pipefail
+            if kind get clusters 2>/dev/null | grep -qx '{{ kind_cluster_name }}'; then
+              echo "Cluster '{{ kind_cluster_name }}' already exists"
+            else
+              kind create cluster --name '{{ kind_cluster_name }}' --wait 5m
+            fi
+          args:
+            executable: /bin/bash
+          become_user: "{{ k8s_cluster_user }}"
+          register: kind_create
+          changed_when: "'already exists' not in kind_create.stdout"
+
+        - name: Show cluster status
+          ansible.builtin.shell: |
+            set -euo pipefail
+            kind get clusters
+            kubectl cluster-info --context "kind-{{ kind_cluster_name }}"
+            kubectl get nodes --context "kind-{{ kind_cluster_name }}"
+          args:
+            executable: /bin/bash
+          become_user: "{{ k8s_cluster_user }}"
+          register: cluster_info
+          changed_when: false
+
+        - name: Print cluster status
+          ansible.builtin.debug:
+            msg: "{{ cluster_info.stdout_lines }}"
+
+  handlers:
+    - name: Apply sysctl files
+      ansible.builtin.command: sysctl --system
+      changed_when: true
+
+    - name: Restart Docker
+      ansible.builtin.systemd:
+        name: docker
+        state: restarted
